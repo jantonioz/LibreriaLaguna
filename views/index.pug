@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  //h1= title
+  //p Welcome to #{title}
+  h1 Listado
+  ul 
+    each employee in listado
+      li= employee.first_name
