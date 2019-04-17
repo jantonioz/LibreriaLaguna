@@ -16,7 +16,7 @@ var Libro = function (libro) {
 
 Libro.createLibro = function createUser(newLibro, result) {
     
-    sql.query("INSERT INTO libro set ?", newLibro, function (err, res) {
+    sql.query("INSERT INTO libros set ?", newLibro, function (err, res) {
         if (err) {
             console.log("error :", err)
             result(err, null)
@@ -29,7 +29,7 @@ Libro.createLibro = function createUser(newLibro, result) {
 
 Libro.getLibroById = function createUser(libroId, result) {
     // '?' es un placeholder como %s o %d
-    sql.query("SELECT * FROM libro WHERE ID = ?", libroId, function (err, res) {
+    sql.query("SELECT * FROM libros WHERE ID = ?", libroId, function (err, res) {
         if (err) {
             console.log("error :", err)
             result(err, null)
@@ -40,7 +40,7 @@ Libro.getLibroById = function createUser(libroId, result) {
 }
 
 Libro.getAllLibros = function getAllLibros(result) {
-    sql.query("SELECT * FROM libro", function (err, res) {
+    sql.query("SELECT * FROM libros", function (err, res) {
         if (err) {
             console.log("error: ", err)
             result(null, err)
@@ -51,7 +51,7 @@ Libro.getAllLibros = function getAllLibros(result) {
 }
 
 Libro.updateTitleById = function update(id, libro, result) {
-    sql.query("UPDATE libro SET Titulo = ? WHERE id = ?", [libro.Titulo, id],
+    sql.query("UPDATE libros SET Titulo = ? WHERE id = ?", [libro.Titulo, id],
         function (err, res) {
             if (err) {
                 console.log("error: ", err)
@@ -63,7 +63,7 @@ Libro.updateTitleById = function update(id, libro, result) {
 }
 
 Libro.remove = function (id, result){
-    sql.query("DELETE FROM libro WHERE id = ?", [id], function(err, res){
+    sql.query("DELETE FROM libros WHERE id = ?", [id], function(err, res){
         if (err) {
             console.log("error: ", err)
             result(null, err)

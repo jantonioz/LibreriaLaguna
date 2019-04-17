@@ -1,4 +1,10 @@
-CREATE TABLE Libro (
+
+DROP DATABASE IF EXISTS test_libreria;
+CREATE DATABASE test_libreria;
+USE test_libreria;
+
+
+CREATE TABLE Libros (
   ID             int(10) NOT NULL AUTO_INCREMENT, 
   Titulo         varchar(255) NOT NULL, 
   TituloOriginal varchar(255), 
@@ -9,6 +15,7 @@ CREATE TABLE Libro (
   editorial_id   int(10) NOT NULL, 
   created_at     timestamp NOT NULL, 
   updated_at     timestamp NOT NULL, 
+  genero_id      int(10) NOT NULL, 
   PRIMARY KEY (ID));
 CREATE TABLE Proveedores (
   ID         int(10) NOT NULL AUTO_INCREMENT, 
@@ -17,7 +24,7 @@ CREATE TABLE Proveedores (
   created_at timestamp NOT NULL, 
   updated_at timestamp NOT NULL, 
   PRIMARY KEY (ID));
-CREATE TABLE Lote (
+CREATE TABLE Lotes (
   ID            int(10) NOT NULL AUTO_INCREMENT, 
   Descripcion   varchar(50) NOT NULL, 
   Fecha_Entrega date NOT NULL, 
@@ -48,7 +55,7 @@ CREATE TABLE Empleados (
   created_at     timestamp NOT NULL, 
   updated_at     timestamp NOT NULL, 
   PRIMARY KEY (ID));
-CREATE TABLE Registro (
+CREATE TABLE Registros (
   ID           int(10) NOT NULL AUTO_INCREMENT, 
   empleados_id int(10) NOT NULL, 
   dia_llegada  date NOT NULL, 
@@ -59,10 +66,10 @@ CREATE TABLE Registro (
   created_at   timestamp NOT NULL, 
   updated_at   timestamp NOT NULL, 
   PRIMARY KEY (ID));
-CREATE TABLE Horario (
+CREATE TABLE Horarios (
   ID                int(10) NOT NULL AUTO_INCREMENT, 
-  Turno_Hora_Inicio time(7) NOT NULL, 
-  Turno_Hora_Fin    time(7) NOT NULL, 
+  Turno_Hora_Inicio time(6) NOT NULL, 
+  Turno_Hora_Fin    time(6) NOT NULL, 
   FechaDesde        date NOT NULL, 
   FechaHasta        date NOT NULL, 
   empleados_id      int(10) NOT NULL, 
@@ -82,7 +89,7 @@ CREATE TABLE Usuarios (
   created_at       timestamp NOT NULL, 
   updated_at       timestamp NOT NULL, 
   PRIMARY KEY (ID));
-CREATE TABLE Direccion (
+CREATE TABLE Direcciones (
   ID          int(10) NOT NULL AUTO_INCREMENT, 
   Calle       varchar(255) NOT NULL, 
   Numero      int(11) NOT NULL, 
@@ -93,7 +100,7 @@ CREATE TABLE Direccion (
   created_at  timestamp NOT NULL, 
   updated_at  timestamp NOT NULL, 
   PRIMARY KEY (ID));
-CREATE TABLE Compra (
+CREATE TABLE Compras (
   ID                   int(10) NOT NULL AUTO_INCREMENT, 
   Unidades_de_producto int(11) NOT NULL, 
   Estampa_tiempo       timestamp NOT NULL, 
@@ -116,13 +123,13 @@ CREATE TABLE Imagen_libro (
   created_at   timestamp NOT NULL, 
   updated_at   timestamp NOT NULL, 
   PRIMARY KEY (ID));
-CREATE TABLE Editorial (
+CREATE TABLE Editoriales (
   ID         int(10) NOT NULL AUTO_INCREMENT, 
   Nombre_ed  varchar(50) NOT NULL, 
   created_at timestamp NOT NULL, 
   updated_at timestamp NOT NULL, 
   PRIMARY KEY (ID));
-CREATE TABLE Autor (
+CREATE TABLE Autores (
   ID         int(10) NOT NULL AUTO_INCREMENT, 
   Nombre     varchar(50) NOT NULL, 
   fecnac     date NOT NULL, 
@@ -145,20 +152,50 @@ CREATE TABLE Salarios (
   updated_at   timestamp NOT NULL, 
   empleado_id  int(10) NOT NULL, 
   PRIMARY KEY (ID));
-ALTER TABLE Lote ADD CONSTRAINT FKLote795954 FOREIGN KEY (proveedor_id) REFERENCES Proveedores (ID);
-ALTER TABLE Registro ADD CONSTRAINT FKRegistro3317 FOREIGN KEY (empleados_id) REFERENCES Empleados (ID);
-ALTER TABLE Horario ADD CONSTRAINT FKHorario444149 FOREIGN KEY (empleados_id) REFERENCES Empleados (ID);
-ALTER TABLE Usuarios ADD CONSTRAINT FKUsuarios383994 FOREIGN KEY (direccion_id) REFERENCES Direccion (ID);
-ALTER TABLE Compra ADD CONSTRAINT FKCompra147603 FOREIGN KEY (Usuario_id) REFERENCES Usuarios (ID);
-ALTER TABLE Compra ADD CONSTRAINT FKCompra550193 FOREIGN KEY (Ejemplar_id) REFERENCES Ejemplares (ID);
-ALTER TABLE Compra ADD CONSTRAINT FKCompra304494 FOREIGN KEY (Direccion_id) REFERENCES Direccion (ID);
-ALTER TABLE Imagen_libro ADD CONSTRAINT FKImagen_lib140200 FOREIGN KEY (libro_id) REFERENCES Libro (ID);
-ALTER TABLE Libro ADD CONSTRAINT FKLibro765796 FOREIGN KEY (editorial_id) REFERENCES Editorial (ID);
-ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr763239 FOREIGN KEY (autor_id) REFERENCES Autor (ID);
-ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr838091 FOREIGN KEY (libro_id) REFERENCES Libro (ID);
-ALTER TABLE Compra ADD CONSTRAINT FKCompra943028 FOREIGN KEY (Empleado_id) REFERENCES Empleados (ID);
-ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares780748 FOREIGN KEY (libro_id) REFERENCES Libro (ID);
-ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares503627 FOREIGN KEY (lote_id) REFERENCES Lote (ID);
-ALTER TABLE Empleados ADD CONSTRAINT FKEmpleados829532 FOREIGN KEY (direccion_id) REFERENCES Direccion (ID);
+CREATE TABLE Generos (
+  ID         int(10) NOT NULL AUTO_INCREMENT, 
+  gen_nombre varchar(50), 
+  PRIMARY KEY (ID));
+ALTER TABLE Lotes ADD CONSTRAINT FKLotes561248 FOREIGN KEY (proveedor_id) REFERENCES Proveedores (ID);
+ALTER TABLE Registros ADD CONSTRAINT FKRegistros775435 FOREIGN KEY (empleados_id) REFERENCES Empleados (ID);
+ALTER TABLE Horarios ADD CONSTRAINT FKHorarios642878 FOREIGN KEY (empleados_id) REFERENCES Empleados (ID);
+ALTER TABLE Usuarios ADD CONSTRAINT FKUsuarios149099 FOREIGN KEY (direccion_id) REFERENCES Direcciones (ID);
+ALTER TABLE Compras ADD CONSTRAINT FKCompras16141 FOREIGN KEY (Usuario_id) REFERENCES Usuarios (ID);
+ALTER TABLE Compras ADD CONSTRAINT FKCompras581268 FOREIGN KEY (Ejemplar_id) REFERENCES Ejemplares (ID);
+ALTER TABLE Compras ADD CONSTRAINT FKCompras902862 FOREIGN KEY (Direccion_id) REFERENCES Direcciones (ID);
+ALTER TABLE Imagen_libro ADD CONSTRAINT FKImagen_lib424853 FOREIGN KEY (libro_id) REFERENCES Libros (ID);
+ALTER TABLE Libros ADD CONSTRAINT FKLibros341537 FOREIGN KEY (editorial_id) REFERENCES Editoriales (ID);
+ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr490576 FOREIGN KEY (autor_id) REFERENCES Autores (ID);
+ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr726961 FOREIGN KEY (libro_id) REFERENCES Libros (ID);
+ALTER TABLE Compras ADD CONSTRAINT FKCompras188433 FOREIGN KEY (Empleado_id) REFERENCES Empleados (ID);
+ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares625788 FOREIGN KEY (libro_id) REFERENCES Libros (ID);
+ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares268921 FOREIGN KEY (lote_id) REFERENCES Lotes (ID);
+ALTER TABLE Empleados ADD CONSTRAINT FKEmpleados703560 FOREIGN KEY (direccion_id) REFERENCES Direcciones (ID);
 ALTER TABLE Empleados ADD CONSTRAINT FKEmpleados97550 FOREIGN KEY (manager_id) REFERENCES Empleados (ID);
 ALTER TABLE Salarios ADD CONSTRAINT FKSalarios924434 FOREIGN KEY (empleado_id) REFERENCES Empleados (ID);
+ALTER TABLE Libros ADD CONSTRAINT FKLibros529235 FOREIGN KEY (genero_id) REFERENCES Generos (ID);
+
+
+
+INSERT INTO Editoriales(Nombre_ed) VALUES ('NoBooks');
+INSERT INTO Editoriales(Nombre_ed) VALUES ('Gnome Press');
+
+INSERT INTO Autores(Nombre, fecnac) VALUES ('Herman Melville', '1819-08-01'), 
+										 ('Isaac Asimov', '1920-01-02');
+										 
+INSERT INTO generos(gen_nombre) VALUES ('Novela'), ('Ciencia Ficcion');
+
+INSERT INTO Libros(Titulo, TituloOriginal, ISBN, Numero_pag, Dimensiones, Descripcion, editorial_id, genero_id)
+VALUES ('Moby-Dick', 'Moby-Dick', 9787532226320, 581, 'No.id', 
+'Narra la travesía del barco ballenero Pequod, comandado por el capitán Ahab, junto a Ismael y el arponero Quiqueg en la obsesiva y autodestructiva persecución de un gran cachalote blanco.', 
+1, 1),
+('Yo, robot', 'I Robot', 9780007491513, 374, 'No.id', 
+'Yo, robot es una colección de relatos en los que se establecen y plantean los problemas de las tres leyes de la robótica que son un compendio fijo e imprescindible de moral aplicable a supuestos robots inteligentes.', 
+2, 2);
+-- select lib.titulo, ed.nombre_ed from libro AS lib inner join editorial AS ed ON (lib.editorial_id = ed.id);
+
+INSERT INTO Autor_Libro(autor_id, libro_id) VALUES (1, 1), (2, 2);
+
+-- SELECT lib.Titulo, aut.Nombre, ed.Nombre_ed FROM libro AS lib INNER JOIN autor_libro AS alib ON (lib.id = alib.libro_id) INNER JOIN Autor AS aut ON(aut.id = alib.autor_id) INNER JOIN editorial AS ed ON (lib.editorial_id = ed.id)
+
+

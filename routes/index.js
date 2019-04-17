@@ -25,8 +25,8 @@ router.get('/', function (req, res, next) {
   //   })
   // })
   // console.log("HECHO")
-
-  
+  console.log('index')
+  res.render('index')
 });
 
 module.exports = router;
