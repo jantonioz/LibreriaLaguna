@@ -10,7 +10,10 @@ exports.list_all_libros = function(req, res){
             
         }
         console.log('res', libro)
-        res.send(libro)
+        //res.send(libro)
+        //res.render('index', { title: 'ASDASD', listado: lista });
+        
+        res.render('libro/listView', {libros: libro})
     })
 }
 
@@ -31,6 +34,7 @@ exports.create_a_libro = function(req, res){
 
 
 exports.get_a_libro = function(req, res){
+    console.log(req.params.libroId)
     Libro.getLibroById(req.params.libroId, function(err, libro){
         if (err)
             res.send(err)

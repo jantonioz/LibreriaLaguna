@@ -15,6 +15,7 @@ var Libro = function (libro) {
 }
 
 Libro.createLibro = function createUser(newLibro, result) {
+    
     sql.query("INSERT INTO libro set ?", newLibro, function (err, res) {
         if (err) {
             console.log("error :", err)
@@ -27,7 +28,8 @@ Libro.createLibro = function createUser(newLibro, result) {
 }
 
 Libro.getLibroById = function createUser(libroId, result) {
-    sql.query("SELECT * FROM libro WHERE ID = ", libroId, function (err, res) {
+    // '?' es un placeholder como %s o %d
+    sql.query("SELECT * FROM libro WHERE ID = ?", libroId, function (err, res) {
         if (err) {
             console.log("error :", err)
             result(err, null)
