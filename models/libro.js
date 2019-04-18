@@ -1,7 +1,7 @@
 'use strict';
 
 var sql = require('./db.js')
-const genero = ' INNER JOIN generos AS GEN ON (genero_id = gen.ID) ';
+const genero = ' FROM libros AS lib INNER JOIN generos AS gen ON (lib.genero_id = gen.ID) ';
 
 // Constructor de Libro
 var Libro = function (libro) {
@@ -31,7 +31,7 @@ Libro.createLibro = function createUser(newLibro, result) {
 
 Libro.getLibroById = function createUser(libroId, result) {
     // '?' es un placeholder como %s o %d
-    sql.query("SELECT * FROM libros WHERE ID = ? ", libroId, function (err, res) {
+    sql.query("SELECT * " + genero +" WHERE lib.id = ? ", libroId, function (err, res) {
         if (err) {
             console.log("error :", err)
             result(err, null)
@@ -54,7 +54,7 @@ Libro.getAllLibros = function getAllLibros(result) {
 }
 
 Libro.find = function findLibro(titulo, result){
-    sql.query("SELECT * FROM libros " + genero +" WHERE titulo LIKE ?", '%'+titulo+'%', function(err, res){
+    sql.query("SELECT * " + genero + " WHERE titulo LIKE ?", '%'+titulo+'%', function(err, res){
         if (err){
             console.log("error: ", err)
             result(null, err)

@@ -1,6 +1,11 @@
 extends ../layout
 
 block content
-  h1= libro.titulo
-  small= libro.isbn
-  p= libro.descripcion
+  div(class="container")
+    div(class="row")
+      div(class="col-3")
+        img(class="card-img-top" src="http://placehold.it/300x400" alt="")
+        small= 'ISBN: ' + libro.isbn + 	" \u2022 " + libro.gen_nombre
+      div(class="col")
+        h1= libro.titulo
+        p= libro.descripcion
