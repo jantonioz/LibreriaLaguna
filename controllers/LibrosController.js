@@ -7,11 +7,8 @@ exports.list_all_libros = function(req, res){
         console.log("libros controller")
         if (err){
             res.send(err)
-            
         }
         console.log('res', libro)
-        //res.send(libro)
-        //res.render('index', { title: 'ASDASD', listado: lista });
         
         res.render('libro/listView', {libros: libro})
     })

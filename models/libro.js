@@ -4,14 +4,15 @@ var sql = require('./db.js')
 
 // Constructor de Libro
 var Libro = function (libro) {
-    this.ID = libro.ID,
-        this.Titulo = libro.Titulo,
-        this.TituloOriginal = libro.TituloOriginal,
-        this.ISBN = libro.ISBN,
-        this.Autor = libro.Autor,
-        this.Nummero_pag = libro.Nummero_pag,
-        this.Dimension = libro.Dimension,
-        this.Descripcion = libro.Descripcion
+    this.ID = libro.ID
+    this.Titulo = libro.Titulo
+    this.TituloOriginal = libro.TituloOriginal
+    this.ISBN = libro.ISBN
+    this.Autor = libro.Autor
+    this.Nummero_pag = libro.Nummero_pag
+    this.Dimension = libro.Dimension
+    this.Descripcion = libro.Descripcion
+    this.gen_nombre = libro.gen_nombre
 }
 
 Libro.createLibro = function createUser(newLibro, result) {
@@ -29,7 +30,7 @@ Libro.createLibro = function createUser(newLibro, result) {
 
 Libro.getLibroById = function createUser(libroId, result) {
     // '?' es un placeholder como %s o %d
-    sql.query("SELECT * FROM libros WHERE ID = ?", libroId, function (err, res) {
+    sql.query("SELECT * FROM libros WHERE ID = ? ", libroId, function (err, res) {
         if (err) {
             console.log("error :", err)
             result(err, null)
@@ -40,7 +41,8 @@ Libro.getLibroById = function createUser(libroId, result) {
 }
 
 Libro.getAllLibros = function getAllLibros(result) {
-    sql.query("SELECT * FROM libros", function (err, res) {
+    sql.query("SELECT * FROM libros "  + 
+    "AS lib INNER JOIN generos AS gen ON (lib.genero_id = gen.id) ", function (err, res) {
         if (err) {
             console.log("error: ", err)
             result(null, err)

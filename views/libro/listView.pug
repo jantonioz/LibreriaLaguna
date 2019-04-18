@@ -2,43 +2,17 @@ extends ../layout
 
 
 block content
-    each libro in libros
-        h1= libro.Titulo
-        small= 'ISBN: ' + libro.ISBN
-        p=  'Descripcion: ' + libro.Descripcion
-    
-    each libro in libros
-        h1= libro.Titulo
-        small= 'ISBN: ' + libro.ISBN
-        p=  'Descripcion: ' + libro.Descripcion
+    mixin item
+        each libro in libros
+            h1= libro.Titulo
+            small= 'ISBN: ' + libro.ISBN + 	" \u2022 " + libro.gen_nombre
+            p=  'Descripcion: ' + libro.Descripcion
 
-    each libro in libros
-        h1= libro.Titulo
-        small= 'ISBN: ' + libro.ISBN
-        p=  'Descripcion: ' + libro.Descripcion
-    
-    each libro in libros
-        h1= libro.Titulo
-        small= 'ISBN: ' + libro.ISBN
-        p=  'Descripcion: ' + libro.Descripcion
-
-    each libro in libros
-        h1= libro.Titulo
-        small= 'ISBN: ' + libro.ISBN
-        p=  'Descripcion: ' + libro.Descripcion
-    
-    each libro in libros
-        h1= libro.Titulo
-        small= 'ISBN: ' + libro.ISBN
-        p=  'Descripcion: ' + libro.Descripcion
-
-
-    each libro in libros
-        h1= libro.Titulo
-        small= 'ISBN: ' + libro.ISBN
-        p=  'Descripcion: ' + libro.Descripcion
-    
-    each libro in libros
-        h1= libro.Titulo
-        small= 'ISBN: ' + libro.ISBN
-        p=  'Descripcion: ' + libro.Descripcion
+    +item
+    +item
+    +item
+    +item
+    +item
+    +item
+    +item
+    +item
