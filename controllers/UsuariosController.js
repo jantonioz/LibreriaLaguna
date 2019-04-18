@@ -8,9 +8,13 @@ exports.list_all_users = function(req, res){
         if (err)
             res.send(err)
 
-        res.render('index')
+        res.render('usuario/lista')
     })
 }   
+
+exports.getRegister = function(req, res){
+    res.render('usuario/register')
+}
 
 exports.create_usr = function(req, res){
 

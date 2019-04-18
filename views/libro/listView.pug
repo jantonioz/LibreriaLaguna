@@ -2,17 +2,8 @@ extends ../layout
 
 
 block content
-    mixin item
-        each libro in libros
-            h1= libro.Titulo
-            small= 'ISBN: ' + libro.ISBN + 	" \u2022 " + libro.gen_nombre
-            p=  'Descripcion: ' + libro.Descripcion
-
-    +item
-    +item
-    +item
-    +item
-    +item
-    +item
-    +item
-    +item
+    each libro in libros
+        h1
+            a(href="/libros/" + libro.ID ) #{libro.titulo}
+        small= 'ISBN: ' + libro.isbn + 	" \u2022 " + libro.gen_nombre
+        p=  'Descripcion: ' + libro.descripcion

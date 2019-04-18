@@ -10,7 +10,7 @@ exports.list_all_libros = function(req, res){
         }
         console.log('res', libro)
         
-        res.render('libro/listView', {libros: libro})
+        res.render('libro/listView', {libros: libro, activeLibros: 'active'})
     })
 }
 
@@ -29,13 +29,25 @@ exports.create_a_libro = function(req, res){
     }
 }
 
+exports.find_a_libro = function(req, res){
+    
+    Libro.find(req.body.search, function(err, libros){
+        if (err)
+            console.log(err)
+
+        console.log(libros)
+        res.render('libro/listView', {libros: libros, activeLibros: 'active'})
+    })
+}
 
 exports.get_a_libro = function(req, res){
     console.log(req.params.libroId)
     Libro.getLibroById(req.params.libroId, function(err, libro){
         if (err)
             res.send(err)
-        res.json(libro)
+
+        console.log(libro)
+        res.render('libro/singleView', {libro: libro[0]})
     })
 }
 
