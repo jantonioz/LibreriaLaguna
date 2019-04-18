@@ -1,7 +1,9 @@
 'use strict';
 
 var sql = require('./db.js')
-const genero = ' FROM libros AS lib INNER JOIN generos AS gen ON (lib.genero_id = gen.ID) ';
+const genero = ' FROM libros AS lib INNER JOIN generos AS gen ON (lib.genero_id = gen.ID) ' + 
+                ' INNER JOIN autor_libro AS al ON (al.libro_id = lib.ID) ' +
+                ' INNER JOIN autores AS aut ON (aut.ID = al.autores_id) ';
 
 // Constructor de Libro
 var Libro = function (libro) {

@@ -1,7 +1,7 @@
 extends layout
 
 block fullpageContent
-  
+  div(style="position:relative;min-height: 100vh;")
     // JUMBOTRON
     header(class="jumbotron bg-dark")
       h1(class="display-3 text-white" ) Librería laguna
@@ -9,7 +9,7 @@ block fullpageContent
       a(href="#" class="btn btn-outline-success btn-lg") Comprar ahora!
 
     // ELEMENTOS DE LIBROS
-    div(class="container")
+    div(class="container " )
       div(class="row text-center")
         mixin element
           div(class="col-lg-3 col-md-6 mb-4")
