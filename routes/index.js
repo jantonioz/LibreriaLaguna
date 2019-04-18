@@ -26,7 +26,7 @@ router.get('/', function (req, res, next) {
   // })
   // console.log("HECHO")
   console.log('index')
-  res.render('index')
+  res.render('index', { titulo: "Libreria laguna", content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA" })
 });
 
 module.exports = router;
