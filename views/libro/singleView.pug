@@ -5,7 +5,9 @@ block content
     div(class="row")
       div(class="col-3")
         img(class="card-img-top" src="http://placehold.it/300x400" alt="")
-        small= 'ISBN: ' + libro.isbn + 	" \u2022 " + libro.gen_nombre
+        small Autor 
+          a(href="/autores/d/" + libro.autor_id) #{libro.nombre} 
+          #{" \u2022 " + libro.gen_nombre}
       div(class="col")
         h1= libro.titulo
         p= libro.descripcion

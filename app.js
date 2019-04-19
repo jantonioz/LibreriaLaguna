@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var fileUpload = require('express-fileupload');
 
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
@@ -23,11 +24,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
-// app.use('/libros', librosRouter);
-// app.use('/usuarios', usrRouter);
+// SOPORTAR IMAGENES EN POST FORMS
+app.use(fileUpload());
 
+
+// IMPLEMENTAR TODO EL SISTEMA DE RUTAS
 app.use('/', appRouter);
 
 // catch 404 and forward to error handler

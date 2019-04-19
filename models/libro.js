@@ -3,7 +3,7 @@
 var sql = require('./db.js')
 const genero = ' FROM libros AS lib INNER JOIN generos AS gen ON (lib.genero_id = gen.ID) ' + 
                 ' INNER JOIN autor_libro AS al ON (al.libro_id = lib.ID) ' +
-                ' INNER JOIN autores AS aut ON (aut.ID = al.autores_id) ';
+                ' INNER JOIN autores AS aut ON (aut.ID = al.autor_id) ';
 
 // Constructor de Libro
 var Libro = function (libro) {
@@ -16,6 +16,7 @@ var Libro = function (libro) {
     this.Dimension = libro.Dimension
     this.Descripcion = libro.Descripcion
     this.gen_nombre = libro.gen_nombre
+    this.imagen = libro.imagen
 }
 
 Libro.createLibro = function createUser(newLibro, result) {

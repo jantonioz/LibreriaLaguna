@@ -1,0 +1,54 @@
+extends ../layout
+
+
+block content
+    div(class="container")
+        form(action="/libros/crear", method="POST", enctype="multipart/form-data")
+            input(type="hidden", name="_csrf", value=_csrf)
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="titulo", class="col col-lg") Titulo:
+                    div(class="col")
+                        input(type="text", class="form-control", id="titulo", name="titulo", placeholer="Ingresa un titulo" autocomplete="off")
+                        
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="tituloorig" class="col col-lg") Titulo Original:
+                    div(class="col")
+                        input(type="text" class="form-control" id="tituloorig" name="tituloorig" placeholer="Titulo en la lengua original" autocomplete="off")
+            
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="paginas" class="col col-lg") Número de páginas:
+                    div(class="col")
+                        input(type="text" class="form-control" id="paginas" name="paginas" placeholer="Ingresa un titulo" autocomplete="off")
+            
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="descripcion" class="col col-lg") Descripcion:
+                    div(class="col")
+                        textarea(class="form-control" rows=4 id="descripcion" name="descripcion" placeholer="Ingresa un titulo" autocomplete="off")
+            
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="descripcion_fisica" class="col col-lg") Descripcion fisica:
+                    div(class="col")
+                        input(type="text" class="form-control" id="descripcion_fisica" name="descripcion_fisica" placeholer="Ingresa un titulo" autocomplete="off")
+
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="imagen") Imagen:
+                    div(class="col")
+                        input(type="file" class="form-control py-2" id="imagen" name="imagen")
+            hr
+            div(class="form-group")
+                div(class="row")
+                    div(class="col-sm-3 mx-auto")
+                        button(type="submit" class="btn btn-primary") Aceptar 
+                        a(type="cancel" href="/libros" class="btn btn-outline-danger") Cancelar
