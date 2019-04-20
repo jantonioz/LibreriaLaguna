@@ -2,10 +2,27 @@
 
 var sql = require('./db.js')
 
+const INSERT = 'INSERT INTO autor_libro(autor_id, libro_id) VALUES(?, ?)';
+
 // Constructor de A U T O R - L I B R O
-var Autor_Libro = function(autor_libro){
-    this.autor_ID = autor_libro.autor_ID;
-    this.libro_ID = autor_libro.libro_ID;
-    this.created_at = autor_libro.created_at;
-    this.updated_at = autor_libro.updated_at;
+class AutorLibro {
+    constructor(autor_id, libro_id) {
+        this.autor_id = autor_id;
+        this.libro_id = libro_id;
+    }
+
+
+    save(result) {
+        sql.query(INSERT, [this.autor_id, this.libro_id], (err, res) => {
+            if(err){
+                console.log("ERROR:", err);
+                result(err, null);
+            }else{
+                result(null, res);
+            }
+        })
+    }
+
 }
+
+module.exports = AutorLibro;

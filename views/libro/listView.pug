@@ -5,5 +5,5 @@ block content
     each libro in libros
         h1
             a(href="/libros/d/" + libro.lib_id ) #{libro.titulo}
-        small= 'Autor: ' + libro.autor + 	" \u2022 " + libro.gen_nombre
+        small= 'Autor: ' + libro.autor + 	" \u2022 " + libro.genero
         p=  'Descripcion: ' + libro.descripcion

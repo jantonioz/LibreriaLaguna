@@ -3,14 +3,14 @@
 var sql = require('./db.js')
 
 const selectors = 'lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descripcion_fisica, ' +
-'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,'+
-' img.img_filename AS filename,  ' + 
-'aut.aut_id AS autor_id, gen.gen_id AS gen_id ';
+    'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
+    ' img.img_filename AS filename,  ' +
+    'aut.aut_id AS autor_id, gen.gen_id AS gen_id ';
 
-const genero = ' FROM libros AS lib'+
+const genero = ' FROM libros AS lib' +
     ' INNER JOIN generos AS gen ON (lib.genero_id = gen.gen_id) ' +
-    ' INNER JOIN autor_libro AS al ON (al.libro_id = lib.lib_id) ' +
-    ' INNER JOIN autores AS aut ON (aut.aut_id = al.autor_id) ';
+    ' LEFT JOIN autor_libro AS al ON (al.libro_id = lib.lib_id) ' +
+    ' LEFT JOIN autores AS aut ON (aut.aut_id = al.autor_id) ';
 
 const imageJOIN = ' LEFT JOIN imagen_libro AS img ON (lib.lib_id = img.libro_id) '
 
@@ -28,6 +28,23 @@ class Libro {
         this.descripcion_fisica = descripcion_fisica
         this.editorial_id = ed_id
         this.genero_id = gen_id
+    }
+
+ 
+    save(result) {
+        sql.query(insert,
+            [this.titulo, this.tituloOrig, this.isbn, this.paginas,
+            this.descripcion_fisica, this.descripcion, this.editorial_id,
+            this.genero_id],
+            (err, res) => {
+                if (err) {
+                    console.log("error :", err)
+                    result(err, null)
+                } else {
+                    console.log(res.insertId)
+                    result(null, res.insertId)
+                }
+            })
     }
 }
 
@@ -62,15 +79,15 @@ Libro.getLibroById = function createUser(libroId, result) {
 }
 
 Libro.getAllLibros = function getAllLibros(result) {
-    sql.query("SELECT " + selectors + genero + imageJOIN , function (err, res) {
-            if (err) {
-                console.log("error: ", err)
-                result(null, err)
-            } else {
-                console.log(res)
-                result(null, res)
-            }
-        })
+    sql.query("SELECT " + selectors + genero + imageJOIN, function (err, res) {
+        if (err) {
+            console.log("error: ", err)
+            result(null, err)
+        } else {
+            console.log(res)
+            result(null, res)
+        }
+    })
 }
 
 Libro.find = function findLibro(titulo, result) {

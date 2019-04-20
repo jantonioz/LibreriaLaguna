@@ -58,7 +58,9 @@ block content
                             option(selected) Selecciona una editorial
                             if editoriales != null
                                 each editorial in editoriales 
-                                    option(value=editorial.id) #{editorial.nombre}
+                                    option(value=editorial.ed_id) #{editorial.ed_nombre}
+                    div(class="col-sm-2")
+                        a(class="btn btn-success text-light", href="/editoriales/crear") Agregar Nuevo
 
             div(class="form-group")
                 div(class="row")
@@ -69,7 +71,22 @@ block content
                             option(selected) Selecciona un genero
                             if generos != null
                                 each genero in generos 
-                                    option(value=genero.id) #{genero.nombre}
+                                    option(value=genero.gen_id) #{genero.gen_nombre}
+                    div(class="col-sm-2")
+                        a(class="btn btn-success text-light", href="/generos/crear") Agregar Nuevo
+
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="genero_id", class="col col-lg") Autor:
+                    div(class="col")
+                        select(class="custom-select" name="autor_id")
+                            option(selected) Selecciona un autor
+                            if autores != null
+                                each autor in autores 
+                                    option(value=autor.aut_id) #{autor.aut_nombre}
+                    div(class="col-sm-2")
+                        a(class="btn btn-success text-light", href="/autores/crear") Agregar Nuevo
                             
 
             div(class="form-group")

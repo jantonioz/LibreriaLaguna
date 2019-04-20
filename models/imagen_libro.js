@@ -8,6 +8,18 @@ class ImagenLibro {
         this.data = data;
         this.img_filename = img_filename;
     }
+
+    save(result){
+        sql.query("INSERT INTO imagen_libro(data, img_filename, libro_id) VALUES(?, ?, ?)",
+        [this.data, this.img_filename, this.libro_id],
+        (err, res) => {
+            if (err) {
+                console.log("error: ", err)
+                result(err, null)
+            }
+            result(null, res)
+        })
+    }
 }
 
 ImagenLibro.create = (imagenLibro, result) => {

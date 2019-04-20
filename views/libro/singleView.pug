@@ -5,13 +5,19 @@ block content
   div(class="container")
     div(class="row")
       div(class="col-3")
-        img(class="card-img-top" src="http://placehold.it/300x400" alt="")
+        if(imgsrc!=null)
+          img(class="card-img-top" src=imgsrc alt="")
+        else
+          img(class="card-img-top" src="http://placehold.it/500x325" alt="")
         small Autor 
           a(href="/autores/d/" + libro.autor_id) #{libro.autor}
-          
           | !{" \u2022 "} !{genLink}
+        //- form(action="/libros/addImage/" + libro.lib_id, method="POST")
+        //-   label(for="file-upload" class="custom-file-upload text-light bg-danger") Agregar Imagen
+        //-     input(type="file" id="file-upload")
           
       div(class="col")
-        h1= libro.titulo
+        h1= libro.titulo 
+          a(href="libros/edit/" + libro.lib_id, class="btn btn-secondary ml-5") Editar
         p= libro.descripcion
         
