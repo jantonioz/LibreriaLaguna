@@ -4,6 +4,6 @@ extends ../layout
 block content
     each libro in libros
         h1
-            a(href="/libros/d/" + libro.ID ) #{libro.titulo}
-        small= 'Autor: ' + libro.isbn + 	" \u2022 " + libro.gen_nombre
+            a(href="/libros/d/" + libro.lib_id ) #{libro.titulo}
+        small= 'Autor: ' + libro.autor + 	" \u2022 " + libro.gen_nombre
         p=  'Descripcion: ' + libro.descripcion

@@ -1,13 +1,16 @@
 extends ../layout
 
 block content
+  - var genLink = "<a href='/generos/d/" + libro.gen_id +"'> " + libro.genero + "</a>"
   div(class="container")
     div(class="row")
       div(class="col-3")
         img(class="card-img-top" src="http://placehold.it/300x400" alt="")
         small Autor 
-          a(href="/autores/d/" + libro.autor_id) #{libro.nombre} 
-          #{" \u2022 " + libro.gen_nombre}
+          a(href="/autores/d/" + libro.autor_id) #{libro.autor}
+          
+          | !{" \u2022 "} !{genLink}
+          
       div(class="col")
         h1= libro.titulo
         p= libro.descripcion
