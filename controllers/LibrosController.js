@@ -1,6 +1,7 @@
 'use strict';
 
 var Libro = require('../models/libro')
+var imagenlibro = require('../models/imagen_libro')
 
 exports.list_all_libros = function (req, res) {
     Libro.getAllLibros(function (err, libro) {
@@ -15,7 +16,18 @@ exports.list_all_libros = function (req, res) {
 }
 
 exports.formCreate_libro = function (req, res) {
-    res.render('libro/create');
+    var editoriales =
+    {
+        editorial1: { id: 1, nombre: "NoBooks" },
+        editorial2: { id: 2, nombre: "Gnome Press" }
+    }
+
+    var generos = {
+        genero1: {id: 1, nombre: "Novela"},
+        genero2: {id: 2, nombre: "Ciencia Ficcion"}
+    }
+
+    res.render('libro/create', { editoriales: editoriales, generos: generos });
 }
 
 exports.create_a_libro = (req, res) => {
@@ -24,20 +36,38 @@ exports.create_a_libro = (req, res) => {
         res.status(400).send('No files were uploaded.');
     }
 
-    
-    
-    // var new_libro = new Libro(req.body)
+    //res.json(req.body);
 
-    // // SOPORTA ERROR NULO
-    // if (!new_libro || !new_libro.Titulo){
-    //     res.status(400).send({error:true, message: "Inserte un titulo"})
-    // }else{
-    //     Libro.createLibro(libro, function(err, libro){
-    //         if (err)
-    //             res.send(err)
-    //         res.json(libro)
-    //     })
-    // }
+    var titulo = req.body.titulo;
+    var tituloO = req.body.tituloorig;
+    var isbn = req.body.isbn;
+    var paginas = req.body.paginas;
+    var descripcion = req.body.descripcion;
+    var descripcionFis = req.body.descripcion_fisica;
+    var editorial_id = req.body.editorial_id;
+    var genero_id = req.body.genero_id;
+ 
+
+
+    var imgName = req.files.imagen.name;
+    var imgdata = req.files.imagen.data;
+    
+    // let mLibro = new Libro(titulo, tituloO, isbn, paginas, descripcion, descripcionFis, genero_id ,editorial_id);
+    // Libro.createLibro(mLibro, (err, insertId)=>{
+    //     if(err)
+    //         res.send(err)
+    //     res.json(libro)
+        
+    // })
+
+    
+    let imgLibro = new imagenlibro(3, imgdata, imgName)
+    imagenlibro.create(imgLibro, (err, imgres)=>{
+        if (err)
+            res.send(err)
+        res.json(imgres)
+    })
+    
 }
 
 exports.find_a_libro = function (req, res) {

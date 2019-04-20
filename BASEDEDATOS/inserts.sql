@@ -6,8 +6,7 @@ INSERT INTO Autores(nombre, fecnac) VALUES ('Herman Melville', '1819-08-01'),
 										 
 INSERT INTO generos(gen_nombre) VALUES ('Novela'), ('Ciencia Ficcion');
 
-INSERT INTO 
-Libros(titulo, orig_titulo, isbn, paginas, descripcion_fisica, descripcion, editorial_id, genero_id)
+INSERT INTO Libros(titulo, orig_titulo, isbn, paginas, descripcion_fisica, descripcion, editorial_id, genero_id)
 VALUES ('Moby-Dick', 'Moby-Dick', 9787532226320, 581, 'Bolsillo', 
 'Narra la travesía del barco ballenero Pequod, 
 comandado por el capitán Ahab, junto a Ismael y el 
