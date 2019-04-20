@@ -2,6 +2,8 @@ extends ../layout
 
 
 block content
+    
+    h1 Libros de: !{autor}
     each libro in libros
         -var genLink = "<a href='/generos/d/" + libro.gen_id +"'> " + libro.genero + "</a>"
         h2

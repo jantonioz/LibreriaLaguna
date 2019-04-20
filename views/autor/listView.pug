@@ -1,0 +1,9 @@
+extends ../layout
+
+
+block content
+    each aut in autores
+        h1
+            a(href="/autores/d/" + aut.aut_id ) #{aut.aut_nombre}
+        //- small= 'Autor: ' + libro.autor + 	" \u2022 " + libro.genero
+        p=  'Nacimiento: ' + aut.aut_fecnac

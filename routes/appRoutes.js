@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var libro = require("../controllers/LibrosController")
-var usuario = require("../controllers/UsuariosController")
+var libro = require("../controllers/LibrosController");
+var usuario = require("../controllers/UsuariosController");
+var autor = require("../controllers/AutoresController");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -25,6 +26,10 @@ router.post('/libros/crear/', libro.create_a_libro);
 router.get('/usuarios/', usuario.list_all_users);
 router.post('usuarios/', usuario.create_usr);
 router.get('/usuario/register');
+
+
+router.get('/autores/', autor.list_all_authors);
+router.get('/autores/d/:aut_id', autor.listBooksOf)
 
 
 module.exports = router;
