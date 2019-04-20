@@ -3,6 +3,7 @@ var router = express.Router();
 var libro = require("../controllers/LibrosController");
 var usuario = require("../controllers/UsuariosController");
 var autor = require("../controllers/AutoresController");
+var genero = require("../controllers/GenerosController");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -29,7 +30,11 @@ router.get('/usuario/register');
 
 
 router.get('/autores/', autor.list_all_authors);
-router.get('/autores/d/:aut_id', autor.listBooksOf)
+router.get('/autores/d/:aut_id', autor.listBooksOf);
+
+
+router.get('/generos/', genero.list_all_generos);
+router.get('/generos/d/:gen_id', genero.getLibrosBy);
 
 
 module.exports = router;

@@ -1,0 +1,14 @@
+extends ../layout
+
+
+block content
+    
+    h1 Libros del genero: !{genero}
+    each libro in libros
+        -var genLink = "<a href='/generos/d/" + libro.gen_id +"'> " + libro.genero + "</a>"
+        h2
+            a(href="/libros/d/" + libro.lib_id ) #{libro.titulo}
+        small= 'Autor: '
+            a(href="/autores/d/" + libro.autor_id) #{libro.autor}
+            | !{" \u2022 "} !{genLink}
+        p=  'Descripcion: ' + libro.descripcion
