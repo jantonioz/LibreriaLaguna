@@ -1,0 +1,9 @@
+extends ../layout
+
+
+block content
+    each ed in editoriales
+        h1
+            a(href="/editoriales/d/" + ed.ed_id ) #{ed.ed_nombre}
+        //- small= 'Autor: ' + libro.autor + 	" \u2022 " + libro.genero
+        //p=  'Nacimiento: ' + aut.aut_fecnac

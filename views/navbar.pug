@@ -11,10 +11,15 @@ nav(class="navbar sticky-top navbar-expand-lg navbar-dark bg-danger pb-3 pt-3")
             li(class="nav-item " + [activeLibros] )
                 a(class="nav-link" href="/libros") Libros
             li(class="nav-item dropdown")
-                a(class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Categorias
+                a(class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Generos
                 div(class="dropdown-menu" aria-labelledby="navbarDropdown")
-                    a(class="dropdown-item" href="#") Catagoria A
-                    a(class="dropdown-item" href="#") Catagoria B
+                    //- if (generos)
+                    //-     each genero in generos
+                    //-         a(class="dropdown-item", href="/generos/d/" + genero.gen_id) !{genero.gen_nombre}
+                    a(class="dropdown-item" href="/generos/d/1") Novela
+                    a(class="dropdown-item" href="/generos/d/2") Ciencia Ficcion
+                    a(class="dropdown-item" href="/generos/d/3") Ficcion de aventuras
+                    a(class="dropdown-item" href="/generos/d/4") Novela Sci-fi
                     div(class="dropdown-divider")
                     a(class="dropdown-item" href="#") Mas comprados
             li(class="nav-item")

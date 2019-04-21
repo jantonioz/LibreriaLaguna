@@ -2,7 +2,7 @@
 
 var Libro = require('../models/libro');
 var Imagen = require('../models/imagen_libro');
-var Editorial = require('../models/editoriales');
+var Editorial = require('../models/editorial');
 var Autor = require('../models/autor');
 var Genero = require('../models/genero');
 var AutorLibro = require('../models/autor_libro');

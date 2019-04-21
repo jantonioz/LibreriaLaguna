@@ -3,7 +3,7 @@ extends ../layout
 
 block content
     
-    h1 Libros del genero: !{genero}
+    h1 Libros del editorial: !{editorial}
     if (libros != null)
         each libro in libros
             -var genLink = "<a href='/generos/d/" + libro.gen_id +"'> " + libro.genero + "</a>"

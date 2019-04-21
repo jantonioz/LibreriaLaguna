@@ -59,6 +59,17 @@ Genero.findByNombre = (nombre, result) => {
     });
 }
 
+Genero.findById = (id, result) => {
+    sql.query('SELECT gen_nombre AS genero FROM generos WHERE gen_id = ?', id, (err, res) => {
+        if (err){
+            console.log("ERROR: ", err);
+            result(err, null);
+        } else {
+            result(null, res);
+        }
+    })
+}
+
 Genero.booksBy = (gen_id, result) => {
     sql.query(libroBy, gen_id, (err, res) => {
         if (err) {

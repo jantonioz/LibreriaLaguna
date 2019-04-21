@@ -4,6 +4,7 @@ var libro = require("../controllers/LibrosController");
 var usuario = require("../controllers/UsuariosController");
 var autor = require("../controllers/AutoresController");
 var genero = require("../controllers/GenerosController");
+var editorial = require("../controllers/EditorialesController");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -35,6 +36,12 @@ router.get('/autores/d/:aut_id', autor.listBooksOf);
 
 router.get('/generos/', genero.list_all_generos);
 router.get('/generos/d/:gen_id', genero.getLibrosBy);
+router.get('/generos/crear/', genero.formCrear);
+router.post('/generos/crear', genero.create);
+
+
+router.get('/editoriales/', editorial.list_all_editoriales);
+router.get('/editoriales/d/:ed_id', editorial.getLibrosBy);
 
 
 module.exports = router;
