@@ -2,7 +2,6 @@
 
 var Editorial = require('../models/editorial');
 
-
 exports.list_all_editoriales = (req, res) => {
     Editorial.find(null, (err, rows) => {
         if (err) {
@@ -22,6 +21,18 @@ exports.getLibrosBy = (req, res) => {
                 console.log(nombreEd);
 
                 nombreEd = nombreEd[0].ed_nombre;
+
+                for (let i = 0; i < rows.length; i++) {
+                    if (typeof rows[i].imgdata !== 'undefined' && rows[i].imgdata != null) {
+                        console.log(rows[i].imgdata)
+                        let tempbin = rows[i].imgdata;
+                        let data64 = Buffer.from(tempbin, 'binary').toString('base64');
+                        rows[i].imgdata = data64;
+                        console.log(rows[i].imgdata);
+                    }
+                }
+
+
                 if (rows.length > 0)
                     res.render('editorial/listLibros', { title: rows[0].editorial, libros: rows, editorial: nombreEd })
                 else

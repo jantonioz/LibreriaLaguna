@@ -13,9 +13,18 @@ exports.list_all_libros = function (req, res) {
         if (err) {
             res.send(err)
         }
-        console.log('res', libro)
-        console.log(libro.length)
-        res.render('libro/listView', {title: 'Libros', libros: libro, activeLibros: 'active' })
+  
+        for (let i = 0; i < libro.length; i++) {
+            if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
+                console.log(libro[i].imgdata)
+                let tempbin = libro[i].imgdata;
+                let data64 = Buffer.from(tempbin, 'binary').toString('base64');
+                libro[i].imgdata = data64;
+                console.log(libro[i].imgdata);
+            }
+        }
+
+        res.render('libro/listView', { title: 'Libros', libros: libro, activeLibros: 'active' })
     })
 
 }
@@ -24,7 +33,7 @@ exports.formCreate_libro = async function (req, res) {
     var eds = await getEds();
     var auts = await getAuts();
     var gens = await getGens();
-    res.render('libro/create', {title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens });
+    res.render('libro/create', { title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens });
 }
 
 exports.create_a_libro = (req, res) => {
@@ -73,14 +82,6 @@ exports.create_a_libro = (req, res) => {
             });
         }
     })
-
-    // let imgLibro = new imagenlibro(3, imgdata, imgName)
-    // imagenlibro.create(imgLibro, (err, imgres) => {
-    //     if (err)
-    //         res.send(err)
-    //     res.json(imgres)
-    // })
-
 }
 
 exports.find_a_libro = function (req, res) {
@@ -89,8 +90,7 @@ exports.find_a_libro = function (req, res) {
         if (err)
             console.log(err)
 
-        console.log(libros)
-        res.render('libro/listView', {title: 'Libros', libros: libros, activeLibros: 'active' })
+        res.render('libro/listView', { title: 'Libros', libros: libros, activeLibros: 'active' })
     })
 }
 
@@ -107,9 +107,9 @@ exports.get_a_libro = function (req, res) {
             console.log(data64)
             let img = 'data:image/png;base64,' + data64;
 
-            res.render('libro/singleView', {title: libro[0].titulo, libro: libro[0], imgsrc: img })
+            res.render('libro/singleView', { title: libro[0].titulo, libro: libro[0], imgsrc: img })
         }
-        res.render('libro/singleView', {title: libro[0].titulo, libro: libro[0] })
+        res.render('libro/singleView', { title: libro[0].titulo, libro: libro[0] })
     })
 }
 

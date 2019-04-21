@@ -3,10 +3,15 @@ extends ../layout
 
 block content
     each libro in libros
-        -var genLink = "<a href='/generos/d/" + libro.gen_id +"'> " + libro.genero + "</a>"
-        h2
-            a(href="/libros/d/" + libro.lib_id ) #{libro.titulo}
-        small= 'Autor: '
-            a(href="/autores/d/" + libro.autor_id) #{libro.autor}
-            | !{" \u2022 "} !{genLink}
-        p=  'Descripcion: ' + libro.descripcion
+        div(class="row m-3")
+            div(class="col col-sm-2")
+                if(libro.imgdata!=null)
+                    img(class="card-img-top" src='data:image/png;base64,'+libro.imgdata, style="max-width=50px; max-height=90px;")
+            div(class="col")    
+                -var genLink = "<a href='/generos/d/" + libro.gen_id +"'> " + libro.genero + "</a>"
+                h2
+                    a(href="/libros/d/" + libro.lib_id ) #{libro.titulo}
+                small= 'Autor: '
+                    a(href="/autores/d/" + libro.autor_id) #{libro.autor}
+                    | !{" \u2022 "} !{genLink}
+                p=  'Descripcion: ' + libro.descripcion

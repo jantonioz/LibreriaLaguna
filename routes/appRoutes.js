@@ -32,6 +32,8 @@ router.get('/usuario/register');
 
 router.get('/autores/', autor.list_all_authors);
 router.get('/autores/d/:aut_id', autor.listBooksOf);
+router.get('/autores/crear', autor.formCrear);
+router.post('/autores/crear', autor.create);
 
 
 router.get('/generos/', genero.list_all_generos);
@@ -42,6 +44,7 @@ router.post('/generos/crear', genero.create);
 
 router.get('/editoriales/', editorial.list_all_editoriales);
 router.get('/editoriales/d/:ed_id', editorial.getLibrosBy);
+
 
 
 module.exports = router;

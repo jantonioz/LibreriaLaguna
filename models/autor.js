@@ -36,8 +36,8 @@ Autor.create = (newAuthor, result) => {
             result(err, null)
         }
         else {
-            console.log(res.insertID)
-            result(null, res.insertID)
+            console.log(res.insertId)
+            result(null, res.insertId)
         }
     })
 }

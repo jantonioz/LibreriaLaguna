@@ -22,6 +22,17 @@ exports.getLibrosBy = (req, res) => {
         Genero.findById(req.params.gen_id, (err, nombreGen) => {
             console.log(nombreGen[0].genero);
             nombreGen = nombreGen[0].genero;
+
+            for (let i = 0; i < rows.length; i++) {
+                if (typeof rows[i].imgdata !== 'undefined' && rows[i].imgdata != null) {
+                    console.log(rows[i].imgdata)
+                    let tempbin = rows[i].imgdata;
+                    let data64 = Buffer.from(tempbin, 'binary').toString('base64');
+                    rows[i].imgdata = data64;
+                    console.log(rows[i].imgdata);
+                }
+            }
+
             if (rows.length > 0)
                 res.render('genero/listLibros', { title: rows[0].genero, libros: rows, genero: nombreGen })
             else

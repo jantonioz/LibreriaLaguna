@@ -71,7 +71,7 @@ Editorial.booksBy = (ed_id, result) => {
         } else {
             result(null, res);
         }
-    })
+    });
 }
 
 module.exports = Editorial;
