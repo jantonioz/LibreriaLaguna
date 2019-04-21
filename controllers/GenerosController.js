@@ -9,7 +9,7 @@ exports.list_all_generos = (req, res) => {
             res.send(err)
         }
         console.log('res', rows)
-        res.render('genero/listView', { generos: rows })
+        res.render('genero/listView', {title: 'Generos', generos: rows })
     })
 }
 

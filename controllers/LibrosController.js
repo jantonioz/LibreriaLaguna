@@ -15,7 +15,7 @@ exports.list_all_libros = function (req, res) {
         }
         console.log('res', libro)
         console.log(libro.length)
-        res.render('libro/listView', { libros: libro, activeLibros: 'active' })
+        res.render('libro/listView', {title: 'Libros', libros: libro, activeLibros: 'active' })
     })
 
 }
@@ -24,7 +24,7 @@ exports.formCreate_libro = async function (req, res) {
     var eds = await getEds();
     var auts = await getAuts();
     var gens = await getGens();
-    res.render('libro/create', { editoriales: eds, autores: auts, generos: gens });
+    res.render('libro/create', {title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens });
 }
 
 exports.create_a_libro = (req, res) => {
@@ -90,7 +90,7 @@ exports.find_a_libro = function (req, res) {
             console.log(err)
 
         console.log(libros)
-        res.render('libro/listView', { libros: libros, activeLibros: 'active' })
+        res.render('libro/listView', {title: 'Libros', libros: libros, activeLibros: 'active' })
     })
 }
 
@@ -107,9 +107,9 @@ exports.get_a_libro = function (req, res) {
             console.log(data64)
             let img = 'data:image/png;base64,' + data64;
 
-            res.render('libro/singleView', { libro: libro[0], imgsrc: img })
+            res.render('libro/singleView', {title: libro[0].titulo, libro: libro[0], imgsrc: img })
         }
-        res.render('libro/singleView', { libro: libro[0] })
+        res.render('libro/singleView', {title: libro[0].titulo, libro: libro[0] })
     })
 }
 

@@ -9,7 +9,7 @@ exports.list_all_authors = function (req, res) {
             res.send(err)
         }
         console.log('res', rows)
-        res.render('autor/listView', { autores: rows })
+        res.render('autor/listView', {title: 'Autores', autores: rows })
     })
 }
 
@@ -23,7 +23,7 @@ exports.listBooksOf = (req, res) => {
         }
         console.log('res', rows)
         //res.send("OK")
-        res.render('autor/listLibros', {libros: rows, autor: rows[0].autor})
+        res.render('autor/listLibros', {title: rows[0].autor, libros: rows, autor: rows[0].autor})
         //res.render('autor/listView', { libros: rows })
     })
 
