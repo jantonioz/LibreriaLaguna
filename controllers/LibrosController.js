@@ -8,12 +8,14 @@ var Genero = require('../models/genero');
 var AutorLibro = require('../models/autor_libro');
 
 exports.list_all_libros = function (req, res) {
+
+
     Libro.getAllLibros(function (err, libro) {
         console.log("libros controller")
         if (err) {
             res.send(err)
         }
-  
+
         for (let i = 0; i < libro.length; i++) {
             if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
                 console.log(libro[i].imgdata)
@@ -26,7 +28,17 @@ exports.list_all_libros = function (req, res) {
 
         res.render('libro/listView', { title: 'Libros', libros: libro, activeLibros: 'active' })
     })
+}
 
+exports.formEditar = async (req, res) => {
+    var eds = await getEds();
+    var auts = await getAuts();
+    var gens = await getGens();
+    var libro = await getLibro(req.params.libroId);    
+    console.log(libro);
+    if(libro.imgdata !== 'undefined' && libro.imgdata !== null)
+        libro.imgdata = convertToBase64(libro.imgdata);
+    res.render('libro/editView', { title: 'Editar libro', editoriales: eds, autores: auts, generos: gens, libro: libro })
 }
 
 exports.formCreate_libro = async function (req, res) {
@@ -41,8 +53,6 @@ exports.create_a_libro = (req, res) => {
     if (req.files == null || Object.keys(req.files).length == 0) {
         res.status(400).send('No files were uploaded.');
     }
-
-    //res.json(req.body);
 
     var titulo = req.body.titulo;
     var tituloO = req.body.tituloorig;
@@ -159,4 +169,21 @@ function getAuts() {
             }
         })
     });
+}
+
+function getLibro(lib_id) {
+    return new Promise((resolve, reject) => {
+        Libro.getLibroById(lib_id, (err, res) => {
+            if (!err) {
+                console.log("LIBRO ENCONTRADO")
+                resolve(res[0]);
+            }
+            else reject(err);
+        })
+    })
+}
+
+function convertToBase64(binaryData) {
+    let data64 = Buffer.from(binaryData, 'binary').toString('base64');
+    return data64;
 }

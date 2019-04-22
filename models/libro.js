@@ -2,34 +2,60 @@
 
 var sql = require('./db.js')
 
-const selectors = 'lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descripcion_fisica, ' +
+
+
+const selectors = 'lib.lib_id, lib.titulo, lib.orig_titulo, lib.isbn,lib.paginas, lib.descripcion_fisica, ' +
     'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
     ' img.img_filename AS filename,  ' +
-    'aut.aut_id AS autor_id, gen.gen_id AS gen_id ';
+    'aut.aut_id AS autor_id, gen.gen_id AS gen_id, lib.editorial_id, ed.ed_nombre AS editorial ';
 
 const genero = ' FROM libros AS lib' +
     ' INNER JOIN generos AS gen ON (lib.genero_id = gen.gen_id) ' +
     ' LEFT JOIN autor_libro AS al ON (al.libro_id = lib.lib_id) ' +
-    ' LEFT JOIN autores AS aut ON (aut.aut_id = al.autor_id) ';
+    ' LEFT JOIN autores AS aut ON (aut.aut_id = al.autor_id) ' +
+    ' LEFT JOIN editoriales AS ed ON (ed.ed_id = lib.editorial_id) ';
 
 const imageJOIN = ' LEFT JOIN imagen_libro AS img ON (lib.lib_id = img.libro_id) ';
 
 const fullINFO = ' lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descripcion_fisica, ' +
-'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
-' img.img_filename AS filename,  ' +
-'aut.aut_id AS autor_id, gen.gen_id AS gen_id ' +
-' FROM libros AS lib' +
-' INNER JOIN generos AS gen ON (lib.genero_id = gen.gen_id) ' +
-' INNER JOIN autor_libro AS al ON (al.libro_id = lib.lib_id) ' +
-' INNER JOIN autores AS aut ON (aut.aut_id = al.autor_id) ' +
-' INNER JOIN imagen_libro AS img ON (lib.lib_id = img.libro_id) ';
+    'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
+    ' img.img_filename AS filename,  ' +
+    'aut.aut_id AS autor_id, gen.gen_id AS gen_id ' +
+    ' FROM libros AS lib' +
+    ' INNER JOIN generos AS gen ON (lib.genero_id = gen.gen_id) ' +
+    ' INNER JOIN autor_libro AS al ON (al.libro_id = lib.lib_id) ' +
+    ' INNER JOIN autores AS aut ON (aut.aut_id = al.autor_id) ' +
+    ' INNER JOIN imagen_libro AS img ON (lib.lib_id = img.libro_id) ';
 exports.fullInfo = fullINFO;
 
-const insert = "INSERT INTO libros(titulo, orig_titulo, isbn, paginas, descripcion_fisica, descripcion, editorial_id, genero_id)" +
+const insert = "INSERT INTO libros" +
+    "(titulo, orig_titulo, isbn, paginas, descripcion_fisica," +
+    " descripcion, editorial_id, genero_id)" +
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
+const fields = {
+    titulo: 'titulo', tituloOrig: 'orig_titulo', isbn: 'isbn', paginas: 'paginas',
+    descripcion: 'descripcion', descripcion_fisica: 'descripcion_fisica', editorial_id: 'editorial_id',
+    genero_id: 'genero_id'
+};
+
+const assignTo = ' = ? ';
+
+
+const update = 'UPDATE libros SET' + 
+            fields.titulo               + assignTo + ', ' + 
+            fields.tituloOrig           + assignTo + ', ' +
+            fields.isbn                 + assignTo + ', ' +
+            fields.paginas              + assignTo + ', ' +
+            fields.descripcion          + assignTo + ', ' +
+            fields.descripcion_fisica   + assignTo + ', ' +
+            fields.genero_id            + assignTo + ', ' +
+            fields.editorial_id         + assignTo +
+            'WHERE lib_id'              + assignTo;
+
 class Libro {
-    constructor(titulo, tituloO, isbn, paginas, descripcion, descripcion_fisica, gen_id, ed_id) {
+    constructor(titulo, tituloO, isbn, paginas, descripcion, descripcion_fisica, gen_id, ed_id, lib_id = 0) {
+        this.id = lib_id;
         this.titulo = titulo
         this.tituloOrig = tituloO
         this.isbn = isbn
@@ -40,7 +66,6 @@ class Libro {
         this.genero_id = gen_id
     }
 
- 
     save(result) {
         sql.query(insert,
             [this.titulo, this.tituloOrig, this.isbn, this.paginas,
@@ -55,6 +80,23 @@ class Libro {
                     result(null, res.insertId)
                 }
             })
+    }
+
+
+    update(result) {
+        sql.query(update,
+            [this.titulo, this.tituloOrig, this.isbn, this.paginas,
+            this.descripcion, this.descripcion_fisica, this.genero_id,
+            this.editorial_id, this.id],
+            (err, res) => {
+                if (err) {
+                    console.log("error :", err)
+                    result(err, null)
+                } else {
+                    console.log(res.insertId)
+                    result(null, res.insertId)
+                }
+            });
     }
 }
 

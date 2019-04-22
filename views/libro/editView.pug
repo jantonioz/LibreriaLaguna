@@ -1,0 +1,152 @@
+extends ../layout
+
+
+block content
+    div(class="container")
+        form(action="/libros/editar", method="POST", enctype="multipart/form-data")
+            input(type="hidden", name="_csrf", value=_csrf)
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="titulo", class="col col-lg") Titulo:
+                    div(class="col")
+                        input(type="text", class="form-control", id="titulo", name="titulo", placeholer="Ingresa un titulo" autocomplete="off", value=libro.titulo)
+                        
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="tituloorig" class="col col-lg") Titulo Original:
+                    div(class="col")
+                        input(type="text" class="form-control" id="tituloorig" name="tituloorig" placeholer="Titulo en la lengua original" autocomplete="off", value=libro.orig_titulo)
+            
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="isbn" class="col col-lg") ISBN:
+                    div(class="col col-sm-3")
+                        input(type="text" class="form-control" id="isbn" name="isbn" placeholer="Ingresa un titulo" autocomplete="off", value=libro.isbn)
+
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="paginas" class="col col-lg") Número de páginas:
+                    div(class="col col-sm-2")
+                        input(type="text" class="form-control" id="paginas" name="paginas" placeholer="Ingresa un titulo" autocomplete="off", value=libro.paginas)
+
+            
+    
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="descripcion" class="col col-lg") Descripcion:
+                    div(class="col")
+                        textarea(class="form-control" rows=4 id="descripcion" name="descripcion" placeholer="Ingresa un titulo" autocomplete="off") !{libro.descripcion}
+            
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="descripcion_fisica" class="col col-lg") Descripcion fisica:
+                    div(class="col")
+                        input(type="text" class="form-control" id="descripcion_fisica" name="descripcion_fisica" placeholer="Ingresa un titulo" autocomplete="off", value=libro.descripcion_fisica)
+            
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="editorial_id", class="col col-lg") Editorial:
+                    div(class="col")
+                        select(class="custom-select" name="editorial_id", id="editorialesSelector")
+                            //option(value=libro.editorial_id) !{libro.editorial}
+                            if editoriales != null
+                                each editorial in editoriales 
+                                    option(value=editorial.ed_id) #{editorial.ed_nombre}
+                    div(class="col-sm-2")
+                        a(class="btn btn-success text-light", href="/editoriales/crear") Agregar Nuevo
+
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="genero_id", class="col col-lg") Genero:
+                    div(class="col")
+                        select(class="custom-select" name="genero_id", id="generosSelector")
+                            //option(value=libro.gen_id) !{libro.genero}
+                            if generos != null
+                                each genero in generos 
+                                    option(value=genero.gen_id) #{genero.gen_nombre}
+                    div(class="col-sm-2")
+                        a(class="btn btn-success text-light", href="/generos/crear") Agregar Nuevo
+
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="genero_id", class="col col-lg") Autor:
+                    div(class="col")
+                        select(class="custom-select" name="autor_id", id="autorSelector")
+                            //option(value=libro.autor_id) !{libro.autor}
+                            if autores != null
+                                each autor in autores 
+                                    option(value=autor.aut_id) #{autor.aut_nombre}
+                    div(class="col-sm-2")
+                        a(class="btn btn-success text-light", href="/autores/crear") Agregar Nuevo
+                            
+
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="imagen") Imagen:
+                    div(class="col col-lg-5")
+                        div(class="custom-file")
+                            input(type="file", class="custom-file-input", id="imagen", name="imagen" onChange="changelabel()")
+                            label(class="custom-file-label", for="imagen", id="lblimagen") [!{libro.filename}]
+                    img(class="img-fluid", src="data:image/png;base64," + libro.imgdata, style="max-width:200px; max-height:200px;")
+            hr
+            div(class="form-group")
+                div(class="row")
+                    div(class="col-sm-3 mx-auto")
+                        button(type="submit" class="btn btn-primary") Aceptar 
+                        a(type="cancel" href="/libros" class="btn btn-outline-danger") Cancelar
+
+
+    // HACER ESTO CON AJAX
+    script.
+        function changelabel(e){
+            
+            //get the file name
+            var fileName = document.getElementById("imagen").value;
+            console.log(fileName);
+            //replace the "Choose a file" label
+            //$(this).next('.custom-file-label').html(fileName);
+            document.getElementById("lblimagen").innerHTML  = fileName.split('\\')[2]
+            console.log("adding img")
+            document.getElementById("imgView").src = fileName
+        }
+        function setAutor(){
+            var sel = document.getElementById('autorSelector');
+            for(var i = 0, j = sel.options.length; i < j; i++){
+                if (sel.options[i].innerHTML === '!{libro.autor}'){
+                    sel.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        function setGenero(){
+            var sel = document.getElementById('generosSelector');
+            for(var i = 0, j = sel.options.length; i < j; i++){
+                if (sel.options[i].innerHTML === '!{libro.genero}'){
+                    sel.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        function setEditorial(){
+            var sel = document.getElementById('editorialesSelector');
+            for(var i = 0, j = sel.options.length; i < j; i++){
+                if (sel.options[i].innerHTML === '!{libro.editorial}'){
+                    sel.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+        setAutor();
+        setGenero();
