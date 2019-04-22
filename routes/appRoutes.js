@@ -6,11 +6,33 @@ var autor = require("../controllers/AutoresController");
 var genero = require("../controllers/GenerosController");
 var editorial = require("../controllers/EditorialesController");
 
+var modelLibro = require("../models/libro");
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
 
-    console.log('index')
-    res.render('index', { titulo: "Libreria laguna", content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA", activeInicio:'active' })
+    modelLibro.getAllLibros(function (err, libro) {
+        console.log("libros controller")
+        if (err) {
+            res.send(err)
+        }
+
+        for (let i = 0; i < libro.length; i++) {
+            if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
+                console.log(libro[i].imgdata)
+                let tempbin = libro[i].imgdata;
+                let data64 = Buffer.from(tempbin, 'binary').toString('base64');
+                libro[i].imgdata = data64;
+                console.log(libro[i].imgdata);
+            }
+        }
+
+        res.render('index', { title: 'Libros', libros: libro, activeInicio: 'active', content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA" })
+    })
+
+
+    //console.log('index')
+    //res.render('index', { titulo: "Libreria laguna", content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA", activeInicio: 'active' })
 });
 
 // RUTAS [ruta, controlador]

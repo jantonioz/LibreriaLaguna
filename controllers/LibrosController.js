@@ -8,6 +8,8 @@ var Genero = require('../models/genero');
 var AutorLibro = require('../models/autor_libro');
 
 exports.list_all_libros = function (req, res) {
+
+    
     Libro.getAllLibros(function (err, libro) {
         console.log("libros controller")
         if (err) {

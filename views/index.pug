@@ -11,27 +11,31 @@ block fullpageContent
     // ELEMENTOS DE LIBROS
     div(class="container " )
       div(class="row text-center")
-        mixin element
-          div(class="col-lg-3 col-md-6 mb-4")
+        //- mixin element        
+        each libro in libros
+          div(class="col-lg-3 col-md-6 mb-5")
             div(class="card h-50")
-              img(class="card-img-top" src="http://placehold.it/500x325" alt="")
+              if (libro.imgdata != null)
+                img(class="card-img-top mx-auto img-fluid mt-2", style="display: block;max-width:100px;max-height:180px;width: auto;height: auto;", src='data:image/png;base64,'+libro.imgdata, alt="")
+              else  
+                img(class="card-img-top mx-auto img-fluid mt-2", style="display: block;max-width:100px;max-height:180px;width: auto;height: auto;", src="http://placehold.it/100x150", alt="")
               div(class="card-body")
-                h4(class="card-title") Titulo de libro
-                p(class="card-text") Descripcion de libro
-              div(class="card-footer")
+                h4(class="card-title") !{libro.titulo}
+                p(class="card-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 400px;") !{libro.descripcion}
+              div(class="card-footer" style="height:100px")
                 a(href="#" class="btn btn-success btn-sm") Comprar
                 a(href="#" class="btn btn-outline-dark btn-sm") Carrito
 
 
-        +element
-        +element
-        +element
-        +element
-        +element
-        +element
-        +element
-        +element
-        +element
-        +element
-        +element
-        +element
+        //- +element
+        //- +element
+        //- +element
+        //- +element
+        //- +element
+        //- +element
+        //- +element
+        //- +element
+        //- +element
+        //- +element
+        //- +element
+        //- +element
