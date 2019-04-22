@@ -12,10 +12,6 @@ var modelLibro = require("../models/libro");
 /* GET home page. */
 router.get('/', function (req, res, next) {
 
-<<<<<<< HEAD
-    console.log('index')
-    res.render('index', { titulo: "Libreria laguna", content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA", activeInicio:'active' })//;
-=======
     modelLibro.getAllLibros(function (err, libro) {
         console.log("libros controller")
         if (err) {
@@ -33,7 +29,6 @@ router.get('/', function (req, res, next) {
         }
         res.render('index', { title: 'Libros', libros: libro, activeInicio: 'active', content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA" })
     })
->>>>>>> c3f2fd871b5eed9767bc6b491abdc16992d631fb
 });
 
 // RUTAS [ruta, controlador]
@@ -49,7 +44,7 @@ router.get('/libros/e/:libroId', libro.formEditar);
 
 router.get('/usuarios/', usuario.list_all_users);
 router.post('usuarios/', usuario.create_usr);
-router.get('/usuario/register');
+router.get('/usuarios/register', usuario.getRegister);
 //router.get('usuarios/crear', usuario.create_usr);
 
 router.get('/autores/', autor.list_all_authors);

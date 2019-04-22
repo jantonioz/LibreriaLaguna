@@ -13,7 +13,7 @@ exports.list_all_users = function(req, res){
 }   
 
 exports.getRegister = function(req, res){
-    res.render('usuario/register')
+    res.render('usuario/crear')
 }
 
 exports.create_usr = function(req, res){
