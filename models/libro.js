@@ -42,7 +42,7 @@ const fields = {
 const assignTo = ' = ? ';
 
 
-const update = 'UPDATE libros SET' + 
+const update = 'UPDATE libros SET ' + 
             fields.titulo               + assignTo + ', ' + 
             fields.tituloOrig           + assignTo + ', ' +
             fields.isbn                 + assignTo + ', ' +
@@ -64,6 +64,7 @@ class Libro {
         this.descripcion_fisica = descripcion_fisica
         this.editorial_id = ed_id
         this.genero_id = gen_id
+        this.lib_id = lib_id;
     }
 
     save(result) {
@@ -93,8 +94,8 @@ class Libro {
                     console.log("error :", err)
                     result(err, null)
                 } else {
-                    console.log(res.insertId)
-                    result(null, res.insertId)
+                    console.log(res)
+                    result(null, res)
                 }
             });
     }

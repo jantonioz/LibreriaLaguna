@@ -34,11 +34,13 @@ exports.formEditar = async (req, res) => {
     var eds = await getEds();
     var auts = await getAuts();
     var gens = await getGens();
-    var libro = await getLibro(req.params.libroId);    
+    var libro = await getLibro(req.params.libroId);
     console.log(libro);
-    if(libro.imgdata !== 'undefined' && libro.imgdata !== null)
+    if (libro.imgdata !== 'undefined' && libro.imgdata !== null)
         libro.imgdata = convertToBase64(libro.imgdata);
-    res.render('libro/editView', { title: 'Editar libro', editoriales: eds, autores: auts, generos: gens, libro: libro })
+    res.render('libro/editView', 
+    { title: 'Editar libro', editoriales: eds, autores: auts, 
+    generos: gens, libro: libro, lib_id: req.params.libroId })
 }
 
 exports.formCreate_libro = async function (req, res) {
@@ -124,11 +126,34 @@ exports.get_a_libro = function (req, res) {
 }
 
 exports.update_a_libro = function (req, res) {
-    Libro.updateTitleById(req.params.libroId, new Libro(req.body), function (err, libro) {
+
+    var lib_id = req.body.lib_id;
+    var titulo = req.body.titulo;
+    var tituloO = req.body.tituloorig;
+    var isbn = req.body.isbn;
+    var paginas = req.body.paginas;
+    var descripcion = req.body.descripcion;
+    var descripcionFis = req.body.descripcion_fisica;
+    var editorial_id = req.body.editorial_id;
+    var genero_id = req.body.genero_id;
+    //var autor_id = req.body.autor_id;
+
+    var libro = new Libro(titulo, tituloO, isbn, paginas,
+        descripcion, descripcionFis, genero_id, editorial_id, lib_id);
+
+    libro.update((err, result) => {
         if (err)
-            res.send(err)
-        res.json(libro)
-    })
+            res.send(err);
+        else {
+            res.redirect('/libros/d/'+lib_id);
+        }
+    });
+
+    // Libro.updateTitleById(req.params.libroId, new Libro(req.body), function (err, libro) {
+    //     if (err)
+    //         res.send(err)
+    //     res.json(libro)
+    // })
 }
 
 exports.delete_a_libro = function (req, res) {
