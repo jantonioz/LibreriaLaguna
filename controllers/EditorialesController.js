@@ -43,7 +43,7 @@ exports.getLibrosBy = (req, res) => {
 }
 
 exports.formCrear = (req, res) => {
-    res.render('genero/crear', { title: 'Crea un genero' })
+    res.render('editorial/crear', { title: 'Registra una editorial', mensaje: 'Registra una editorial' })
 }
 
 exports.create = (req, result) => {

@@ -131,6 +131,7 @@ Libro.getLibroById = function createUser(libroId, result) {
 }
 
 Libro.getAllLibros = function getAllLibros(result) {
+    console.log("SELECT " + selectors + genero + imageJOIN);
     sql.query("SELECT " + selectors + genero + imageJOIN, function (err, res) {
         if (err) {
             console.log("error: ", err)

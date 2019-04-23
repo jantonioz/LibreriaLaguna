@@ -27,7 +27,7 @@ const fullINFO = 'SELECT lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descr
 const libroBy = fullINFO + ' WHERE ed.ed_id = ?';
 
 Editorial.create = (nEditorial, result) => {
-    sql.query(INSERT, nEditorial.ed_nombre, (err, res)=>{
+    sql.query(INSERT, nEditorial.nombre, (err, res)=>{
         if (err) {
             console.log("ERROR:", err)
             result(res, null)

@@ -10,28 +10,28 @@ block content
                     div(class="col col-sm-2")
                         label(for="titulo", class="col col-lg") Titulo:
                     div(class="col")
-                        input(type="text", class="form-control", id="titulo", name="titulo", placeholer="Ingresa un titulo" autocomplete="off")
+                        input(type="text", class="form-control", id="titulo", name="titulo", placeholer="Ingresa un titulo" autocomplete="off" required)
                         
             div(class="form-group")
                 div(class="row")
                     div(class="col col-sm-2")
                         label(for="tituloorig" class="col col-lg") Titulo Original:
                     div(class="col")
-                        input(type="text" class="form-control" id="tituloorig" name="tituloorig" placeholer="Titulo en la lengua original" autocomplete="off")
+                        input(type="text" class="form-control" id="tituloorig" name="tituloorig" placeholer="Titulo en la lengua original" autocomplete="off" required)
             
             div(class="form-group")
                 div(class="row")
                     div(class="col col-sm-2")
                         label(for="isbn" class="col col-lg") ISBN:
                     div(class="col col-sm-3")
-                        input(type="text" class="form-control" id="isbn" name="isbn" placeholer="Ingresa un titulo" autocomplete="off")
+                        input(type="text" class="form-control" id="isbn" name="isbn" placeholer="Ingresa un titulo" autocomplete="off" required)
 
             div(class="form-group")
                 div(class="row")
                     div(class="col col-sm-2")
                         label(for="paginas" class="col col-lg") Número de páginas:
                     div(class="col col-sm-2")
-                        input(type="text" class="form-control" id="paginas" name="paginas" placeholer="Ingresa un titulo" autocomplete="off")
+                        input(type="text" class="form-control" id="paginas" name="paginas" placeholer="Ingresa un titulo" autocomplete="off" required)
 
             
     
@@ -40,21 +40,21 @@ block content
                     div(class="col col-sm-2")
                         label(for="descripcion" class="col col-lg") Descripcion:
                     div(class="col")
-                        textarea(class="form-control" rows=4 id="descripcion" name="descripcion" placeholer="Ingresa un titulo" autocomplete="off")
+                        textarea(class="form-control" rows=4 id="descripcion" name="descripcion" placeholer="Ingresa un titulo" autocomplete="off" required)
             
             div(class="form-group")
                 div(class="row")
                     div(class="col col-sm-2")
                         label(for="descripcion_fisica" class="col col-lg") Descripcion fisica:
                     div(class="col")
-                        input(type="text" class="form-control" id="descripcion_fisica" name="descripcion_fisica" placeholer="Ingresa un titulo" autocomplete="off")
+                        input(type="text" class="form-control" id="descripcion_fisica" name="descripcion_fisica" placeholer="Ingresa un titulo" autocomplete="off" required)
             
             div(class="form-group")
                 div(class="row")
                     div(class="col col-sm-2")
                         label(for="editorial_id", class="col col-lg") Editorial:
                     div(class="col")
-                        select(class="custom-select" name="editorial_id")
+                        select(class="custom-select" name="editorial_id"  required)
                             option(selected) Selecciona una editorial
                             if editoriales != null
                                 each editorial in editoriales 
@@ -67,7 +67,7 @@ block content
                     div(class="col col-sm-2")
                         label(for="genero_id", class="col col-lg") Genero:
                     div(class="col")
-                        select(class="custom-select" name="genero_id")
+                        select(class="custom-select" name="genero_id" required)
                             option(selected) Selecciona un genero
                             if generos != null
                                 each genero in generos 
@@ -80,7 +80,7 @@ block content
                     div(class="col col-sm-2")
                         label(for="genero_id", class="col col-lg") Autor:
                     div(class="col")
-                        select(class="custom-select" name="autor_id")
+                        select(class="custom-select" name="autor_id" required)
                             option(selected) Selecciona un autor
                             if autores != null
                                 each autor in autores 
@@ -95,7 +95,7 @@ block content
                         label(for="imagen") Imagen:
                     div(class="col col-lg-5")
                         div(class="custom-file")
-                            input(type="file", class="custom-file-input", id="imagen", name="imagen" onChange="changelabel()")
+                            input(type="file", class="custom-file-input", id="imagen", name="imagen" onChange="changelabel()" required)
                             label(class="custom-file-label", for="imagen", id="lblimagen") Selecciona una imagen
                     img(class="card-img-top" src="http://placehold.it/500x325" alt="" style="width:200px; height:200px;")
             hr

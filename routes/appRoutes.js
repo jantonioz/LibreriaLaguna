@@ -60,6 +60,8 @@ router.post('/generos/crear', genero.create);
 
 router.get('/editoriales/', editorial.list_all_editoriales);
 router.get('/editoriales/d/:ed_id', editorial.getLibrosBy);
+router.get('/editoriales/registrar', editorial.formCrear);
+router.post('/editoriales/crear', editorial.create);
 
 //router.get('/inicio/', libro = new Object());
 
