@@ -5,7 +5,8 @@ var usuario = require("../controllers/UsuariosController");
 var autor = require("../controllers/AutoresController");
 var genero = require("../controllers/GenerosController");
 var editorial = require("../controllers/EditorialesController");
-var stockLibro = require("../models/libro");
+var busqueda = require("../controllers/BusquedaController");
+//var stockLibro = require("../models/libro");
 
 var modelLibro = require("../models/libro");
 
@@ -65,6 +66,9 @@ router.get('/editoriales/registrar', editorial.formCrear);
 router.post('/editoriales/crear', editorial.create);
 router.get('/editoriales/e/:id', editorial.formEditar);
 router.post('/editoriales/editar', editorial.editar);
+
+
+router.post('/find?:busqueda', busqueda.find);
 
 //router.get('/inicio/', libro = new Object());
 
