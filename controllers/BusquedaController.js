@@ -8,8 +8,21 @@ var Autor = require('../models/autor');
 exports.find = async (req, res) => {
     var search = req.body.search;
     let libros = await getLibros(search);
-    let generos = await getGeneros(search);
+    let generos = await getGeneros('%'+search+'%');
+    let autores = await getAutores('%'+search+'%');
+
+
     res.json({libros, generos})
+}
+
+function getAutores(search) {
+    return new Promise((resolve, reject) => {
+        Autor.find(search, (err, res) => {
+            if (!err) {
+                resolve(res);
+            }
+        });
+    });
 }
 
 function getGeneros(search) {
