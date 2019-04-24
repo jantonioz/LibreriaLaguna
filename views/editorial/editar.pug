@@ -1,0 +1,28 @@
+extends ../layout
+
+
+block content
+    div(class="container")
+        h1(class="mb-5") !{mensaje}
+        form(action="/editoriales/editar", method="POST", enctype="multipart/form-data")
+            input(type="hidden", value=editorial.id, name="id")
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="nombre", class="col col-lg") Nombre editorial:
+                    div(class="col col-lg-5")
+                        input(type="text", class="form-control", id="nombre", name="nombre", placeholer="Ingresa un nombre", autocomplete="off", required, value=editorial.nombre)
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="correo", class="col col-lg") Correo
+                    div(class="col col-lg-5")
+                        div(class="input-group row")
+                            div(class="input-group-prepend")
+                                span(class="input-group-text", id="basic-addon1") @
+                            input(type="text", class="form-control", placeholer="Correo", aria-label="correo", aria-describedby="basic-addon1", name="correo", value=editorial.correo)
+                        
+            div(class="form-group")
+                div(class="row")
+                    div(class="col-sm-5 mx-auto")
+                        button(type="submit", class="btn btn-success") Aceptar

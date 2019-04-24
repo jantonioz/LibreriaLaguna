@@ -148,12 +148,6 @@ exports.update_a_libro = function (req, res) {
             res.redirect('/libros/d/'+lib_id);
         }
     });
-
-    // Libro.updateTitleById(req.params.libroId, new Libro(req.body), function (err, libro) {
-    //     if (err)
-    //         res.send(err)
-    //     res.json(libro)
-    // })
 }
 
 exports.delete_a_libro = function (req, res) {

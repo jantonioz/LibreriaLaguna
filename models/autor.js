@@ -43,7 +43,7 @@ Autor.create = (newAuthor, result) => {
 }
 
 Autor.booksBy = (autor_id, result) => {
-    console.log(libroBy, autor_id);
+    //console.log(libroBy, autor_id);
     sql.query(libroBy, autor_id, (err, res) => {
         if (err) {
             result(err, null);

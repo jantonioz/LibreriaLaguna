@@ -57,3 +57,23 @@ exports.create = (req, result) => {
         }
     })
 }
+
+exports.formEditar = (req, result) => {
+    Editorial.findById(req.params.id, (err, res) => {
+        if (err)
+            result.send('error');
+        
+        let mEditorial = new Editorial(res[0].ed_nombre, res[0].ed_correo, res[0].ed_id);
+        result.render('editorial/editar', { title: 'Editar editorial', mensaje: 'Editar editorial', editorial: mEditorial });
+    })
+}
+
+exports.editar = (req, result) => {
+    let mEditorial = new Editorial(req.body.nombre, req.body.correo, req.body.id);
+
+    mEditorial.update((err, res) => {
+        if (err)
+            result.send("ERROR");
+        result.redirect('/editoriales');
+    })
+}

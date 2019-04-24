@@ -88,7 +88,7 @@ CREATE TABLE Imagen_libro (
 CREATE TABLE Editoriales (
   ed_id      int(10) NOT NULL AUTO_INCREMENT, 
   ed_nombre  varchar(50) NOT NULL, 
-  ed_correo  int(11) NOT NULL, 
+  ed_correo  varchar(50) NOT NULL, -- ERROR ESTABA EN int(11)
   updated_at timestamp NULL, 
   created_at timestamp NOT NULL, 
   PRIMARY KEY (ed_id));

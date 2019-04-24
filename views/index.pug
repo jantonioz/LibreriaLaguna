@@ -1,12 +1,13 @@
 extends layout
 
 block fullpageContent
+  
   div(style="position:relative;min-height: 100vh;")
     // JUMBOTRON
-    header(class="jumbotron bg-dark")
+    header(class="jumbotron")
       h1(class="display-3 text-white" ) Librería laguna
       p(class="lead text-white") #{content}
-      a(href="#" class="btn btn-outline-success btn-lg") Comprar ahora!
+      a(href="#" class="btn btn-danger btn-lg") Comprar ahora!
 
     // ELEMENTOS DE LIBROS
     div(class="container " )
@@ -16,11 +17,11 @@ block fullpageContent
           div(class="col-lg-3 col-md-6 mb-5")
             div(class="card ")
               if (libro.imgdata != null)
-                img(class="card-img-top mx-auto img-fluid mt-2", style="display: block;max-width:100px;max-height:180px;width: auto;height: auto;", src='data:image/png;base64,'+libro.imgdata, alt="")
+                img(class="card-img-top mx-auto img-fluid mt-2", style="display: block;max-width:100px;max-height:155px;width: auto;height: auto;", src='data:image/png;base64,'+libro.imgdata, alt="")
               else  
                 img(class="card-img-top mx-auto img-fluid mt-2", style="display: block;max-width:100px;max-height:180px;width: auto;height: auto;", src="http://placehold.it/100x170", alt="")
               div(class="card-body")
-                h4(class="card-title") !{libro.titulo}
+                h4(class="card-title" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 400px;") !{libro.titulo}
                 p(class="card-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 400px;") !{libro.descripcion}
               div(class="card-footer")
                 a(href="#" class="btn btn-success btn-sm") Comprar

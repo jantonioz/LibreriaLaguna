@@ -3,7 +3,14 @@ extends ../layout
 
 block content
     each ed in editoriales
-        h1
-            a(href="/editoriales/d/" + ed.ed_id ) #{ed.ed_nombre}
+        div(class="row")
+            div(class="col")
+                h1
+                    a(href="/editoriales/d/" + ed.ed_id ) #{ed.ed_nombre}
+                    a(href="/editoriales/e/" + ed.ed_id, class="btn btn-secondary ml-5") Editar
+        //- div(class="col")
+        //-     h1= libro.titulo 
+        //-     a(href="/libros/e/" + libro.lib_id, class="btn btn-secondary ml-5") Editar
+        //-     p= libro.descripcion
         //- small= 'Autor: ' + libro.autor + 	" \u2022 " + libro.genero
-        //p=  'Nacimiento: ' + aut.aut_fecnac
+        //-p=  'Nacimiento: ' + aut.aut_fecnac

@@ -11,9 +11,13 @@ block content
                         label(for="nombre", class="col col-lg") Nombre editorial:
                     div(class="col col-lg-5")
                         input(type="text", class="form-control", id="nombre", name="nombre", placeholer="Ingresa un nombre" autocomplete="off" required)
-                    div(class="col")
+            div(class="form-group")
+                div(class="input-group")
+                    div(class="input-group-prepend")
+                        span(class="input-group-text", id="basic-addon1") @
+                    input(type="text", class="form-control", placeholer="Correo", aria-label="correo", aria-describedby="basic-addon1")
+                        
+            div(class="form-group")
+                div(class="row")
+                    div(class="col-sm-5 mx-auto")
                         button(type="submit", class="btn btn-success") Aceptar
-            //- div(class="form-group")
-            //-     div(class="row")
-            //-         div(class="col-sm-5 mx-auto")
-            //-             button(type="submit", class="btn btn-success") Aceptar

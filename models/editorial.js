@@ -1,22 +1,18 @@
 'use strict';
 var sql = require('./db.js');
 
-class Editorial{
-    constructor(ed_nombre){
-        this.nombre = ed_nombre;
-    }
-}
-
-const INSERT     = 'INSERT INTO Editoriales(ed_nombre) VALUES(?) ';
+const INSERT = 'INSERT INTO Editoriales(ed_nombre, ed_correo, created_at) VALUES(?, ?, NOW())';
+const UPDATE =  'UPDATE Editoriales SET ed_nombre = ?, ed_correo = ?, updated_at = NOW()' + 
+                'WHERE ed_id = ?';
 const SELECT_ALL = 'SELECT * FROM Editoriales ';
 const findByName = 'WHERE ed_nombre like ?';
-const findById   = 'WHERE ed_id = ?';
+const findById = 'WHERE ed_id = ?';
 
 const fullINFO = 'SELECT lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descripcion_fisica, ' +
     'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
     ' img.img_filename AS filename,  ' +
     'aut.aut_id AS autor_id, gen.gen_id AS gen_id, ' +
-    'ed.ed_nombre as ed_nombre'+
+    'ed.ed_nombre as ed_nombre' +
     ' FROM libros AS lib' +
     ' INNER JOIN generos AS gen ON (lib.genero_id = gen.gen_id) ' +
     ' INNER JOIN autor_libro AS al ON (al.libro_id = lib.lib_id) ' +
@@ -26,12 +22,42 @@ const fullINFO = 'SELECT lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descr
 
 const libroBy = fullINFO + ' WHERE ed.ed_id = ?';
 
+class Editorial {
+    constructor(ed_nombre, correo, id = 0) {
+        this.nombre = ed_nombre;
+        this.correo = correo;
+        this.id = id;
+    }
+
+    save(result) {
+        sql.query(INSERT, this.nombre, (err, res) => {
+            if (err) {
+                console.log("ERROR:", err);
+                result(res, null);
+            } else {
+                result(null, res);
+            }
+        });
+    }
+
+    update(result) {
+        sql.query(UPDATE, [this.nombre, this.correo, this.id], (err, res) => {
+            if (err) {
+                console.log("ERROR: ", err);
+                result(err, null);
+            } else {
+                result(null, res);
+            }
+        })
+    }
+}
+
 Editorial.create = (nEditorial, result) => {
-    sql.query(INSERT, nEditorial.nombre, (err, res)=>{
+    sql.query(INSERT, nEditorial.nombre, (err, res) => {
         if (err) {
             console.log("ERROR:", err)
             result(res, null)
-        } else{
+        } else {
             result(null, res)
         }
     });
@@ -40,10 +66,10 @@ Editorial.create = (nEditorial, result) => {
 Editorial.find = (name, result) => {
     let query = name == null ? SELECT_ALL : SELECT_ALL + findByName;
     sql.query(query, name, (err, res) => {
-        if (err){
+        if (err) {
             console.log("ERROR: ", res);
             result(err, null);
-        } else{
+        } else {
             //console.log("OK:", res);
             result(null, res);
         }
@@ -53,7 +79,7 @@ Editorial.find = (name, result) => {
 Editorial.findById = (id, result) => {
     console.log(id);
     sql.query(SELECT_ALL + findById, id, (err, res) => {
-        if (err){
+        if (err) {
             console.log("ERROR: ", err);
             result(err, null);
         } else {

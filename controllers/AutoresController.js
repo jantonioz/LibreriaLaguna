@@ -17,18 +17,18 @@ exports.list_all_authors = function (req, res) {
 exports.listBooksOf = (req, res) => {
     let aut_id = req.params.aut_id;
     Autor.booksBy(aut_id, (err, libro) => {
-        console.log("Autores Controller")
+        //console.log("Autores Controller")
         if (err) {
-            //res.send(err)
+            res.send(err)
         }
 
         for (let i = 0; i < libro.length; i++) {
             if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
-                console.log(libro[i].imgdata)
+                //console.log(libro[i].imgdata)
                 let tempbin = libro[i].imgdata;
                 let data64 = Buffer.from(tempbin, 'binary').toString('base64');
                 libro[i].imgdata = data64;
-                console.log(libro[i].imgdata);
+                //console.log(libro[i].imgdata);
             }
         }
 

@@ -20,11 +20,11 @@ router.get('/', function (req, res, next) {
 
         for (let i = 0; i < libro.length; i++) {
             if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
-                console.log(libro[i].imgdata)
+                //console.log(libro[i].imgdata)
                 let tempbin = libro[i].imgdata;
                 let data64 = Buffer.from(tempbin, 'binary').toString('base64');
                 libro[i].imgdata = data64;
-                console.log(libro[i].imgdata);
+                //console.log(libro[i].imgdata);
             }
         }
         res.render('index', { title: 'Libros', libros: libro, activeInicio: 'active', content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA" })
@@ -63,6 +63,8 @@ router.get('/editoriales/', editorial.list_all_editoriales);
 router.get('/editoriales/d/:ed_id', editorial.getLibrosBy);
 router.get('/editoriales/registrar', editorial.formCrear);
 router.post('/editoriales/crear', editorial.create);
+router.get('/editoriales/e/:id', editorial.formEditar);
+router.post('/editoriales/editar', editorial.editar);
 
 //router.get('/inicio/', libro = new Object());
 
