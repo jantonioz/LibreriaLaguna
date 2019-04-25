@@ -65,14 +65,23 @@ Autor.getBookByAuthor = function getBook(authorNombre, result) {
     })
 }
 
-Autor.find = (name, result) => {
-    let mQuery = name == null ? SELECT_ALL : SELECT_ALL + findByName;
-    sql.query(mQuery, null, function (err, res) {
+Autor.findByNombre = (nombre, result) => {
+    sql.query(SELECT_ALL + findByName, name, function (err, res) {
         if (err) {
             console.log("Error: ", err);
             result(err, null);
         } else {
-            //console.log("OK: ", res);
+            result(null, res);
+        }
+    });
+}
+
+Autor.find = (result) => {
+    sql.query(SELECT_ALL, function (err, res) {
+        if (err) {
+            console.log("Error: ", err);
+            result(err, null);
+        } else {
             result(null, res);
         }
     });

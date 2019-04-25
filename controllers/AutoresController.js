@@ -3,7 +3,7 @@
 var Autor = require('../models/autor')
 
 exports.list_all_authors = function (req, res) {
-    Autor.find(null, function (err, rows) {
+    Autor.find(function (err, rows) {
         console.log("Autores Controller")
         if (err) {
             res.send(err)

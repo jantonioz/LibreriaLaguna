@@ -181,7 +181,7 @@ function getEds() {
 
 function getAuts() {
     return new Promise((resolve, reject) => {
-        Autor.find(null, (err, res) => {
+        Autor.find((err, res) => {
             if (!err) {
                 console.log("AUTORES OBTENIDOS");
                 resolve(res);

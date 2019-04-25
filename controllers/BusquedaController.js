@@ -12,12 +12,12 @@ exports.find = async (req, res) => {
     let autores = await getAutores('%'+search+'%');
 
 
-    res.json({libros, generos})
+    res.json({libros, generos, autores})
 }
 
 function getAutores(search) {
     return new Promise((resolve, reject) => {
-        Autor.find(search, (err, res) => {
+        Autor.findByNombre(search, (err, res) => {
             if (!err) {
                 resolve(res);
             }
