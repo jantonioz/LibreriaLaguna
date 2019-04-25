@@ -13,7 +13,7 @@ class Autor {
 
 const insert = 'INSERT INTO Autores(aut_nombre, aut_fecnac) VALUES(?,?)';
 const SELECT_ALL = "SELECT * FROM Autores";
-const findByName = " WHERE aut_name like ?";
+const findByName = " WHERE aut_nombre like ?";
 const findByID = ' WHERE aut_id = ?';
 
 const fullINFO = 'SELECT lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descripcion_fisica, ' +
@@ -66,7 +66,7 @@ Autor.getBookByAuthor = function getBook(authorNombre, result) {
 }
 
 Autor.findByNombre = (nombre, result) => {
-    sql.query(SELECT_ALL + findByName, name, function (err, res) {
+    sql.query(SELECT_ALL + findByName, nombre, function (err, res) {
         if (err) {
             console.log("Error: ", err);
             result(err, null);
