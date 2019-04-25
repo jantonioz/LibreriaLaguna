@@ -10,7 +10,7 @@ var AutorLibro = require('../models/autor_libro');
 exports.list_all_libros = function (req, res) {
 
 
-    Libro.getAllLibros(function (err, libro) {
+    Libro.getAllLibros( (err, libro) => {
         console.log("libros controller")
         if (err) {
             res.send(err)
@@ -18,11 +18,11 @@ exports.list_all_libros = function (req, res) {
 
         for (let i = 0; i < libro.length; i++) {
             if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
-                console.log(libro[i].imgdata)
+                //console.log(libro[i].imgdata)
                 let tempbin = libro[i].imgdata;
                 let data64 = Buffer.from(tempbin, 'binary').toString('base64');
                 libro[i].imgdata = data64;
-                console.log(libro[i].imgdata);
+                //console.log(libro[i].imgdata);
             }
         }
 
@@ -42,6 +42,8 @@ exports.formEditar = async (req, res) => {
     { title: 'Editar libro', editoriales: eds, autores: auts, 
     generos: gens, libro: libro, lib_id: req.params.libroId })
 }
+
+
 
 exports.formCreate_libro = async function (req, res) {
     var eds = await getEds();

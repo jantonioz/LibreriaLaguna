@@ -4,7 +4,10 @@ extends ../layout
 block content
     div(class="container")
         h1(class="mb-5") !{mensaje}
+
+
         form(action="/editoriales/crear", method="POST", enctype="multipart/form-data")
+
             div(class="form-group")
                 div(class="row")
                     div(class="col col-sm-2")
@@ -15,7 +18,7 @@ block content
                 div(class="input-group")
                     div(class="input-group-prepend")
                         span(class="input-group-text", id="basic-addon1") @
-                    input(type="text", class="form-control", placeholer="Correo", aria-label="correo", aria-describedby="basic-addon1")
+                    input(type="text", class="form-control", placeholer="Correo", name="correo", aria-label="correo", aria-describedby="basic-addon1")
                         
             div(class="form-group")
                 div(class="row")

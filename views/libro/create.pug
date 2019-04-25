@@ -58,7 +58,7 @@ block content
                             option(selected) Selecciona una editorial
                             if editoriales != null
                                 each editorial in editoriales 
-                                    option(value=editorial.ed_id) #{editorial.ed_nombre}
+                                    option(value=editorial.ed_id) !{editorial.ed_nombre}
                     div(class="col-sm-2")
                         a(class="btn btn-success text-light", href="/editoriales/crear") Agregar Nuevo
 

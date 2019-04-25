@@ -13,11 +13,11 @@ exports.list_all_editoriales = (req, res) => {
 }
 
 exports.getLibrosBy = (req, res) => {
-    Editorial.booksBy(req.params.ed_id, (err, rows) => {
+    Editorial.booksBy(req.params.id, (err, rows) => {
         if (err) {
             res.send(err)
         } else {
-            Editorial.findById(req.params.ed_id, (err, nombreEd) => {
+            Editorial.findById(req.params.id, (err, nombreEd) => {
                 console.log(nombreEd);
 
                 nombreEd = nombreEd[0].ed_nombre;
@@ -47,22 +47,31 @@ exports.formCrear = (req, res) => {
 }
 
 exports.create = (req, result) => {
-    let newGenero = new Editorial(req.body.nombre);
-    Editorial.create(newGenero, (err, res) => {
-        if (err) {
-            result.send("ERROR");
-        }
+
+    var nuevaEditorial = new Editorial(req.body.nombre, req.body.correo);
+    nuevaEditorial.save((err, res) => {
+        if (err)
+            console.log("ERROR: ", err);
         else {
-            result.json(res)
+            result.redirect('/editoriales/');
         }
     })
+
+    // Editorial.create(newGenero, (err, res) => {
+    //     if (err) {
+    //         result.send("ERROR");
+    //     }
+    //     else {
+    //         result.json(res)
+    //     }
+    // })
 }
 
 exports.formEditar = (req, result) => {
     Editorial.findById(req.params.id, (err, res) => {
         if (err)
             result.send('error');
-        
+
         let mEditorial = new Editorial(res[0].ed_nombre, res[0].ed_correo, res[0].ed_id);
         result.render('editorial/editar', { title: 'Editar editorial', mensaje: 'Editar editorial', editorial: mEditorial });
     })

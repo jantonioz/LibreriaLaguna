@@ -11,9 +11,9 @@ var busqueda = require("../controllers/BusquedaController");
 var modelLibro = require("../models/libro");
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-
-    modelLibro.getAllLibros(function (err, libro) {
+router.get('/', (req, res) => {
+    
+    modelLibro.getAllLibros((err, libro) => {
         console.log("libros controller")
         if (err) {
             res.send(err)
@@ -25,9 +25,9 @@ router.get('/', function (req, res, next) {
                 let tempbin = libro[i].imgdata;
                 let data64 = Buffer.from(tempbin, 'binary').toString('base64');
                 libro[i].imgdata = data64;
-                //console.log(libro[i].imgdata);
             }
         }
+
         res.render('index', { title: 'Libros', libros: libro, activeInicio: 'active', content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA" })
     })
 });
@@ -61,7 +61,7 @@ router.post('/generos/crear', genero.create);
 
 
 router.get('/editoriales/', editorial.list_all_editoriales);
-router.get('/editoriales/d/:ed_id', editorial.getLibrosBy);
+router.get('/editoriales/d/:id', editorial.getLibrosBy);
 router.get('/editoriales/registrar', editorial.formCrear);
 router.post('/editoriales/crear', editorial.create);
 router.get('/editoriales/e/:id', editorial.formEditar);

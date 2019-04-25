@@ -1,6 +1,6 @@
 'use strict';
 
-var mysql = require('mysql')
+var mysql = require('mysql');
 
 // Coneccion a la bd local
 var connection = mysql.createConnection({

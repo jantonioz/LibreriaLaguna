@@ -30,7 +30,7 @@ class Editorial {
     }
 
     save(result) {
-        sql.query(INSERT, this.nombre, (err, res) => {
+        sql.query(INSERT, [this.nombre, this.correo], (err, res) => {
             if (err) {
                 console.log("ERROR:", err);
                 result(res, null);
@@ -74,7 +74,7 @@ Editorial.find = (name, result) => {
             result(null, res);
         }
     });
-}
+} 
 
 Editorial.findById = (id, result) => {
     console.log(id);
