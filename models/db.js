@@ -10,8 +10,8 @@ var connection = mysql.createConnection({
     database: 'test_libreria',
 })
 
-connection.connect(function(err){
-    if (err) throw err
+connection.connect((err) => {
+    if (err) console.log(err);
 })
 
 module.exports = connection
