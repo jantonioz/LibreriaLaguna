@@ -3,7 +3,7 @@ extends ../layout
 block content
       div(class="container-fluid h-100")
         div(class="row justify-content-center align-items-center h-100")
-            div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5")
+            div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5 mb-5")
                 form(action="/usuarios/register", method="POST", enctype="multipart/form-data")
                     div(class="form-label-group")
                         input(type="text", class="form-control",id="nombre", name="nombre", placeholder="Nombres", autocomplete = "off", required)
@@ -22,7 +22,7 @@ block content
                         label(for="username") Nombre de usuario
 
                     div(class="form-label-group")
-                        input(type="password", class="form-control", id="password", name="password", placeholder = "Contraseña: " autocomplete = "off", required)
+                        input(type="password", class="form-control", id="password", name="password", placeholder = "Contraseña " autocomplete = "off", required)
                         label(for="password") Contraseña
 
 
@@ -30,5 +30,35 @@ block content
                         label(for="fecha_nacimiento") Fecha de nacimiento
                         input(type="date", class = "form-control", id = "fecha_nacimiento", name = "fecha_nacimiento", placeholder = "Fecha de nacimiento" autocomplete="off", required)
                         
+                    div(class="row")
+                        h4(class="col col-sm-4 text-muted") Direccion 
+                        hr(class="col")
+
+                    div(class="row")
+                        div(class="col")
+                            div(class="form-label-group")
+                                input(type="text", class="form-control", id="calle", name="calle", placeholder = "Calle " autocomplete = "off", required)
+                                label(for="calle") Calle
+                        div(class="col col-sm-4")
+                            div(class="form-label-group")
+                                input(type="text", class="form-control", id="numero", name="numero", placeholder = "Numero" autocomplete = "off", required)
+                                label(for="numero") Numero
+
+                    div(class="row")
+                        div(class="col")
+                            div(class="form-label-group")
+                                input(type="text", class="form-control", id="colonia", name="colonia", placeholder = "Colonia" autocomplete = "off", required)
+                                label(for="colonia") Colonia
+                        div(class="col")
+                            div(class="form-label-group")
+                                input(type="text", class="form-control", id="ciudad", name="ciudad", placeholder = "Ciudad" autocomplete = "off", required)
+                                label(for="ciudad") Ciudad
+
+                    div(class="form-label-group")
+                                input(type="text", class="form-control", id="pais", name="pais", placeholder = "Ciudad" autocomplete = "off", required)
+                                label(for="pais") Pais
+                    
+
+                    
 
                     button(type="submit", class="btn btn-lg btn-primary btn-block") Registrar
