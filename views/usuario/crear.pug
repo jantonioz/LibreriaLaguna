@@ -1,54 +1,33 @@
 extends ../layout
 
 block content
-      div(class = "container mx-auto")
-        form(action="usuario/crear", method = "POST", enctype="multipart/form-data")
-
-            div(class = "form-group")
-                div(class = "col col-sm-2")
-                    label(for="nombre", class = "col col-lg") Nombre del usuario:
-                div(class = "col col-lg-4")
-                    input(type="text", class="form-control", id = "nombre", name = "nombre", placeholer = "Ingresa tu nombre: " autocomplete = "off", required)
-                 
-            div(class = "form-group")
-                div(class = "row")
-                    div(class = "col col-sm-2")
-                       label(for="apellidos", class = "col col-lg") Ingresa pellidos:
-                div(class = "col col-lg-4")
-                       input(type="text", class = "form-control", id = "apellidos", name = "apellidos", placeholer = "Ingresa apellidos: " autocomplete = "off", required)
-            
-            div(class = "form-group")
-                div(class = "row")
-                    div(class = "col col-sm-2")
-                       label(for="email", class = "col col-lg") Direccion e-mail:
-                div(class = "col col-lg-4")
-                       input(type="text", class = "form-control", id = "email", name = "email", placeholer = "Direccion e-mail" autocomplete = "off", required)
-            
-            div(class = "form-group")
-                div(class = "row")
-                    div(class = "col col-sm-2")
-                        label(for="username", class = "col-col-lg") Nombre de usuario:
-                div(class = "col col-lg-4")
-                        input(type="email", class = "form-control", id = "username", name = "username", placeholer = "Nombre de usuario" autocomplete = "off", required)
-
-            div(class = "form-group")
-                div(class = "row")
-                    div(class = "col col-sm-2")
-                        label(for="password", class = "col col-lg") Contraseña:
-                div(class = "col col-lg-4")
-                       input(type="password", class = "form-control", id = "password", name = "password", placeholer = "Contraseña: " autocomplete = "off", required)
+      div(class="container-fluid h-100")
+        div(class="row justify-content-center align-items-center h-100")
+            div(class="col col-sm-6 col-md-6 col-lg-4 col-xl-3")
+                form(action="usuario/crear", method="POST", enctype="multipart/form-data")
+                    div(class = "form-label-group")
+                        input(type="text", class="form-control",id="nombre", name="nombre", placeholder="Nombres", autocomplete = "off", required)
+                        label(for="nombre") Nombres
+                        
+                    div(class="form-label-group")
+                        input(type="text", id="apellidos", class = "form-control",name = "apellidos", placeholder = "Apellidos" autocomplete = "off", required)
+                        label(for="apellidos") Apellidos
                     
+                div(class = "form-label-group")
+                        input(type="email", id="email", class = "form-control", name = "email", placeholder = "email" autocomplete = "off", required)
+                        label(for="email")
+                    
+                    div(class = "form-label-group")
+                        input(type="email", id="username", class = "form-control", name = "username", placeholder = "username" autocomplete = "off", required)
+                        label(for="username")
+
+                    div(class = "form-label-group")
+                        input(type="password", class="form-control", id="password", name="password", placeholder = "Contraseña: " autocomplete = "off", required)
+                        label(for="password") Contraseña: 
 
 
-            div(class = "form-group")
-                div(class = "row")
-                   div(class = "col col-sm-2")
-                        label(for="fecha_nacimiento", class = "col col-lg") Fecha de nacimiento:
-                div(class = "col col-lg-4")
-                        input(type="date", class = "form-control", id = "fecha_nacimiento", name = "fecha_nacimiento", placeholer = "Fecha de nacimiento" autocomplete="off", required)
-    
+                    div(class = "form-group")
+                        input(type="date", class = "form-control", id = "fecha_nacimiento", name = "fecha_nacimiento", placeholder = "Fecha de nacimiento" autocomplete="off", required)
+                        label(for="fecha_nacimiento") Fecha de nacimiento:
 
-            div(class="form-group")
-                div(class="row")
-                    div(class="col-sm-5 mx-auto")
-                        button(type="submit", class="btn btn-primary mb-2") Confirmar datos
+                    button(type="submit", class="btn btn-lg btn-primary btn-block") Registrar
