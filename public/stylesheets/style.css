@@ -72,6 +72,10 @@ input[type="file"] {
   margin-bottom: 1rem;
 }
 
+.form-label-group > input {
+  height: 48px;
+}
+
 .form-label-group > input,
 .form-label-group > label {
   padding: var(--input-padding-y) var(--input-padding-x);
