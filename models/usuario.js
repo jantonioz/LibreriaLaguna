@@ -4,7 +4,8 @@ var sql = require('./db.js')
 
 const fields = {
     nombre: 'usr_nombre', apellidos: 'usr_apellidos', email: 'usr_email',
-    username: 'usr_username', password: 'usr_password', fnac: 'usr_fnac'
+    username: 'usr_username', password: 'usr_password', fnac: 'usr_fnac', 
+    direccion: 'direccion_id'
 };
 
 const comma = ', ';
@@ -12,8 +13,10 @@ const comma = ', ';
 const assign = ' = ?';
 
 const Insert =
-    'INSERT INTO usuarios (' + fields.nombre + comma + fields.apellidos + comma + fields.email + comma +
-    fields.username + comma + fields.password + comma + fields.fnac + ') VALUES (?, ?, ?, ?, ?, ?)';
+    'INSERT INTO usuarios (' + 
+    fields.nombre + comma + fields.apellidos + comma + fields.email + comma +
+    fields.username + comma + fields.password + comma + fields.fnac + comma + 
+    fields.direccion + ') VALUES (?, ?, ?, ?, ?, ?, ?)';
 
 const update =
     'UPDATE Usuarios SET ' + fields.nombre + assign + comma
@@ -27,7 +30,7 @@ const update =
 const Delete = 'DELETE FROM Usuarios WHERE usr_id = ?';
 
 class Usuario {
-    constructor(nombre, apellidos, email, username, password, fnac, id = 0) {
+    constructor(nombre, apellidos, email, username, password, fnac, direccion_id, id = 0) {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -35,12 +38,13 @@ class Usuario {
         this.username = username;
         this.password = password;
         this.fnac = fnac;
+        this.direccion_id = direccion_id;
     }
 
     save(result) {
         sql.query(Insert,
             [this.nombre, this.apellidos, this.email,
-            this.username, this.password, this.fnac],
+            this.username, this.password, this.fnac, this.direccion_id],
             (err, res) => {
                 if (err) {
                     console.log("ERROR:", err);
@@ -48,7 +52,8 @@ class Usuario {
                 } else {
                     result(null, res);
                 }
-            });
+            }
+        );
     }
 
     update(result) {
