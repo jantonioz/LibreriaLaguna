@@ -53,11 +53,18 @@ input[type="file"] {
   background-color: #000000;  
 }
 
+
+:root {
+  --input-padding-x: .75rem;
+  --input-padding-y: .75rem;
+}
+
+
 .form-signin {
   width: 100%;
   max-width: 420px;
   padding: 15px;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .form-label-group {
