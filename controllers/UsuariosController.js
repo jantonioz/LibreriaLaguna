@@ -17,26 +17,21 @@ exports.getRegister = function(req, res){
 }
 
 exports.create_usr = function(req, res){
-
-    // console.log(req.body.nombre)
-    // res.json(req.body)
-
     var nombre = req.body.nombre;
-    var apellido = req.body.apellidos;
+    var apellidos = req.body.apellidos;
     var email = req.body.email;
     var username = req.body.username;
     var password = req.body.password;
     var fecha_nacimiento = req.body.fecha_nacimiento;
 
-    if (!nombre || !apellido || !email || !username || !password || !fecha_nacimiento)
-        res.status(400).send({error: true, message: "ERROR AL CAPTURAR DATOS"})
+    if (!nombre || !apellidos || !email || !username || !password || !fecha_nacimiento)
+        res.status(400).send({error: true, message: "ERROR AL CAPTURAR DATOS"});
 
-    else {
-        let usr = new Usuario(nombre, apellido, email, username, password, fecha_nacimiento);
-        Usuario.crearUsuario(usr, function(err, usr){
-            if (err)
-                res.send(err)
-            res.json(usr)
-        })
-    }
+    let usuario = new Usuario(nombre, apellidos, email, username, password, fecha_nacimiento);
+    usuario.save((err, queryResult) => {
+        if (err)
+            res.json(err);
+        else
+            res.json(queryResult);
+    });
 }
