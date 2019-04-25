@@ -22,7 +22,7 @@ exports.create_usr = function(req, res){
     // res.json(req.body)
 
     var nombre = req.body.nombre;
-    var apellido = req.body.apellido;
+    var apellido = req.body.apellidos;
     var email = req.body.email;
     var username = req.body.username;
     var password = req.body.password;
@@ -33,9 +33,6 @@ exports.create_usr = function(req, res){
 
     else {
         let usr = new Usuario(nombre, apellido, email, username, password, fecha_nacimiento);
-
-        console.log(usr)
-        res.json(req.body)
         Usuario.crearUsuario(usr, function(err, usr){
             if (err)
                 res.send(err)

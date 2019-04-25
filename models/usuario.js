@@ -14,6 +14,7 @@ var Usuario = function (nombre, apellidos, email, username, password, fecha_naci
 }
 
 Usuario.crearUsuario = function crearUsuario(usr, result) {
+    // CAMBIA EL QUERY, ya no se llaman así los campos
     let query = "INSERT INTO usuarios(nombre, apellidos, " +
         "email, username, password, fecha_nacimiento)" +
         "VALUES (?,?,?,?,?,?)";
