@@ -145,7 +145,7 @@ Libro.getAllLibros = function getAllLibros(result) {
 }
 
 Libro.find = function findLibro(titulo, result) {
-    sql.query("SELECT * " + genero + " WHERE titulo LIKE ?", '%' + titulo + '%', function (err, res) {
+    sql.query("SELECT * " + genero + " WHERE titulo LIKE ? OR " + fields.tituloOrig + " LIKE ?", [titulo, titulo], function (err, res) {
         if (err) {
             console.log("error: ", err)
             result(null, err)

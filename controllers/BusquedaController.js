@@ -7,7 +7,7 @@ var Autor = require('../models/autor');
 
 exports.find = async (req, res) => {
     var search = req.body.search;
-    let libros = await getLibros(search);
+    let libros = await getLibros  ('%'+search+'%');
     let generos = await getGeneros('%'+search+'%');
     let autores = await getAutores('%'+search+'%');
 
