@@ -12,24 +12,24 @@ var modelLibro = require("../models/libro");
 
 /* GET home page. */
 router.get('/', (req, res) => {
-    
+
     modelLibro.getAllLibros((err, libro) => {
         console.log("libros controller")
         if (err) {
             res.send(err)
         }
-
-        for (let i = 0; i < libro.length; i++) {
-            if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
-                //console.log(libro[i].imgdata)
-                let tempbin = libro[i].imgdata;
-                let data64 = Buffer.from(tempbin, 'binary').toString('base64');
-                libro[i].imgdata = data64;
+        else {
+            for (let i = 0; i < libro.length; i++) {
+                if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
+                    //console.log(libro[i].imgdata)
+                    let tempbin = libro[i].imgdata;
+                    let data64 = Buffer.from(tempbin, 'binary').toString('base64');
+                    libro[i].imgdata = data64;
+                }
             }
+            res.render('index', { title: 'Libros', libros: libro, activeInicio: 'active', content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA" })
         }
-
-        res.render('index', { title: 'Libros', libros: libro, activeInicio: 'active', content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA" })
-    })
+    });
 });
 
 // RUTAS [ruta, controlador]
