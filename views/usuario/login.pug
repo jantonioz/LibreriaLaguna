@@ -5,6 +5,7 @@ block content
         div(class="row justify-content-center align-items-center h-100")
             div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5 mb-5")
                 form(action="/usuarios/register", method="POST", enctype="multipart/form-data")
+                    h1 Inicio de sesión
                     div(class="form-label-group")
                         input(type="text", class="form-control",id="username", name="username", placeholder="Nombre de usuario", autocomplete="off", required)
                         label(for="username") Nombre de usuario
@@ -13,4 +14,4 @@ block content
                         input(type="text", class="form-control",id="password", name="password", placeholder="Contraseña", autocomplete="off", required)
                         label(for="password") Contraseña
 
-                button(type="submit", class="btn btn-lg btn-primary btn-block") Registrar
+                button(type="submit", class="btn btn-lg btn-primary btn-block") Iniciar sesión

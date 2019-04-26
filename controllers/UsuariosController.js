@@ -8,8 +8,7 @@ exports.list_all_users = function(req, res){
     Usuario.getAllUsuarios(function(err, usr){
         if (err)
             res.send(err)
-
-        res.render('usuario/lista')
+        res.render('usuario/lista');
     })
 }   
 
@@ -18,7 +17,7 @@ exports.formLogin = (req, res) => {
 }
 
 exports.getRegister = function(req, res){
-    res.render('usuario/crear')
+    res.render('usuario/crear');
 }
 
 exports.create_usr = async function(req, res){
