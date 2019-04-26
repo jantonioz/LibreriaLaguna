@@ -1,0 +1,47 @@
+extends ../layout
+
+
+block content
+    if (libros)
+        h2 Libros    
+        each libro in libros
+            div(class="row m-3")
+                div(class="col col-sm-2")
+                    if(libro.imgdata!=null)
+                        img(class="img-fluid" src='data:image/png;base64,'+libro.imgdata, style="max-width=50px; max-height=90px;")
+                div(class="col")    
+                    -var genLink = "<a href='/generos/d/" + libro.gen_id +"'> " + libro.genero + "</a>"
+                    h2
+                        a(href="/libros/d/" + libro.lib_id ) !{libro.titulo}
+                    small= 'Autor: '
+                        a(href="/autores/d/" + libro.autor_id) !{libro.autor}
+                        | !{" \u2022 "} !{genLink}
+                    p=  'Descripcion: ' + libro.descripcion
+
+    if (generos)
+        h2 Generos
+        each gen in generos
+            h3
+                a(href="/generos/d/" + gen.gen_id ) #{gen.gen_nombre}
+            //- small= 'Autor: ' + libro.autor + 	" \u2022 " + libro.genero
+            //p=  'Nacimiento: ' + aut.aut_fecnac
+
+
+    if (autores)
+        h2 Autores
+        each aut in autores
+            h3
+                a(href="/autores/d/" + aut.aut_id ) #{aut.aut_nombre}
+            //- small= 'Autor: ' + libro.autor + 	" \u2022 " + libro.genero
+            p=  'Nacimiento: ' + aut.aut_fecnac
+
+    if (editoriales)
+        each ed in editoriales
+            div(class="row")
+                div(class="col")
+                    h1
+                        a(href="/editoriales/d/" + ed.ed_id ) #{ed.ed_nombre}
+                        a(href="/editoriales/e/" + ed.ed_id, class="btn btn-secondary ml-5") Editar
+
+
+    
