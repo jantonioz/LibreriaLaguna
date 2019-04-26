@@ -13,6 +13,10 @@ exports.list_all_users = function(req, res){
     })
 }   
 
+exports.formLogin = (req, res) => {
+    res.render('usuario/login', {title: 'Login usuario'});
+}
+
 exports.getRegister = function(req, res){
     res.render('usuario/crear')
 }
