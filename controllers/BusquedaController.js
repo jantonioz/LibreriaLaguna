@@ -20,9 +20,7 @@ function getEditoriales(search) {
         Editorial.findByNombre(search, (err, res) => {
             if (!err) {
                 resolve(res);
-            } else {
-                reject(err);
-            }
+            } 
         })
     });
 }

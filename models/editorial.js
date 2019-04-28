@@ -90,11 +90,11 @@ Editorial.findById = (id, result) => {
 }
 
 Editorial.findByNombre = (nombre, result) => {
-    sql.query(SELECT_ALL + findByName, name, (err, res) => {
+    sql.query(SELECT_ALL + findByName, nombre, (err, res) => {
         if (err) {
             result(err, null);
         } else {
-            result(null, err);
+            result(null, res);
         }
     });
 }
