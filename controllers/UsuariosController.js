@@ -22,11 +22,10 @@ exports.login = (req, res) => {
 
 
     Usuario.verify(username, password, (err, usuario) => {
-        if (!err) {
-            res.json(usuario);
-        } else {
+        if (!err && usuario) {
+            res.send("LOGGED");
+        } else
             res.send("ERROR");
-        }
     });
 }
 

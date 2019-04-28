@@ -129,6 +129,8 @@ Usuario.verify = (username, password,result) => {
             result(err, null);
         } else if (res.length == 1) {
             result(null, res);
+        } else {
+            result(null, null);
         }
     });
 }

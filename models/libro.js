@@ -177,4 +177,22 @@ Libro.remove = function (id, result) {
     })
 }
 
+Libro.getAllFormatted = (result) => {
+    
+    sql.query("SELECT " + selectors + genero + imageJOIN, function (err, res) {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+        } else {
+            for (let i = 0; i < res.length; i++) {
+                if (typeof res[i].imgdata !== 'undefined' && res[i].imgdata != null) {
+                    let tempbin = res[i].imgdata;
+                    res[i].imgdata = Buffer.from(tempbin, 'binary').toString('base64');;
+                }
+            }
+            result(null, res);
+        }
+    });
+}
+
 module.exports = Libro;
