@@ -44,11 +44,29 @@ router.post('/libros/crear/', libro.create_a_libro);
 router.get('/libros/e/:libroId', libro.formEditar);
 router.post('/libros/update', libro.update_a_libro);
 
+var redirectHome = (req, res, next) => {
+    if (req.session && req.session.user && req.cookies.sid) {
+        res.redirect('/');
+    } else {
+        next();
+    }
+}
+
+var redirectLogin = (req, res, next) => {
+    if (!req.session || !req.session.user || !req.cookies.sid) {
+        res.redirect('/login');
+    } else {
+        next();
+    }
+}
+
 router.get('/usuarios/', usuario.list_all_users);
-router.get('/login', usuario.formLogin);
-router.post('/login', usuario.login);
-router.get('/signup', usuario.getRegister);
-router.post('/usuarios/register', usuario.create_usr);
+router.get('/login', redirectHome, usuario.formLogin);
+router.post('/login', redirectHome, usuario.login);
+router.get('/logout', redirectLogin, usuario.logout);
+router.get('/signup', redirectHome, usuario.getRegister);
+router.post('/usuarios/register', redirectHome, usuario.create_usr);
+router.get('/cuenta', redirectLogin, usuario.userInfo);
 
 
 router.get('/autores/', autor.list_all_authors);

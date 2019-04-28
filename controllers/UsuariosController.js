@@ -20,10 +20,13 @@ exports.login = (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
 
+    
 
     Usuario.verify(username, password, (err, usuario) => {
         if (!err && usuario) {
-            res.send("LOGGED");
+            
+            req.session.user = usuario[0];
+            res.redirect('/');
         } else
             res.send("ERROR");
     });
@@ -77,4 +80,19 @@ function createDireccion(calle, numero, colonia, ciudad, pais){
             }
         });
     });
+}
+
+
+exports.userInfo = (req, res) => {
+    res.json({cookie: req.cookies.sid, session: req.session.user});
+}
+
+
+exports.logout = (req, res) => {
+    if (req.session && req.session.user && req.cookies.sid) {
+        res.clearCookie('sid');
+        res.redirect('/');
+    } else {
+        res.redirect('/login');
+    }
 }
