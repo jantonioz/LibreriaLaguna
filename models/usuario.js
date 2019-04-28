@@ -4,7 +4,7 @@ var sql = require('./db.js')
 
 const fields = {
     nombre: 'usr_nombre', apellidos: 'usr_apellidos', email: 'usr_email',
-    username: 'usr_username', password: 'usr_password', fnac: 'usr_fnac', 
+    username: 'usr_username', password: 'usr_password', fnac: 'usr_fnac',
     direccion: 'direccion_id'
 };
 
@@ -13,9 +13,9 @@ const comma = ', ';
 const assign = ' = ?';
 
 const Insert =
-    'INSERT INTO usuarios (' + 
+    'INSERT INTO usuarios (' +
     fields.nombre + comma + fields.apellidos + comma + fields.email + comma +
-    fields.username + comma + fields.password + comma + fields.fnac + comma + 
+    fields.username + comma + fields.password + comma + fields.fnac + comma +
     fields.direccion + ') VALUES (?, ?, ?, ?, ?, ?, ?)';
 
 const update =
@@ -28,6 +28,9 @@ const update =
     + ' WHERE usr_id = ?';
 
 const Delete = 'DELETE FROM Usuarios WHERE usr_id = ?';
+
+const VerifyQuery = 'SELECT * FROM usuarios WHERE ' + fields.username +
+    ' = ? AND ' + fields.password + ' = ? LIMIT 1';
 
 class Usuario {
     constructor(nombre, apellidos, email, username, password, fnac, direccion_id, id = 0) {
@@ -118,6 +121,16 @@ Usuario.getAllUsuarios = function getAllLibros(result) {
             result(null, res);
         }
     })
+}
+
+Usuario.verify = (username, password,result) => {
+    sql.query(VerifyQuery, [username, password], (err, res) => {
+        if (err) {
+            result(err, null);
+        } else if (res.length == 1) {
+            result(null, res);
+        }
+    });
 }
 
 module.exports = Usuario

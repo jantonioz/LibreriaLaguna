@@ -46,7 +46,7 @@ router.post('/libros/update', libro.update_a_libro);
 
 router.get('/usuarios/', usuario.list_all_users);
 router.post('usuarios/', usuario.create_usr);
-router.get('/usuarios/register', usuario.getRegister);
+router.get('/signup', usuario.getRegister);
 router.post('/usuarios/register', usuario.create_usr);
 router.get('/usuarios/login', usuario.formLogin);
 
