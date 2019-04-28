@@ -48,7 +48,7 @@ router.get('/usuarios/', usuario.list_all_users);
 router.post('usuarios/', usuario.create_usr);
 router.get('/signup', usuario.getRegister);
 router.post('/usuarios/register', usuario.create_usr);
-router.get('/usuarios/login', usuario.formLogin);
+router.get('/login', usuario.formLogin);
 
 router.get('/autores/', autor.list_all_authors);
 router.get('/autores/d/:aut_id', autor.listBooksOf);
