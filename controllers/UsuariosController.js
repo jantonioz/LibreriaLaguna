@@ -16,6 +16,20 @@ exports.formLogin = (req, res) => {
     res.render('usuario/login', {title: 'Login usuario'});
 }
 
+exports.login = (req, res) => {
+    var username = req.body.username;
+    var password = req.body.password;
+
+
+    Usuario.verify(username, password, (err, usuario) => {
+        if (!err) {
+            res.json(usuario);
+        } else {
+            res.send("ERROR");
+        }
+    });
+}
+
 exports.getRegister = function(req, res){
     res.render('usuario/crear');
 }
