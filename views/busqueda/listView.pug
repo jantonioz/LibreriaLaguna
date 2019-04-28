@@ -2,7 +2,7 @@ extends ../layout
 
 
 block content
-    if (libros)
+    if (libros.length > 0)
         h2 Libros    
         each libro in libros
             div(class="row m-3")
@@ -18,7 +18,7 @@ block content
                         | !{" \u2022 "} !{genLink}
                     p=  'Descripcion: ' + libro.descripcion
 
-    if (generos)
+    if (generos.length > 0)
         h2 Generos
         each gen in generos
             h3
@@ -27,7 +27,7 @@ block content
             //p=  'Nacimiento: ' + aut.aut_fecnac
 
 
-    if (autores)
+    if (autores.length > 0)
         h2 Autores
         each aut in autores
             h3
@@ -35,7 +35,7 @@ block content
             //- small= 'Autor: ' + libro.autor + 	" \u2022 " + libro.genero
             p=  'Nacimiento: ' + aut.aut_fecnac
 
-    if (editoriales)
+    if (editoriales.length > 0)
         each ed in editoriales
             div(class="row")
                 div(class="col")

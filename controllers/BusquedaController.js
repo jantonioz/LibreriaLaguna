@@ -11,8 +11,13 @@ exports.find = async (req, res) => {
     let generos = await getGeneros('%'+search+'%');
     let autores = await getAutores('%'+search+'%');
 
+    res.render('busqueda/listView', {title: 'Busqueda', libros: libros, generos: generos, autores: autores, editoriales: []});
+}
 
-    res.json({libros, generos, autores})
+function getEditoriales(search) {
+    return new Promise((resolve, reject) => {
+
+    });
 }
 
 function getAutores(search) {
@@ -39,6 +44,13 @@ function getLibros(search) {
     return new Promise((resolve, reject) => {
         Libro.find(search, (err, res) => {
             if (!err) {
+                for (let i = 0; i < res.length; i++) {
+                    if (typeof res[i].imgdata !== 'undefined' && res[i].imgdata != null) {
+                        let tempbin = res[i].imgdata;
+                        let data64 = Buffer.from(tempbin, 'binary').toString('base64');
+                        res[i].imgdata = data64;
+                    }
+                }
                 resolve(res);
             }
         });
