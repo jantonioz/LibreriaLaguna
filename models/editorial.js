@@ -89,6 +89,16 @@ Editorial.findById = (id, result) => {
     });
 }
 
+Editorial.findByNombre = (nombre, result) => {
+    sql.query(SELECT_ALL + findByName, name, (err, res) => {
+        if (err) {
+            result(err, null);
+        } else {
+            result(null, err);
+        }
+    });
+}
+
 Editorial.booksBy = (ed_id, result) => {
     sql.query(libroBy, ed_id, (err, res) => {
         if (err) {

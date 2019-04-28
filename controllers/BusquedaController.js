@@ -10,13 +10,20 @@ exports.find = async (req, res) => {
     let libros = await getLibros  ('%'+search+'%');
     let generos = await getGeneros('%'+search+'%');
     let autores = await getAutores('%'+search+'%');
+    let editoriales = await getEditoriales('%'+search+'%');
 
-    res.render('busqueda/listView', {title: 'Busqueda', libros: libros, generos: generos, autores: autores, editoriales: []});
+    res.render('busqueda/listView', {title: 'Busqueda', libros: libros, generos: generos, autores: autores, editoriales: editoriales});
 }
 
 function getEditoriales(search) {
     return new Promise((resolve, reject) => {
-
+        Editorial.findByNombre(search, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        })
     });
 }
 
