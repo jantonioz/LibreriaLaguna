@@ -3,23 +3,23 @@ CREATE DATABASE test_libreria;
 USE test_libreria;
 
 CREATE TABLE Libros (
-  lib_id             int(10) NOT NULL AUTO_INCREMENT, 
-  titulo             varchar(255) NOT NULL, 
-  orig_titulo        varchar(255), 
-  isbn               bigint(15) NOT NULL UNIQUE, 
-  paginas            int(4) NOT NULL, 
-  descripcion_fisica varchar(100) NOT NULL, 
-  descripcion        text NOT NULL, 
-  fecha_pub          date NOT NULL, 
-  genero_id          int(10) NOT NULL, 
-  editorial_id       int(10) NOT NULL, 
-  updated_at         timestamp NULL, 
-  created_at         timestamp NOT NULL, 
+  lib_id       int(10) NOT NULL AUTO_INCREMENT, 
+  titulo       varchar(255) NOT NULL, 
+  orig_titulo  varchar(255), 
+  isbn         bigint(15) NOT NULL UNIQUE, 
+  publicacion  date NOT NULL, 
+  paginas      int(4) NOT NULL, 
+  descripcion  text NOT NULL, 
+  fecha_pub    date NOT NULL, 
+  genero_id    int(10) NOT NULL, 
+  editorial_id int(10) NOT NULL, 
+  updated_at   timestamp NULL, 
+  created_at   timestamp NOT NULL, 
   PRIMARY KEY (lib_id));
 CREATE TABLE Proveedores (
   prov_id      int(10) NOT NULL AUTO_INCREMENT, 
   prov_nombre  varchar(255) NOT NULL, 
-  prov_email   varchar(50) NOT NULL, 
+  prov_email   varchar(50) NOT NULL UNIQUE, 
   direccion_id int(10) NOT NULL, 
   updated_at   timestamp NULL, 
   created_at   timestamp NOT NULL, 
@@ -89,7 +89,7 @@ CREATE TABLE Imagen_libro (
 CREATE TABLE Editoriales (
   ed_id      int(10) NOT NULL AUTO_INCREMENT, 
   ed_nombre  varchar(50) NOT NULL, 
-  ed_correo  varchar(50) NOT NULL, 
+  ed_correo  varchar(50) NOT NULL UNIQUE, 
   updated_at timestamp NULL, 
   created_at timestamp NOT NULL, 
   PRIMARY KEY (ed_id));
@@ -148,10 +148,11 @@ ALTER TABLE Item_compra ADD CONSTRAINT FKItem_compr354842 FOREIGN KEY (ejemplare
 ALTER TABLE Item_compra ADD CONSTRAINT FKItem_compr537480 FOREIGN KEY (compras_id) REFERENCES Compras (comp_id);
 ALTER TABLE Transporte ADD CONSTRAINT FKTransporte864377 FOREIGN KEY (compras_id) REFERENCES Compras (comp_id);
 
+
 INSERT INTO `editoriales` (`ed_id`, `ed_nombre`, `ed_correo`, `updated_at`, `created_at`) VALUES
 (1, 'NoBooks', 'NoBooks@gmail.com'              , NOW(), NOW()),
-(2, 'Gnome Press', '0'                          , NOW(), NOW()),
-(3, 'Pierre-Jules Hetzel', '0'                  , NOW(), NOW()),
+(2, 'Gnome Press', 'gnomepress@gmail.com'       , NOW(), NOW()),
+(3, 'Pierre-Jules Hetzel', 'jules_ed@hotmail.com', NOW(), NOW()),
 (4, 'Tor books', 'torbooks@gmail.com'           , NOW(), NOW()),
 (5, 'Una editorial mas', 'mieditorial@gmail.com', NOW(), NOW());
 
@@ -173,15 +174,15 @@ INSERT INTO `autores` (`aut_id`, `aut_nombre`, `aut_fecnac`, `aut_biografia`, `u
 (11, 'Brandon Sanderson', '1975-12-19', '', NOW(), NOW());
 
 
-INSERT INTO `libros` (`lib_id`, `titulo`, `orig_titulo`, `isbn`, `paginas`, `descripcion_fisica`, `descripcion`, `fecha_pub`, `genero_id`, `editorial_id`, `updated_at`, `created_at`) VALUES
-(1, 'Moby Dick', 'Moby Dick', 9787532226320, 581, 'Bolsillo', 'Narra la travesía del barco ballenero Pequod, \r\ncomandado por el capitán Ahab, junto a Ismael y el \r\narponero Quiqueg en la obsesiva y autodestructiva \r\npersecución de un gran cachalote blanco.', '0000-00-00', 1, 1, NOW(), '2019-04-24 02:57:02'),
-(2, 'Yo, robot', 'I Robot', 9780007491513, 374, 'No.id', 'Yo, robot es una colección de relatos en los que se \r\nestablecen y plantean los problemas de las tres leyes \r\nde la robótica que son un compendio fijo e imprescindible \r\nde moral aplicable a supuestos robots inteligentes.', '0000-00-00', 2, 1, NOW(), '2019-04-24 02:57:43'),
-(3, 'La isla misteriosa', 'The mysterious island', 9788497862752, 476, 'Portada blanda', 'Durante la guerra civil americana, cinco hombres logran escapar del asedio de Richmond en un globo aerostático que finalmente acabará estrellándose en una isla desierta de los Mares del Sur. Los cinco compañeros no tienen nada salvo su ingenio para sobrev', '0000-00-00', 3, 3, NOW(), '2019-04-20 11:59:17'),
-(11, 'Amanecer rojo', 'Red rising', 9785040790166, 382, 'Portada blanda', 'Ahora, en Marte, el equilibrio se sustenta en un férreo sistema de castas representadas por colores. Para acceder a la élite de los gobernantes, los dorados deben ganarse su puesto en una contienda implacable.', '0000-00-00', 2, 2, NOW(), '2019-04-21 09:42:38'),
-(12, 'Fundación', 'Foundation', 9788498003116, 230, 'Portada dura', 'Una de las características más interesantes de la novela es que se trata de un futuro muy lejano, decenas de miles de años en el futuro pero con condiciones netamente humanas. ', '0000-00-00', 2, 1, NOW(), '2019-04-21 08:08:36'),
-(14, 'Hijo dorado', 'Golden son', 9788427208773, 464, 'Portada blanda', 'Tras una implacable competición en el Instituto de Marte, Darrow se ha ganado un puesto de honor entre la élite gobernante. Ahora luce la cicatriz curvada de los dorados, los más crueles y brillantes de los humanos. Pero Darrow no es como ellos…', '0000-00-00', 2, 1, NOW(), '2019-04-22 03:29:08'),
-(15, 'La vuelta al mundo en 80 días', 'Le Tour du monde en quatre-vingts jours', 9787540222093, 257, 'Portada dura', 'El flemático y solitario caballero británico Phileas Fogg abandonará su vida de escrupulosa disciplina para cumplir con una apuesta con sus colegas del Reform Club, en la que arriesgará la mitad de su fortuna comprometiéndose a dar la vuelta al mundo en s', '0000-00-00', 1, 3, NOW(), '2019-04-24 02:05:49'),
-(16, 'El imperio final', 'The Final Empire', 9780575089914, 747, 'Portada blanda', 'Durante mil años han caído las cenizas y nada florece. Durante mil años los skaa han sido esclavizados y viven sumidos en un miedo inevitable. Durante mil años el Lord Legislador reina con un poder absoluto gracias al terror, a sus poderes y a su inmortal', '0000-00-00', 5, 1, NOW(), '2019-04-24 02:58:27');
+INSERT INTO `libros` (`lib_id`, `titulo`, `orig_titulo`, `isbn`, `paginas`, `descripcion`, `fecha_pub`, `genero_id`, `editorial_id`, `updated_at`, `created_at`) VALUES
+(1, 'Moby Dick', 'Moby Dick', 9787532226320, 581,  'Narra la travesía del barco ballenero Pequod, \r\ncomandado por el capitán Ahab, junto a Ismael y el \r\narponero Quiqueg en la obsesiva y autodestructiva \r\npersecución de un gran cachalote blanco.', '0000-00-00', 1, 1, NOW(), '2019-04-24 02:57:02'),
+(2, 'Yo, robot', 'I Robot', 9780007491513, 374, 'Yo, robot es una colección de relatos en los que se \r\nestablecen y plantean los problemas de las tres leyes \r\nde la robótica que son un compendio fijo e imprescindible \r\nde moral aplicable a supuestos robots inteligentes.', '0000-00-00', 2, 1, NOW(), '2019-04-24 02:57:43'),
+(3, 'La isla misteriosa', 'The mysterious island', 9788497862752, 476, 'Durante la guerra civil americana, cinco hombres logran escapar del asedio de Richmond en un globo aerostático que finalmente acabará estrellándose en una isla desierta de los Mares del Sur. Los cinco compañeros no tienen nada salvo su ingenio para sobrev', '0000-00-00', 3, 3, NOW(), '2019-04-20 11:59:17'),
+(11, 'Amanecer rojo', 'Red rising', 9785040790166, 382, 'Ahora, en Marte, el equilibrio se sustenta en un férreo sistema de castas representadas por colores. Para acceder a la élite de los gobernantes, los dorados deben ganarse su puesto en una contienda implacable.', '0000-00-00', 2, 2, NOW(), '2019-04-21 09:42:38'),
+(12, 'Fundación', 'Foundation', 9788498003116, 230, 'Una de las características más interesantes de la novela es que se trata de un futuro muy lejano, decenas de miles de años en el futuro pero con condiciones netamente humanas. ', '0000-00-00', 2, 1, NOW(), '2019-04-21 08:08:36'),
+(14, 'Hijo dorado', 'Golden son', 9788427208773, 464, 'Tras una implacable competición en el Instituto de Marte, Darrow se ha ganado un puesto de honor entre la élite gobernante. Ahora luce la cicatriz curvada de los dorados, los más crueles y brillantes de los humanos. Pero Darrow no es como ellos…', '0000-00-00', 2, 1, NOW(), '2019-04-22 03:29:08'),
+(15, 'La vuelta al mundo en 80 días', 'Le Tour du monde en quatre-vingts jours', 9787540222093, 257, 'El flemático y solitario caballero británico Phileas Fogg abandonará su vida de escrupulosa disciplina para cumplir con una apuesta con sus colegas del Reform Club, en la que arriesgará la mitad de su fortuna comprometiéndose a dar la vuelta al mundo en s', '0000-00-00', 1, 3, NOW(), '2019-04-24 02:05:49'),
+(16, 'El imperio final', 'The Final Empire', 9780575089914, 747, 'Durante mil años han caído las cenizas y nada florece. Durante mil años los skaa han sido esclavizados y viven sumidos en un miedo inevitable. Durante mil años el Lord Legislador reina con un poder absoluto gracias al terror, a sus poderes y a su inmortal', '0000-00-00', 5, 1, NOW(), '2019-04-24 02:58:27');
 
 
 INSERT INTO `autor_libro` (`ID`, `autor_id`, `libro_id`, `updated_at`, `created_at`) VALUES
