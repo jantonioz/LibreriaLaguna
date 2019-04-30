@@ -4,7 +4,7 @@ var sql = require('./db.js')
 
 
 
-const selectors = 'lib.lib_id, lib.titulo, lib.orig_titulo, lib.isbn,lib.paginas, lib.descripcion_fisica, ' +
+const selectors = 'lib.lib_id, lib.titulo, lib.orig_titulo, lib.isbn,lib.paginas, lib.fecha_pub, ' +
     'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
     ' img.img_filename AS filename,  ' +
     'aut.aut_id AS autor_id, gen.gen_id AS gen_id, lib.editorial_id, ed.ed_nombre AS editorial ';
@@ -29,13 +29,13 @@ const fullINFO = ' lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descripcion
 exports.fullInfo = fullINFO;
 
 const insert = "INSERT INTO libros" +
-    "(titulo, orig_titulo, isbn, paginas, descripcion_fisica," +
+    "(titulo, orig_titulo, isbn, paginas, fecha_pub," +
     " descripcion, editorial_id, genero_id)" +
     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 const fields = {
     titulo: 'titulo', tituloOrig: 'orig_titulo', isbn: 'isbn', paginas: 'paginas',
-    descripcion: 'descripcion', descripcion_fisica: 'descripcion_fisica', editorial_id: 'editorial_id',
+    descripcion: 'descripcion', publicacion: 'fecha_pub', editorial_id: 'editorial_id',
     genero_id: 'genero_id'
 };
 
@@ -48,20 +48,20 @@ const update = 'UPDATE libros SET ' +
             fields.isbn                 + assignTo + ', ' +
             fields.paginas              + assignTo + ', ' +
             fields.descripcion          + assignTo + ', ' +
-            fields.descripcion_fisica   + assignTo + ', ' +
+            fields.publicacion          + assignTo + ', ' +
             fields.genero_id            + assignTo + ', ' +
             fields.editorial_id         + assignTo +
             'WHERE lib_id'              + assignTo;
 
 class Libro {
-    constructor(titulo, tituloO, isbn, paginas, descripcion, descripcion_fisica, gen_id, ed_id, lib_id = 0) {
+    constructor(titulo, tituloO, isbn, paginas, descripcion, publicacion, gen_id, ed_id, lib_id = 0) {
         this.id = lib_id;
         this.titulo = titulo
         this.tituloOrig = tituloO
         this.isbn = isbn
         this.paginas = paginas
         this.descripcion = descripcion
-        this.descripcion_fisica = descripcion_fisica
+        this.publicacion = publicacion
         this.editorial_id = ed_id
         this.genero_id = gen_id
         this.lib_id = lib_id;
@@ -70,7 +70,7 @@ class Libro {
     save(result) {
         sql.query(insert,
             [this.titulo, this.tituloOrig, this.isbn, this.paginas,
-            this.descripcion_fisica, this.descripcion, this.editorial_id,
+            this.publicacion, this.descripcion, this.editorial_id,
             this.genero_id],
             (err, res) => {
                 if (err) {
@@ -87,7 +87,7 @@ class Libro {
     update(result) {
         sql.query(update,
             [this.titulo, this.tituloOrig, this.isbn, this.paginas,
-            this.descripcion, this.descripcion_fisica, this.genero_id,
+            this.descripcion, this.publicacion, this.genero_id,
             this.editorial_id, this.id],
             (err, res) => {
                 if (err) {
