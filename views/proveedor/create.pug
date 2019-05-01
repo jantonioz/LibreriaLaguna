@@ -1,0 +1,56 @@
+extends ../layout
+
+
+block content
+    div(class="container")
+        form(action="/proveedores/register", method="POST")
+            input(type="hidden", name="_csrf", value=_csrf)
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="nombre", class="col col-lg") Nombre:
+                    div(class="col")
+                        input(type="text", class="form-control", id="nombre", name="nombre", placeholer="Nombre", autocomplete="off", required, autofocus)
+                        
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="email" class="col col-lg") Email:
+                    div(class="col")
+                        input(type="email" class="form-control" id="email" name="email" placeholer="email" autocomplete="off" required)
+            
+            div(class="row")
+                h4(class="col col-sm-4 text-muted") Direccion 
+                hr(class="col")
+
+            div(class="row")
+                div(class="col")
+                    div(class="form-label-group")
+                        input(type="text", class="form-control", id="calle", name="calle", placeholder = "Calle " autocomplete = "off", required)
+                        label(for="calle") Calle
+                div(class="col col-sm-4")
+                    div(class="form-label-group")
+                        input(type="text", class="form-control", id="numero", name="numero", placeholder = "Numero" autocomplete = "off", required)
+                        label(for="numero") Numero
+
+            div(class="row")
+                div(class="col")
+                    div(class="form-label-group")
+                        input(type="text", class="form-control", id="colonia", name="colonia", placeholder = "Colonia" autocomplete = "off", required)
+                        label(for="colonia") Colonia
+                div(class="col")
+                    div(class="form-label-group")
+                        input(type="text", class="form-control", id="ciudad", name="ciudad", placeholder = "Ciudad" autocomplete = "off", required)
+                        label(for="ciudad") Ciudad
+
+            div(class="form-label-group")
+                        input(type="text", class="form-control", id="pais", name="pais", placeholder = "Ciudad" autocomplete = "off", required)
+                        label(for="pais") Pais
+
+
+            hr
+            div(class="form-group")
+                div(class="row")
+                    div(class="col-sm-3 mx-auto")
+                        button(type="submit" class="btn btn-primary") Aceptar 
+                        a(type="cancel" href="/libros" class="btn btn-outline-danger") Cancelar

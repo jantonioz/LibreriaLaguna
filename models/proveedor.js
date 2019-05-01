@@ -26,6 +26,8 @@ const QUERY_ID = 'SELECT ' + fields.id + ' FROM ' + table +
 
 const QUERY_LOTES = 'SELECT * FROM lotes WHERE proveedor_id = ?';
 
+const QUERY_SELECTALL = 'SELECT * FROM proveedores';
+
 class Proveedor {
     constructor(nombre, email, direccion_id, id = 0) {
         this.nombre = nombre;
@@ -84,4 +86,10 @@ class Proveedor {
             }
         });
     }
+
+    all(callback) {
+        sql.query()
+    }
 }
+
+module.exports = Proveedor

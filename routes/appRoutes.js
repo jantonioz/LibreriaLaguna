@@ -6,6 +6,7 @@ var autor = require("../controllers/AutoresController");
 var genero = require("../controllers/GenerosController");
 var editorial = require("../controllers/EditorialesController");
 var busqueda = require("../controllers/BusquedaController");
+var proveedor = require("../controllers/ProveedoresController");
 //var stockLibro = require("../models/libro");
 
 var modelLibro = require("../models/libro");
@@ -68,7 +69,6 @@ router.get('/signup', redirectHome, usuario.getRegister);
 router.post('/usuarios/register', redirectHome, usuario.create_usr);
 router.get('/cuenta', redirectLogin, usuario.userInfo);
 
-
 router.get('/autores/', autor.list_all_authors);
 router.get('/autores/d/:aut_id', autor.listBooksOf);
 router.get('/autores/crear', autor.formCrear);
@@ -79,7 +79,6 @@ router.get('/generos/d/:gen_id', genero.getLibrosBy);
 router.get('/generos/crear/', genero.formCrear);
 router.post('/generos/crear', genero.create);
 
-
 router.get('/editoriales/', editorial.list_all_editoriales);
 router.get('/editoriales/d/:id', editorial.getLibrosBy);
 router.get('/editoriales/registrar', editorial.formCrear);
@@ -87,8 +86,10 @@ router.post('/editoriales/crear', editorial.create);
 router.get('/editoriales/e/:id', editorial.formEditar);
 router.post('/editoriales/editar', editorial.editar);
 
-
 router.post('/find?:busqueda', busqueda.find);
+
+router.get('/proveedores/register', proveedor.register);
+router.post('/proveedores/register', proveedor.registerPost);
 
 //router.get('/inicio/', libro = new Object());
 
