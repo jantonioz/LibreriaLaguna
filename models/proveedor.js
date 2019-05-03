@@ -88,7 +88,13 @@ class Proveedor {
     }
 
     all(callback) {
-        sql.query()
+        sql.query('SELECT * FROM proveedores', (err, res) => {
+            if (err) {
+                callback(err, null);                
+            } else {
+                callback(null, res);
+            }
+        });
     }
 }
 
