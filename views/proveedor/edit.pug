@@ -1,0 +1,62 @@
+extends ../layout
+
+
+block content
+    div(class="container")
+        form(action="/proveedores/edit", method="POST")
+            input(type="hidden", name="_csrf", value=_csrf)
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="nombre", class="col col-lg") Nombre:
+                    div(class="col")
+                        input(type="text", class="form-control", id="nombre", name="nombre", placeholer="Nombre", autocomplete="off", required, autofocus, value=prov.prov_nombre)
+                        
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="email" class="col col-lg") Email:
+                    div(class="col")
+                        input(type="email" class="form-control" id="email" name="email" placeholer="email" autocomplete="off" required, value=prov.prov_email)
+            
+            div(class="row")
+                h4(class="col col-sm-4 text-muted") Direccion 
+                hr(class="col")
+
+            div(class="row")
+                div(class="col")
+                    div(class="form-label-group")
+                        input(type="text", class="form-control", id="calle", name="calle", placeholder = "Calle " autocomplete = "off", required, value=prov.dir_calle)
+                        label(for="calle") Calle
+                div(class="col col-sm-4")
+                    div(class="form-label-group")
+                        input(type="text", class="form-control", id="numero", name="numero", placeholder = "Numero" autocomplete = "off", required, value=prov.dir_num)
+                        label(for="numero") Numero
+
+            div(class="row")
+                div(class="col")
+                    div(class="form-label-group")
+                        input(type="text", class="form-control", id="colonia", name="colonia", placeholder = "Colonia" autocomplete = "off", required, value=prov.dir_colonia)
+                        label(for="colonia") Colonia
+                div(class="col")
+                    div(class="form-label-group")
+                        input(type="text", class="form-control", id="ciudad", name="ciudad", placeholder = "Ciudad" autocomplete = "off", required, value=prov.dir_cd)
+                        label(for="ciudad") Ciudad
+
+            div(class="form-label-group")
+                        input(type="text", class="form-control", id="pais", name="pais", placeholder = "Ciudad" autocomplete = "off", required, value=prov.dir_pais)
+                        label(for="pais") Pais
+
+            div(class="form-label-group")
+                        input(type="number", class="form-control", id="codigopostal", name="cp", placeholder = "Código postal" autocomplete = "off", required, value=prov.dir_cp)
+                        label(for="pais") Código postal:
+
+            input(type="hidden", name="direccion_id", value=prov.dir_id)
+
+            input(type="hidden", name="prov_id", value=prov.prov_id)
+
+            div(class="form-group")
+                div(class="row")
+                    div(class="col-sm-3 mx-auto")
+                        button(type="submit" class="btn btn-primary") Editar 
+                        a.ml-4(type="cancel" href="/proveedores" class="btn btn-outline-danger") Cancelar

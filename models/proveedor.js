@@ -26,7 +26,9 @@ const QUERY_ID = 'SELECT ' + fields.id + ' FROM ' + table +
 
 const QUERY_LOTES = 'SELECT * FROM lotes WHERE proveedor_id = ?';
 
-const QUERY_SELECTALL = 'SELECT * FROM proveedores';
+const QUERY_SELECTALL = 'SELECT * FROM proveedores INNER JOIN direcciones AS d ON (direccion_id = d.dir_id)';
+
+const QUERY_FINDBYID = QUERY_SELECTALL + ' WHERE prov_id = ?';
 
 class Proveedor {
     constructor(nombre, email, direccion_id, id = 0) {
@@ -46,14 +48,17 @@ class Proveedor {
         });
     }
 
-    update(callback) {
-        sql.query(UPDATE, [this.nombre, this.email], (err, res) => {
-            if (err) {
-                callback(err, null);
-            } else {
-                callback(null, res);
-            }
+    update() {
+        return new Promise((resolve, reject) => {
+            sql.query(UPDATE, [this.nombre, this.email, this.id], (err, res) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(res);
+                }
+            });
         });
+
     }
 
     delete(callback) {
@@ -89,7 +94,7 @@ class Proveedor {
 
     all() {
         return new Promise((resolve, reject) => {
-            sql.query('SELECT * FROM proveedores', (err, res) => {
+            sql.query(QUERY_SELECTALL, (err, res) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -99,6 +104,19 @@ class Proveedor {
         });
 
     }
+}
+
+
+Proveedor.findById = (id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(QUERY_FINDBYID, [id], (err, res) => {
+            if (!err) {
+                resolve(res[0]);
+            } else {
+                reject(err);
+            }
+        });
+    });
 }
 
 module.exports = Proveedor
