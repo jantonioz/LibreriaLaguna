@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fileUpload = require('express-fileupload');
 var session = require('express-session');
+var paginate = require('express-paginate');
 
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
@@ -47,6 +48,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.use(paginate.middleware(5, 50));
 
 
 // IMPLEMENTAR TODO EL SISTEMA DE RUTAS

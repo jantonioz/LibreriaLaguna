@@ -16,6 +16,10 @@ exports.list_all_libros = function (req, res) {
         if (err) {
             res.send(err)
         }
+        let itemCount = libro.length;
+        let pageCount = Math.ceil(itemCount / req.query.limit);
+
+        libro = libro.slice(req.skip, req.skip + req.query.limit);
 
         for (let i = 0; i < libro.length; i++) {
             if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
@@ -26,12 +30,15 @@ exports.list_all_libros = function (req, res) {
                 //console.log(libro[i].imgdata);
             }
         }
-
-        let itemCount = libro.length;
-        let pageCount = 3;
+ 
+        
 
         res.render('libro/listView', 
-        { title: 'Libros', libros: libro, activeLibros: 'active', pageCout, itemCount, pages: paginate.getArrayPages(libro)(3, pageCount, req.query.page) });
+        { title: 'Libros', libros: libro, activeLibros: 'active', 
+        pageCount, 
+        itemCount, 
+        pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
+        actualPage: req.query.page });
     })
 }
 

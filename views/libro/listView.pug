@@ -15,3 +15,33 @@ block content
                     a(href="/autores/d/" + libro.autor_id) !{libro.autor}
                     | !{" \u2022 "} !{genLink}
                 p=  'Descripcion: ' + libro.descripcion
+
+    if paginate.hasPreviousPages || paginate.hasNextPages(pageCount)
+        .navigation.well-sm#pagination
+            ul.pagination.justify-content-center
+                if paginate.hasPreviousPages
+                    li.page-item
+                        a(href=paginate.href(true)).page-link
+                            | &laquo; Anterior 
+                else 
+                    li.page-item.disabled
+                        a.page-link(tabindex="-1")
+                            | Anterior
+                if pages
+                    each page in pages
+                        if actualPage === page.number
+                            li.page-item.active
+                                a.page-link(href=page.url)= page.number
+                        else 
+                            li.page-item
+                                a.page-link(href=page.url)= page.number
+                            
+                if paginate.hasNextPages(pageCount)
+                    li.page-item
+                        a.page-link(href=paginate.href()).next()
+                            | Siguiente &raquo;
+                            i.fa.fa-arrow-circle-right
+                else 
+                    li.page-item.disabled(tabindex="-1")
+                        a.page-link
+                            | Siguiente
