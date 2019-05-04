@@ -1,6 +1,7 @@
 'use strict';
 
 var sql = require('./db.js')
+var AutorLibro = require('./autor_libro.js');
 
 
 
@@ -17,7 +18,7 @@ const genero = ' FROM libros AS lib' +
 
 const imageJOIN = ' LEFT JOIN imagen_libro AS img ON (lib.lib_id = img.libro_id) ';
 
-const fullINFO = ' lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descripcion_fisica, ' +
+const fullINFO = ' lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.fecha_pub, ' +
     'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
     ' img.img_filename AS filename,  ' +
     'aut.aut_id AS autor_id, gen.gen_id AS gen_id ' +
@@ -56,14 +57,14 @@ const update = 'UPDATE libros SET ' +
 class Libro {
     constructor(titulo, tituloO, isbn, paginas, descripcion, publicacion, gen_id, ed_id, lib_id = 0) {
         this.id = lib_id;
-        this.titulo = titulo
-        this.tituloOrig = tituloO
-        this.isbn = isbn
-        this.paginas = paginas
-        this.descripcion = descripcion
-        this.publicacion = publicacion
-        this.editorial_id = ed_id
-        this.genero_id = gen_id
+        this.titulo = titulo;
+        this.tituloOrig = tituloO;
+        this.isbn = isbn;
+        this.paginas = paginas;
+        this.descripcion = descripcion;
+        this.publicacion = publicacion;
+        this.editorial_id = ed_id;
+        this.genero_id = gen_id;
         this.lib_id = lib_id;
     }
 
@@ -98,6 +99,25 @@ class Libro {
                     result(null, res)
                 }
             });
+    }
+
+    getAutor() {
+        return new Promise((resolve, reject) => {
+            sql.query('SELECT autor_id FROM autor_libro WHERE libro_id = ?', this.id,
+            (err, res) => {
+                if (!err) {
+                    resolve(res[0]);
+                } else {
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    attachAutor() {
+        // return new Promise((resolve, reject) => {
+        //     sql.query
+        // })
     }
 }
 

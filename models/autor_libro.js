@@ -3,6 +3,8 @@
 var sql = require('./db.js')
 
 const INSERT = 'INSERT INTO autor_libro(autor_id, libro_id) VALUES(?, ?)';
+const UPDATE = 'UPDATE autor_libro SET autor_id = ?, libro_id = ? WHERE ' +
+    'autor_id = ? AND libro_id = ?';
 
 // Constructor de A U T O R - L I B R O
 class AutorLibro {
@@ -14,15 +16,28 @@ class AutorLibro {
 
     save(result) {
         sql.query(INSERT, [this.autor_id, this.libro_id], (err, res) => {
-            if(err){
+            if (err) {
                 console.log("ERROR:", err);
                 result(err, null);
-            }else{
+            } else {
                 result(null, res);
             }
         })
     }
 
+    update(newLibroID, newAutorID) {
+        return new Promise((resolve, reject) => {
+            sql.query(UPDATE, [newAutorID, newLibroID, this.autor_id, this.libro_id],
+                (err, res) => {
+                    if (!err) {
+                        resolve(res);
+                    } else {
+                        reject(err);
+                    }
+                });
+        });
+
+    }
 }
 
 module.exports = AutorLibro;

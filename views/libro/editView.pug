@@ -46,9 +46,9 @@ block content
             div(class="form-group")
                 div(class="row")
                     div(class="col col-sm-2")
-                        label(for="descripcion_fisica" class="col col-lg") Descripcion fisica:
+                        label(for="publicacion" class="col col-lg") Publicacion:
                     div(class="col")
-                        input(type="text" class="form-control" id="descripcion_fisica" name="descripcion_fisica" placeholer="Ingresa un titulo" autocomplete="off", value=libro.descripcion_fisica)
+                        input(type="date" class="form-control" id="publicacion" name="publicacion" placeholer="" autocomplete="off", value=libro.fecha_pub)
             
             div(class="form-group")
                 div(class="row")
@@ -96,7 +96,7 @@ block content
                         label(for="imagen") Imagen:
                     div(class="col col-lg-5")
                         div(class="custom-file")
-                            input(type="file", class="custom-file-input", id="imagen", name="imagen" onChange="changelabel()")
+                            input(type="file", class="custom-file-input", id="imagen", name="imagen", onChange="changelabel()", multiple="multiple")
                             label(class="custom-file-label", for="imagen", id="lblimagen") [!{libro.filename}]
                     img(class="img-fluid", src="data:image/png;base64," + libro.imgdata, style="max-width:200px; max-height:200px;")
             hr

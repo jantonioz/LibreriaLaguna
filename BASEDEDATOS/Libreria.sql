@@ -102,7 +102,7 @@ CREATE TABLE Autores (
   created_at    timestamp NOT NULL, 
   PRIMARY KEY (aut_id));
 CREATE TABLE Autor_Libro (
-  ID         int(10) NOT NULL, 
+  ID         int(10) NOT NULL AUTO_INCREMENT,  -- ANTES NO TENIA EL AUTO INCREMENT
   autor_id   int(10) NOT NULL, 
   libro_id   int(10) NOT NULL, 
   updated_at timestamp NULL, 
