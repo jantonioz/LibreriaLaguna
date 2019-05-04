@@ -6,6 +6,7 @@ var Editorial = require('../models/editorial');
 var Autor = require('../models/autor');
 var Genero = require('../models/genero');
 var AutorLibro = require('../models/autor_libro');
+var paginate = require('express-paginate');
 
 exports.list_all_libros = function (req, res) {
 
@@ -26,7 +27,11 @@ exports.list_all_libros = function (req, res) {
             }
         }
 
-        res.render('libro/listView', { title: 'Libros', libros: libro, activeLibros: 'active' })
+        let itemCount = libro.length;
+        let pageCount = 3;
+
+        res.render('libro/listView', 
+        { title: 'Libros', libros: libro, activeLibros: 'active', pageCout, itemCount, pages: paginate.getArrayPages(libro)(3, pageCount, req.query.page) });
     })
 }
 
