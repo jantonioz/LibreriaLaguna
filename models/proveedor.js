@@ -21,8 +21,8 @@ const UPDATE = 'UPDATE ' + table + ' SET ' +
 //  DELETE FROM proveedores WHERE prov_id = ?
 const DELETE = 'DELETE FROM ' + table + ' WHERE ' + fields.id + ASSIGN;
 
-const QUERY_ID = 'SELECT ' + fields.id + ' FROM ' + table + 
-                 ' WHERE ' + fields.email + ASSIGN;
+const QUERY_ID = 'SELECT ' + fields.id + ' FROM ' + table +
+    ' WHERE ' + fields.email + ASSIGN;
 
 const QUERY_LOTES = 'SELECT * FROM lotes WHERE proveedor_id = ?';
 
@@ -74,7 +74,7 @@ class Proveedor {
     }
 
     getLotes(callback) {
-        if (!id || id == 0){
+        if (!id || id == 0) {
             callback(null, null);
             return;
         }
@@ -87,14 +87,17 @@ class Proveedor {
         });
     }
 
-    all(callback) {
-        sql.query('SELECT * FROM proveedores', (err, res) => {
-            if (err) {
-                callback(err, null);                
-            } else {
-                callback(null, res);
-            }
+    all() {
+        return new Promise((resolve, reject) => {
+            sql.query('SELECT * FROM proveedores', (err, res) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(res);
+                }
+            });
         });
+
     }
 }
 

@@ -90,6 +90,7 @@ router.post('/find?:busqueda', busqueda.find);
 
 router.get('/proveedores/register', proveedor.register);
 router.post('/proveedores/register', proveedor.registerPost);
+router.get('/proveedores/', proveedor.listAll);
 
 //router.get('/inicio/', libro = new Object());
 

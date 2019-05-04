@@ -3,6 +3,6 @@ extends ../layout
 block content
     if proveedores
         h1 Proveedores
-    each prov in proveedores
-        h3=prov.nombre
-        p=prov.email
+        each prov in proveedores
+            h3=prov.prov_nombre
+            p=prov.prov_email

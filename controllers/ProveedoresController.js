@@ -2,6 +2,13 @@
 
 var Proveedor = require('../models/proveedor');
 var Direccion = require('../models/direccion');
+var paginate = require('express-paginate');
+
+exports.listAll = async (req, res) => {
+    var rows = await new Proveedor(null,null, null).all();
+    console.log(rows);
+    res.render('proveedor/listView', {title: 'Proveedores', proveedores: rows});
+}
 
 exports.register = (req, res) => {
     res.render('proveedor/create', {title: 'Registra un proveedor'});
