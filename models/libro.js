@@ -43,16 +43,16 @@ const fields = {
 const assignTo = ' = ? ';
 
 
-const update = 'UPDATE libros SET ' + 
-            fields.titulo               + assignTo + ', ' + 
-            fields.tituloOrig           + assignTo + ', ' +
-            fields.isbn                 + assignTo + ', ' +
-            fields.paginas              + assignTo + ', ' +
-            fields.descripcion          + assignTo + ', ' +
-            fields.publicacion          + assignTo + ', ' +
-            fields.genero_id            + assignTo + ', ' +
-            fields.editorial_id         + assignTo +
-            'WHERE lib_id'              + assignTo;
+const update = 'UPDATE libros SET ' +
+    fields.titulo + assignTo + ', ' +
+    fields.tituloOrig + assignTo + ', ' +
+    fields.isbn + assignTo + ', ' +
+    fields.paginas + assignTo + ', ' +
+    fields.descripcion + assignTo + ', ' +
+    fields.publicacion + assignTo + ', ' +
+    fields.genero_id + assignTo + ', ' +
+    fields.editorial_id + assignTo +
+    'WHERE lib_id' + assignTo;
 
 class Libro {
     constructor(titulo, tituloO, isbn, paginas, descripcion, publicacion, gen_id, ed_id, lib_id = 0) {
@@ -68,20 +68,24 @@ class Libro {
         this.lib_id = lib_id;
     }
 
-    save(result) {
-        sql.query(insert,
-            [this.titulo, this.tituloOrig, this.isbn, this.paginas,
-            this.publicacion, this.descripcion, this.editorial_id,
-            this.genero_id],
-            (err, res) => {
-                if (err) {
-                    console.log("error :", err)
-                    result(err, null)
-                } else {
-                    console.log(res.insertId)
-                    result(null, res.insertId)
-                }
-            })
+    save() {
+        return new Promise((resolve, reject) => {
+            sql.query(insert,
+                [this.titulo, this.tituloOrig, this.isbn, this.paginas,
+                this.publicacion, this.descripcion, this.editorial_id,
+                this.genero_id],
+                (err, res) => {
+                    if (err) {
+                        console.log("error :", err);
+                        resolve(-1);
+                    } else {
+                        console.log(res.insertId);
+                        this.id = res.insertId;
+                        resolve(res.insertId);
+                    }
+                });
+        });
+
     }
 
 
@@ -104,13 +108,13 @@ class Libro {
     getAutor() {
         return new Promise((resolve, reject) => {
             sql.query('SELECT autor_id FROM autor_libro WHERE libro_id = ?', this.id,
-            (err, res) => {
-                if (!err) {
-                    resolve(res[0]);
-                } else {
-                    reject(err);
-                }
-            });
+                (err, res) => {
+                    if (!err) {
+                        resolve(res[0]);
+                    } else {
+                        reject(err);
+                    }
+                });
         });
     }
 
@@ -198,7 +202,7 @@ Libro.remove = function (id, result) {
 }
 
 Libro.getAllFormatted = (result) => {
-    
+
     sql.query("SELECT " + selectors + genero + imageJOIN, function (err, res) {
         if (err) {
             console.log("error: ", err);

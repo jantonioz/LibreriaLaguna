@@ -12,7 +12,7 @@ var dateFormat = require('dateformat');
 exports.list_all_libros = function (req, res) {
 
 
-    Libro.getAllLibros( (err, libro) => {
+    Libro.getAllLibros((err, libro) => {
         console.log("libros controller")
         if (err) {
             res.send(err)
@@ -31,15 +31,15 @@ exports.list_all_libros = function (req, res) {
                 //console.log(libro[i].imgdata);
             }
         }
- 
-        
 
-        res.render('libro/listView', 
-        { title: 'Libros', libros: libro, activeLibros: 'active', 
-        pageCount, 
-        itemCount, 
-        pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
-        actualPage: req.query.page });
+        res.render('libro/listView',
+            {
+                title: 'Libros', libros: libro, activeLibros: 'active',
+                pageCount,
+                itemCount,
+                pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
+                actualPage: req.query.page
+            });
     })
 }
 
@@ -51,9 +51,11 @@ exports.formEditar = async (req, res) => {
     libro.fecha_pub = dateFormat(libro.fecha_pub, "yyyy-mm-dd");
     if (libro.imgdata !== 'undefined' && libro.imgdata !== null)
         libro.imgdata = convertToBase64(libro.imgdata);
-    res.render('libro/editView', 
-    { title: 'Editar libro', editoriales: eds, autores: auts, 
-    generos: gens, libro: libro, lib_id: req.params.libroId })
+    res.render('libro/editView',
+        {
+            title: 'Editar libro', editoriales: eds, autores: auts,
+            generos: gens, libro: libro, lib_id: req.params.libroId
+        })
 }
 
 
@@ -65,7 +67,7 @@ exports.formCreate_libro = async function (req, res) {
     res.render('libro/create', { title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens });
 }
 
-exports.create_a_libro = (req, res) => {
+exports.create_a_libro = async (req, res) => {
 
     if (req.files == null || Object.keys(req.files).length == 0) {
         res.status(400).send('No files were uploaded.');
@@ -83,6 +85,22 @@ exports.create_a_libro = (req, res) => {
 
     var libro = new Libro(titulo, tituloO, isbn, paginas,
         descripcion, descripcionFis, genero_id, editorial_id);
+    var alib = new AutorLibro(autor_id, insertIdLibro);
+
+    var id_libro = await libro.save(); // GUARDA EL LIBRO
+    var id_autorlibro = await alib.save(); // GUARDA LA RELACION ENTRE AUTOR Y LIBRO
+
+    // GUARDAR LAS IMAGENES DEL LIBRO
+    if (id_libro != -1 && id_autorlibro != -1) {
+
+        for (var i = 0; i < Object.keys(req.files.imagen).length; i++) {
+            console.log(req.files.imagen[i].name);
+            var data = req.files.imagen[i].data;
+            var filename = req.files.imgane[i].name;
+            var imagen = new Imagen(id_libro, data, filename);
+            imagen.save();
+        }
+    }
 
     libro.save((err, insertIdLibro) => {
         // GUARDAR IMAGEN
@@ -90,7 +108,7 @@ exports.create_a_libro = (req, res) => {
             // LINKEAR AUTOR CON LIBRO
             console.log("ID LIBRO: ", insertIdLibro);
 
-            var alib = new AutorLibro(autor_id, insertIdLibro);
+
             alib.save((err, alibres) => {
                 if (err)
                     console.log("ERROR", err);
@@ -165,7 +183,7 @@ exports.update_a_libro = async function (req, res) {
         if (err)
             res.send(err);
         else {
-            res.redirect('/libros/d/'+lib_id);
+            res.redirect('/libros/d/' + lib_id);
         }
     });
 }

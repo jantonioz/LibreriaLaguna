@@ -14,15 +14,17 @@ class AutorLibro {
     }
 
 
-    save(result) {
-        sql.query(INSERT, [this.autor_id, this.libro_id], (err, res) => {
-            if (err) {
-                console.log("ERROR:", err);
-                result(err, null);
-            } else {
-                result(null, res);
-            }
-        })
+    save() {
+        return new Promise((resolve, rejec) => {
+            sql.query(INSERT, [this.autor_id, this.libro_id], (err, res) => {
+                if (err) {
+                    console.log("ERROR:", err);
+                    resolve(-1);
+                } else {
+                    resolve(res.insertId);
+                }
+            })
+        });
     }
 
     update(newLibroID, newAutorID) {
