@@ -3,15 +3,7 @@
 var sql = require('./db.js');
 var Libro = require('./libro');
 
-// Constructor de A U T O R E S
-class Autor {
-    constructor(nombre, fnac) {
-        this.nombre = nombre;
-        this.fnac = fnac;
-    }
-}
-
-const insert = 'INSERT INTO Autores(aut_nombre, aut_fecnac) VALUES(?,?)';
+const insert = 'INSERT INTO Autores(aut_nombre, aut_fecnac, aut_biografia, ses_id, created_at, updated_at) VALUES(?, ?, ?, ?, NOW(), NOW())';
 const SELECT_ALL = "SELECT * FROM Autores";
 const findByName = " WHERE aut_nombre like ?";
 const findByID = ' WHERE aut_id = ?';
@@ -28,19 +20,41 @@ const fullINFO = 'SELECT lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descr
 
 const libroBy = fullINFO + ' WHERE aut.aut_id =  ?';
 
-Autor.create = (newAuthor, result) => {
+class Autor {
+    constructor(nombre, fecnac, biografia, ses_id, aut_id = 0) {
+        this.nombre = nombre;
+        this.fecnac = fecnac;
+        this.biografia = biografia;
+        this.ses_id = ses_id;
+        this.aut_id = aut_id;
+    }
 
-    sql.query(insert, [newAuthor.nombre, newAuthor.fnac], function (err, res) {
-        if (err) {
-            console.log("Error :", err)
-            result(err, null)
-        }
-        else {
-            console.log(res.insertId)
-            result(null, res.insertId)
-        }
-    })
+    save() {
+        return new Promise((resolve, reject) => {
+            sql.query(insert, [this.nombre, this.fecnac, this.biografia, this.ses_id], (err, res) => {
+                if (!err) {
+                    resolve(res);
+                } else {
+                    reject(err);
+                }
+            });
+        });
+    }
 }
+
+// Autor.create = (newAuthor, result) => {
+//     sql.query(insert, [newAuthor.nombre, newAuthor.fnac], function (err, res) {
+//         if (err) {
+//             console.log("Error :", err)
+//             result(err, null)
+//         }
+//         else {
+
+//             // console.log(res.insertId);
+//             // result(null, res.insertId);
+//         }
+//     })
+// }
 
 Autor.booksBy = (autor_id, result) => {
     //console.log(libroBy, autor_id);
