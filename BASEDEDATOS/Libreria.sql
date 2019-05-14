@@ -87,10 +87,10 @@ CREATE TABLE Direcciones (
   PRIMARY KEY (dir_id));
 CREATE TABLE Compras (
   comp_id     int(10) NOT NULL AUTO_INCREMENT, 
-  comp_verif  bit(1) NOT NULL, 
+  comp_verif  bit(1) NULL, -- NULL, 0, 1
   comp_fpago  varchar(255) NOT NULL, 
   comp_mpago  varchar(50) NOT NULL, 
-  com_estado  varchar(255) NOT NULL, 
+  comp_estado  varchar(255) NOT NULL, 
   usuario_id  int(10) NOT NULL, 
   empleado_id int(10) NOT NULL, 
   ses_id	  int(10) NOT NULL, -- SESION
