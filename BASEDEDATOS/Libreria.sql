@@ -11,7 +11,8 @@ CREATE TABLE Sesiones (
   ses_os			varchar(50) NULL,
   usr_id			int(10) NOT NULL,
   updated_at   		timestamp NULL, 
-  created_at   		timestamp NOT NULL, 
+  created_at   		timestamp NOT NULL,
+  PRIMARY KEY(ses_id)
 );
 CREATE TABLE Libros (
   lib_id       int(10) NOT NULL AUTO_INCREMENT, 
@@ -162,9 +163,8 @@ CREATE TABLE Transporte (
 -- INSERT INICIAL Sesiones-Usuarios
 INSERT INTO Direcciones (dir_id, dir_calle, dir_num, dir_colonia, dir_cd, dir_pais, ses_id, updated_at, created_at) 
 VALUES (1, 'Calle 1', '608', 'Colonia 1', 'Matamoros', 'México', 1, NOW(), NOW());
-INSERT INTO Usuarios (usr_id, usr_nombre, usr_apellidos, usr_admin, usr_admin, usr_email, usr_username, usr_password,
-usr_TipoInicio, usr_fnac, direccion_id, ses_id, created_at, updated_at) VALUES (1, 'Antonio', 'Zandate', 1, 'joseantoniosp@live.com.mx', 'joseantoniosp', '1234',
-'email', '1998-12-16', 1, 1, NOW(), NOW());
+INSERT INTO Usuarios (usr_nombre, usr_apellidos, usr_admin, usr_email, usr_username, usr_password, usr_TipoInicio, usr_fnac, direccion_id, ses_id, created_at, updated_at) 
+VALUES (  'Antonio', 'Zandate', 1, 'joseantoniosp@live.com.mx', 'joseantoniosp', '1234', 'email', '1998-12-16', 1, 1, NOW(), NOW());
 INSERT INTO Sesiones (ses_id, ses_token, usr_id, created_at, updated_at) VALUES (1, 'abcdef123456', 1, NOW(), NOW());
 
 ALTER TABLE Lotes ADD CONSTRAINT FKLotes448903 FOREIGN KEY (proveedor_id) REFERENCES Proveedores (prov_id) ON DELETE CASCADE ON UPDATE CASCADE;

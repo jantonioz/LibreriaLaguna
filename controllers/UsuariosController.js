@@ -16,20 +16,25 @@ exports.formLogin = (req, res) => {
     res.render('usuario/login', {title: 'Login usuario'});
 }
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
 
-    
+    let user = await Usuario.login(username, password);
+    if (user == null) {
+        res.send("ERROR");
+    } else {
+        // CREATE SESION
+        res.json(user);
+    }
 
-    Usuario.verify(username, password, (err, usuario) => {
-        if (!err && usuario) {
-            
-            req.session.user = usuario[0];
-            res.redirect('/');
-        } else
-            res.send("ERROR");
-    });
+    // Usuario.verify(username, password, (err, usuario) => {
+    //     if (!err && usuario) {
+    //         req.session.user = usuario[0];
+    //         res.redirect('/');
+    //     } else
+    //         res.send("ERROR");
+    // });
 }
 
 exports.getRegister = function(req, res){
