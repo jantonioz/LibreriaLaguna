@@ -99,7 +99,7 @@ class Libro {
                 this.editorial_id, this.id],
                 (err, res) => {
                     if (err) {
-                        reject(err):
+                        reject(err);
                     } else {
                         console.log(res)
                         resolve(res);
