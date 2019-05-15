@@ -5,7 +5,7 @@ var sql = require('./db.js')
 const fields = {
     nombre: 'usr_nombre', apellidos: 'usr_apellidos', email: 'usr_email',
     username: 'usr_username', password: 'usr_password', fnac: 'usr_fnac',
-    direccion: 'direccion_id'
+    direccion: 'direccion_id', ses_id: 'ses_id'
 };
 
 const comma = ', ';
