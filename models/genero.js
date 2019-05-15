@@ -2,16 +2,13 @@
 
 var sql = require('./db');
 
-class Genero {
-    constructor(nombre) {
-        this.nombre = nombre;
-    }
-}
 
-const INSERT = 'INSERT INTO Generos(gen_nombre) VALUES(?)';
+
+const INSERT = 'INSERT INTO Generos(gen_nombre, gen_descripcion, ses_id, created_at, updated_at) VALUES(?, ?, ?, NOW(), NOW())';
 const SELECT_ALL = 'SELECT * FROM Generos ';
 const filterByName = 'WHERE gen_nombre like ?';
 const filterById = 'WHERE gen_id = ?';
+const UPDATE = 'UPDATE Generos SET gen_nombre = ?, gen_descripcion = ? WHERE gen_id = ?';
 
 const fullINFO = 'SELECT lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descripcion_fisica, ' +
     'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
@@ -25,16 +22,36 @@ const fullINFO = 'SELECT lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descr
 
 const libroBy = fullINFO + ' WHERE gen.gen_id =  ?';
 
+class Genero {
+    constructor(nombre, descripcion, ses_id) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.ses_id = ses_id;
+    }
 
-Genero.create = (newGenero, result) => {
-    sql.query(INSERT, newGenero.nombre, (err, res) => {
-        if (err) {
-            console.log("ERROR: ", err);
-            result(err, null);
-        } else {
-            result(null, res);
-        }
-    })
+    save() {
+        return new Promise((resolve, reject) => {
+            sql.query(INSERT, [this.nombre, this.descripcion, this.ses_id], (err, res) => {
+                if (!err) {
+                    resolve(res);
+                } else {
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    update() {
+        return new Promise((resolve, reject) =>  {
+            sql.query(UPDATE, [this.nombre, this.descripcion], (err, res) => {
+                if (!err) {
+                    resolve(res);
+                } else {
+                    reject(err);
+                }
+            });
+        });
+    }
 }
 
 Genero.find = (result) => {
@@ -61,7 +78,7 @@ Genero.findByNombre = (nombre, result) => {
 
 Genero.findById = (id, result) => {
     sql.query('SELECT gen_nombre AS genero FROM generos WHERE gen_id = ?', id, (err, res) => {
-        if (err){
+        if (err) {
             console.log("ERROR: ", err);
             result(err, null);
         } else {
