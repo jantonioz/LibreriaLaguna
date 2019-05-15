@@ -32,6 +32,11 @@ const Delete = 'DELETE FROM Usuarios WHERE usr_id = ?';
 const VerifyQuery = 'SELECT * FROM usuarios WHERE ' + fields.username +
     ' = ? AND ' + fields.password + ' = ? LIMIT 1';
 
+const VerifyAdmin = 'SELECT * FROM usuarios WHERE ' 
+    + fields.username + assign + ' AND ' 
+    + fields.password + assign + ' AND '
+    + 'usr_admin = 1 LIMIT 1';
+
 class Usuario {
     constructor(nombre, apellidos, email, username, password, fnac, direccion_id, id = 0, ses_id = 1) {
         this.id = id;
@@ -162,6 +167,22 @@ Usuario.verify = (username, password, result) => {
             result(null, res);
         } else {
             result(null, null);
+        }
+    });
+}
+
+Usuario.verifyAdmin = (username, password, callback) => {
+
+    // NO PROMISE ALLOWED ON MIDDLEWARE
+    sql.query(VerifyAdmin, [username, password], (err, res) => {
+        if (!err) {
+            if (res.length == 1) {
+                callback(true);
+            } else {
+                callback(false);
+            }
+        } else {
+            callback(false);
         }
     });
 }

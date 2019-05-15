@@ -10,6 +10,7 @@ var proveedor = require("../controllers/ProveedoresController");
 //var stockLibro = require("../models/libro");
 
 var modelLibro = require("../models/libro");
+var mUsuario = require("../models/usuario");
 
 /* GET home page. */
 router.get('/', (req, res) => {
@@ -49,17 +50,35 @@ var redirectLogin = (req, res, next) => {
     }
 }
 
+var checkAdmin = (req, res, next) => {
+    console.log("CHECK ADMIN");
+    if (req.session == null || req.session.user == null || req.cookies.sid == null) {
+        console.log("USUARIO: ", req.session.user);
+        res.redirect('/login');
+    }
+    let username = req.session.user.username;
+    let password = req.session.user.password;
+    mUsuario.verifyAdmin(username, password, (result) => {
+        if (result == true) {
+            console.log("NEXT");
+            next();
+        } else if (result) {
+            console.log("NOT ADMIN")
+            res.redirect('/login');
+        }
+    });
+}
+
 // RUTAS [ruta, controlador]
 router.get('/libros/', libro.list_all_libros);
 
 router.get('/libros/d/:libroId', libro.get_a_libro);
-//router.put('/libros/d/:libroId', libro.update_a_libro);
 router.delete('/libros/:libroId', libro.delete_a_libro);
 router.post('/libros/find?:searchName/', libro.find_a_libro);
-router.get('/libros/crear/', redirectLogin, libro.formCreate_libro);
-router.post('/libros/crear/', redirectLogin, libro.create_a_libro);
-router.get('/libros/e/:libroId', redirectLogin, libro.formEditar);
-router.post('/libros/update', redirectLogin, libro.update_a_libro);
+router.get('/libros/crear/', checkAdmin, libro.formCreate_libro);
+router.post('/libros/crear/', checkAdmin, libro.create_a_libro);
+router.get('/libros/e/:libroId', checkAdmin, libro.formEditar);
+router.post('/libros/update', checkAdmin, libro.update_a_libro);
 
 router.get('/usuarios/', usuario.list_all_users);
 router.get('/login', redirectHome, usuario.formLogin);
@@ -71,28 +90,28 @@ router.get('/cuenta', redirectLogin, usuario.userInfo);
 
 router.get('/autores/', autor.list_all_authors);
 router.get('/autores/d/:aut_id', autor.listBooksOf);
-router.get('/autores/crear', redirectLogin, autor.formCrear);
-router.post('/autores/crear', redirectLogin, autor.create);
+router.get('/autores/crear', checkAdmin, autor.formCrear);
+router.post('/autores/crear', checkAdmin, autor.create);
 
 router.get('/generos/', genero.list_all_generos);
 router.get('/generos/d/:gen_id', genero.getLibrosBy);
-router.get('/generos/crear/', redirectLogin, genero.formCrear);
-router.post('/generos/crear', redirectLogin, genero.create);
+router.get('/generos/crear/', checkAdmin, genero.formCrear);
+router.post('/generos/crear', checkAdmin, genero.create);
 
 router.get('/editoriales/', editorial.list_all_editoriales);
 router.get('/editoriales/d/:id', editorial.getLibrosBy);
-router.get('/editoriales/registrar', redirectLogin, editorial.formCrear);
-router.post('/editoriales/crear', redirectLogin, editorial.create);
-router.get('/editoriales/e/:id', redirectLogin, editorial.formEditar);
-router.post('/editoriales/editar', redirectLogin, editorial.editar);
+router.get('/editoriales/registrar', checkAdmin, editorial.formCrear);
+router.post('/editoriales/crear', checkAdmin, editorial.create);
+router.get('/editoriales/e/:id', checkAdmin, editorial.formEditar);
+router.post('/editoriales/editar', checkAdmin, editorial.editar);
 
 router.post('/find?:busqueda', busqueda.find);
 
-router.get('/proveedores/register', redirectLogin, proveedor.register);
-router.post('/proveedores/register', redirectLogin, proveedor.registerPost);
-router.get('/proveedores/', redirectLogin, proveedor.listAll);
-router.get('/proveedores/e/:prov_id', redirectLogin, proveedor.formEditar);
-router.post('/proveedores/edit', redirectLogin, proveedor.postEditar);
+router.get('/proveedores/register', checkAdmin, proveedor.register);
+router.post('/proveedores/register', checkAdmin, proveedor.registerPost);
+router.get('/proveedores/', proveedor.listAll);
+router.get('/proveedores/e/:prov_id', checkAdmin, proveedor.formEditar);
+router.post('/proveedores/edit', checkAdmin, proveedor.postEditar);
 
 //router.get('/inicio/', libro = new Object());
 
