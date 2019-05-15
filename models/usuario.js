@@ -144,7 +144,8 @@ Usuario.login = (username, password) => {
                             res[0].usr_fnac,
                             res[0].direccion_id,
                             res[0].usr_id,
-                            res[0].ses_id);
+                            res[0].ses_id,
+                            res[0].usr_admin);
                 resolve(user);
             } else {
                 resolve(null);

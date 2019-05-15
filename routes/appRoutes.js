@@ -33,18 +33,6 @@ router.get('/', (req, res) => {
     });
 });
 
-// RUTAS [ruta, controlador]
-router.get('/libros/', libro.list_all_libros);
-
-router.get('/libros/d/:libroId', libro.get_a_libro);
-//router.put('/libros/d/:libroId', libro.update_a_libro);
-router.delete('/libros/:libroId', libro.delete_a_libro);
-router.post('/libros/find?:searchName/', libro.find_a_libro);
-router.get('/libros/crear/', libro.formCreate_libro);
-router.post('/libros/crear/', libro.create_a_libro);
-router.get('/libros/e/:libroId', libro.formEditar);
-router.post('/libros/update', libro.update_a_libro);
-
 var redirectHome = (req, res, next) => {
     if (req.session && req.session.user && req.cookies.sid) {
         res.redirect('/');
@@ -61,6 +49,18 @@ var redirectLogin = (req, res, next) => {
     }
 }
 
+// RUTAS [ruta, controlador]
+router.get('/libros/', libro.list_all_libros);
+
+router.get('/libros/d/:libroId', libro.get_a_libro);
+//router.put('/libros/d/:libroId', libro.update_a_libro);
+router.delete('/libros/:libroId', libro.delete_a_libro);
+router.post('/libros/find?:searchName/', libro.find_a_libro);
+router.get('/libros/crear/', redirectLogin, libro.formCreate_libro);
+router.post('/libros/crear/', redirectLogin, libro.create_a_libro);
+router.get('/libros/e/:libroId', redirectLogin, libro.formEditar);
+router.post('/libros/update', redirectLogin, libro.update_a_libro);
+
 router.get('/usuarios/', usuario.list_all_users);
 router.get('/login', redirectHome, usuario.formLogin);
 router.post('/login', redirectHome, usuario.login);
@@ -71,28 +71,28 @@ router.get('/cuenta', redirectLogin, usuario.userInfo);
 
 router.get('/autores/', autor.list_all_authors);
 router.get('/autores/d/:aut_id', autor.listBooksOf);
-router.get('/autores/crear', autor.formCrear);
-router.post('/autores/crear', autor.create);
+router.get('/autores/crear', redirectLogin, autor.formCrear);
+router.post('/autores/crear', redirectLogin, autor.create);
 
 router.get('/generos/', genero.list_all_generos);
 router.get('/generos/d/:gen_id', genero.getLibrosBy);
-router.get('/generos/crear/', genero.formCrear);
-router.post('/generos/crear', genero.create);
+router.get('/generos/crear/', redirectLogin, genero.formCrear);
+router.post('/generos/crear', redirectLogin, genero.create);
 
 router.get('/editoriales/', editorial.list_all_editoriales);
 router.get('/editoriales/d/:id', editorial.getLibrosBy);
-router.get('/editoriales/registrar', editorial.formCrear);
-router.post('/editoriales/crear', editorial.create);
-router.get('/editoriales/e/:id', editorial.formEditar);
-router.post('/editoriales/editar', editorial.editar);
+router.get('/editoriales/registrar', redirectLogin, editorial.formCrear);
+router.post('/editoriales/crear', redirectLogin, editorial.create);
+router.get('/editoriales/e/:id', redirectLogin, editorial.formEditar);
+router.post('/editoriales/editar', redirectLogin, editorial.editar);
 
 router.post('/find?:busqueda', busqueda.find);
 
-router.get('/proveedores/register', proveedor.register);
-router.post('/proveedores/register', proveedor.registerPost);
-router.get('/proveedores/', proveedor.listAll);
-router.get('/proveedores/e/:prov_id', proveedor.formEditar);
-router.post('/proveedores/edit', proveedor.postEditar);
+router.get('/proveedores/register', redirectLogin, proveedor.register);
+router.post('/proveedores/register', redirectLogin, proveedor.registerPost);
+router.get('/proveedores/', redirectLogin, proveedor.listAll);
+router.get('/proveedores/e/:prov_id', redirectLogin, proveedor.formEditar);
+router.post('/proveedores/edit', redirectLogin, proveedor.postEditar);
 
 //router.get('/inicio/', libro = new Object());
 

@@ -1,7 +1,11 @@
 'use strict';
 
-var Usuario = require('../models/usuario.js');
-var Direccion = require('../models/direccion.js');
+const Usuario = require('../models/usuario.js');
+const Direccion = require('../models/direccion.js');
+const Sesion = require('../models/sesion');
+const moment = require('moment');
+const requestIP = require('request-ip');
+
 
 
 exports.list_all_users = function(req, res){
@@ -23,18 +27,29 @@ exports.login = async (req, res) => {
     let user = await Usuario.login(username, password);
     if (user == null) {
         res.send("ERROR");
-    } else {
-        // CREATE SESION
-        res.json(user);
-    }
+    } 
 
-    // Usuario.verify(username, password, (err, usuario) => {
-    //     if (!err && usuario) {
-    //         req.session.user = usuario[0];
-    //         res.redirect('/');
-    //     } else
-    //         res.send("ERROR");
-    // });
+    
+
+    var now = moment().utcOffset('-0500').format('YYYY-MM-DD HH:mm');
+    var expire = moment().utcOffset('-0500').add(2, 'h').format('YYYY-MM-DD HH:mm');
+    var timeStampUnix = moment().utcOffset('-0500').format('x');
+    var ip = "" + requestIP.getClientIp(req);
+    ip = ip.substr(7, 15);
+    var os = req.useragent.os;
+
+    // ADD A NEW SESSION
+    let newSession = new Sesion(
+        user.id, 
+        '' + user.id + user.username + user.password + timeStampUnix, 
+        now, 
+        expire, 
+        ip, 
+        os);
+    let sid = await newSession.save();
+    req.session.user = {name: user.nombre, username: user.username, password: user.password, ses_id: sid, token: newSession.token };
+
+    res.redirect('/cuenta');
 }
 
 exports.getRegister = function(req, res){
