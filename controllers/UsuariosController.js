@@ -29,8 +29,6 @@ exports.login = async (req, res) => {
         res.send("ERROR");
     } 
 
-    
-
     var now = moment().utcOffset('-0500').format('YYYY-MM-DD HH:mm');
     var expire = moment().utcOffset('-0500').add(2, 'h').format('YYYY-MM-DD HH:mm');
     var timeStampUnix = moment().utcOffset('-0500').format('x');
@@ -39,13 +37,7 @@ exports.login = async (req, res) => {
     var os = req.useragent.os;
 
     // ADD A NEW SESSION
-    let newSession = new Sesion(
-        user.id, 
-        '' + user.id + user.username + user.password + timeStampUnix, 
-        now, 
-        expire, 
-        ip, 
-        os);
+    let newSession = new Sesion(user.id, '' + user.id + user.username + user.password + timeStampUnix, now, expire, ip, os);
     let sid = await newSession.save();
     req.session.user = {name: user.nombre, username: user.username, password: user.password, ses_id: sid, token: newSession.token };
 
