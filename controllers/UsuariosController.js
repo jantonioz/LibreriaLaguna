@@ -5,6 +5,7 @@ const Direccion = require('../models/direccion.js');
 const Sesion = require('../models/sesion');
 const moment = require('moment');
 const requestIP = require('request-ip');
+const utils = require("./Utils");
 
 
 
@@ -12,12 +13,12 @@ exports.list_all_users = function(req, res){
     Usuario.getAllUsuarios(function(err, usr){
         if (err)
             res.send(err)
-        res.render('usuario/lista');
+        res.render('usuario/lista', {nombreUsuario: utils.getNombreUsuario(req) });
     })
 }   
 
 exports.formLogin = (req, res) => {
-    res.render('usuario/login', {title: 'Login usuario'});
+    res.render('usuario/login', {title: 'Login usuario', nombreUsuario: utils.getNombreUsuario(req) });
 }
 
 exports.login = async (req, res) => {
@@ -34,21 +35,25 @@ exports.login = async (req, res) => {
     var timeStampUnix = moment().utcOffset('-0500').format('x');
     var ip = "" + requestIP.getClientIp(req);
     ip = ip.substr(7, 15);
+    if (ip == "")
+        ip = "LOCALHOST";
     var os = req.useragent.os;
 
     // ADD A NEW SESSION
     let newSession = new Sesion(user.id, '' + user.id + user.username + user.password + timeStampUnix, now, expire, ip, os);
     let sid = await newSession.save();
-    req.session.user = {name: user.nombre, username: user.username, password: user.password, ses_id: sid, token: newSession.token };
+    req.session.user = {name: user.nombre, username: user.username, password: user.password, ses_id: sid, token: newSession.token, isAdmin: user.admin };
 
-    res.redirect('/cuenta');
+    res.redirect('/');
 }
 
 exports.getRegister = function(req, res){
-    res.render('usuario/crear');
+    res.render('usuario/crear', {ses_id: req.session.user.ses_id, isAdmin: req.session.user.isAdmin, nombreUsuario: utils.getNombreUsuario(req) });
 }
 
 exports.create_usr = async function(req, res){
+    let ses_id = req.body.ses_id;
+
     // =============== USUARIO ===================
     var nombre = req.body.nombre;
     var apellidos = req.body.apellidos;
@@ -56,6 +61,7 @@ exports.create_usr = async function(req, res){
     var username = req.body.username;
     var password = req.body.password;
     var fecha_nacimiento = req.body.fecha_nacimiento;
+    var admin = req.body.admin;
 
     // ================ DIRECCION ================
     var calle = req.body.calle;

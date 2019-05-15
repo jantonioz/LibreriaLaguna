@@ -8,6 +8,7 @@ var Genero = require('../models/genero');
 var AutorLibro = require('../models/autor_libro');
 var paginate = require('express-paginate');
 var dateFormat = require('dateformat');
+const utils = require("./Utils");
 
 exports.list_all_libros = function (req, res) {
 
@@ -38,7 +39,7 @@ exports.list_all_libros = function (req, res) {
                 pageCount,
                 itemCount,
                 pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
-                actualPage: req.query.page
+                actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req)
             });
     })
 }
@@ -54,7 +55,8 @@ exports.formEditar = async (req, res) => {
     res.render('libro/editView',
         {
             title: 'Editar libro', editoriales: eds, autores: auts,
-            generos: gens, libro: libro, lib_id: req.params.libroId
+            generos: gens, libro: libro, lib_id: req.params.libroId, 
+            nombreUsuario: utils.getNombreUsuario(req)
         })
 }
 
@@ -64,7 +66,8 @@ exports.formCreate_libro = async function (req, res) {
     var eds = await getEds();
     var auts = await getAuts();
     var gens = await getGens();
-    res.render('libro/create', { title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens });
+    res.render('libro/create', { title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens,
+     nombreUsuario: utils.getNombreUsuario(req)});
 }
 
 exports.create_a_libro = async (req, res) => {
@@ -135,7 +138,7 @@ exports.find_a_libro = function (req, res) {
         if (err)
             console.log(err)
 
-        res.render('libro/listView', { title: 'Libros', libros: libros, activeLibros: 'active' })
+        res.render('libro/listView', { title: 'Libros', libros: libros, activeLibros: 'active', nombreUsuario: utils.getNombreUsuario(req) })
     })
 }
 
@@ -152,9 +155,9 @@ exports.get_a_libro = function (req, res) {
             console.log(data64)
             let img = 'data:image/png;base64,' + data64;
 
-            res.render('libro/singleView', { title: libro[0].titulo, libro: libro[0], imgsrc: img })
+            res.render('libro/singleView', { title: libro[0].titulo, libro: libro[0], imgsrc: img, nombreUsuario: utils.getNombreUsuario(req) })
         }
-        res.render('libro/singleView', { title: libro[0].titulo, libro: libro[0] })
+        res.render('libro/singleView', { title: libro[0].titulo, libro: libro[0], nombreUsuario: utils.getNombreUsuario(req) })
     })
 }
 

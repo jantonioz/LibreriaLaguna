@@ -37,6 +37,11 @@ router.get('/', (req, res) => {
     });
 });
 
+
+var autoMiddleware = (req, res, next) => {
+    next();
+}
+
 var redirectHome = (req, res, next) => {
     if (req.session && req.session.user && req.cookies.sid) {
         res.redirect('/');
@@ -54,6 +59,7 @@ var redirectLogin = (req, res, next) => {
 }
 
 var checkAdmin = (req, res, next) => {
+    setName(req);
     console.log("CHECK ADMIN");
     if (req.session == null || req.session.user == null || req.cookies.sid == null) {
         console.log("USUARIO: ", req.session.user);
@@ -75,9 +81,9 @@ var checkAdmin = (req, res, next) => {
 // RUTAS [ruta, controlador]
 router.get('/libros/', libro.list_all_libros);
 
-router.get('/libros/d/:libroId', libro.get_a_libro);
-router.delete('/libros/:libroId', libro.delete_a_libro);
-router.post('/libros/find?:searchName/', libro.find_a_libro);
+router.get('/libros/d/:libroId', autoMiddleware, libro.get_a_libro);
+router.delete('/libros/:libroId', autoMiddleware, libro.delete_a_libro);
+router.post('/libros/find?:searchName/', autoMiddleware, libro.find_a_libro);
 router.get('/libros/crear/', checkAdmin, libro.formCreate_libro);
 router.post('/libros/crear/', checkAdmin, libro.create_a_libro);
 router.get('/libros/e/:libroId', checkAdmin, libro.formEditar);
@@ -88,21 +94,22 @@ router.get('/login', redirectHome, usuario.formLogin);
 router.post('/login', redirectHome, usuario.login);
 router.get('/logout', redirectLogin, usuario.logout);
 router.get('/signup', redirectHome, usuario.getRegister);
+router.get('/usuarios/register/', checkAdmin, usuario.getRegister);
 router.post('/usuarios/register', redirectHome, usuario.create_usr);
 router.get('/cuenta', redirectLogin, usuario.userInfo);
 
-router.get('/autores/', autor.list_all_authors);
-router.get('/autores/d/:aut_id', autor.listBooksOf);
+router.get('/autores/', autoMiddleware, autor.list_all_authors);
+router.get('/autores/d/:aut_id', autoMiddleware, autor.listBooksOf);
 router.get('/autores/crear', checkAdmin, autor.formCrear);
 router.post('/autores/crear', checkAdmin, autor.create);
 
-router.get('/generos/', genero.list_all_generos);
-router.get('/generos/d/:gen_id', genero.getLibrosBy);
+router.get('/generos/', autoMiddleware, genero.list_all_generos);
+router.get('/generos/d/:gen_id', autoMiddleware, genero.getLibrosBy);
 router.get('/generos/crear/', checkAdmin, genero.formCrear);
 router.post('/generos/crear', checkAdmin, genero.create);
 
-router.get('/editoriales/', editorial.list_all_editoriales);
-router.get('/editoriales/d/:id', editorial.getLibrosBy);
+router.get('/editoriales/', autoMiddleware, editorial.list_all_editoriales);
+router.get('/editoriales/d/:id', autoMiddleware, editorial.getLibrosBy);
 router.get('/editoriales/registrar', checkAdmin, editorial.formCrear);
 router.post('/editoriales/crear', checkAdmin, editorial.create);
 router.get('/editoriales/e/:id', checkAdmin, editorial.formEditar);
@@ -112,7 +119,7 @@ router.post('/find?:busqueda', busqueda.find);
 
 router.get('/proveedores/register', checkAdmin, proveedor.register);
 router.post('/proveedores/register', checkAdmin, proveedor.registerPost);
-router.get('/proveedores/', proveedor.listAll);
+router.get('/proveedores/', autoMiddleware, proveedor.listAll);
 router.get('/proveedores/e/:prov_id', checkAdmin, proveedor.formEditar);
 router.post('/proveedores/edit', checkAdmin, proveedor.postEditar);
 

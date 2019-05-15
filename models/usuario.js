@@ -38,7 +38,7 @@ const VerifyAdmin = 'SELECT * FROM usuarios WHERE '
     + 'usr_admin = 1 LIMIT 1';
 
 class Usuario {
-    constructor(nombre, apellidos, email, username, password, fnac, direccion_id, id = 0, ses_id = 1) {
+    constructor(nombre, apellidos, email, username, password, fnac, direccion_id, id = 0, ses_id = 1, admin = 0) {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -48,6 +48,7 @@ class Usuario {
         this.fnac = fnac;
         this.direccion_id = direccion_id;
         this.ses_id = ses_id;
+        this.admin = admin;
     }
 
     save() {
@@ -150,7 +151,7 @@ Usuario.login = (username, password) => {
                             res[0].direccion_id,
                             res[0].usr_id,
                             res[0].ses_id,
-                            res[0].usr_admin);
+                            res[0].usr_admin[0]);
                 resolve(user);
             } else {
                 resolve(null);
@@ -172,11 +173,11 @@ Usuario.verify = (username, password, result) => {
 }
 
 Usuario.verifyAdmin = (username, password, callback) => {
-
     // NO PROMISE ALLOWED ON MIDDLEWARE
     sql.query(VerifyAdmin, [username, password], (err, res) => {
         if (!err) {
-            if (res.length == 1) {
+            if (res.length == 1 && res[0].usr_admin[0] == 1) {
+                console.log(res);
                 callback(true);
             } else {
                 callback(false);

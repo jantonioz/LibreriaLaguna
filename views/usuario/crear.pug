@@ -5,6 +5,7 @@ block content
         div(class="row justify-content-center align-items-center h-100")
             div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5 mb-5")
                 form(action="/usuarios/register", method="POST", enctype="multipart/form-data")
+                    intput(type="hidden", name="ses_id", value=ses_id)
                     div(class="form-label-group")
                         input(type="text", class="form-control",id="nombre", name="nombre", placeholder="Nombres", autocomplete = "off", required)
                         label(for="nombre") Nombres
