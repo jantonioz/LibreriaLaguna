@@ -7,6 +7,7 @@ var genero = require("../controllers/GenerosController");
 var editorial = require("../controllers/EditorialesController");
 var busqueda = require("../controllers/BusquedaController");
 var proveedor = require("../controllers/ProveedoresController");
+const utils = require("../controllers/Utils");
 //var stockLibro = require("../models/libro");
 
 var modelLibro = require("../models/libro");
@@ -29,7 +30,9 @@ router.get('/', (req, res) => {
                     libro[i].imgdata = data64;
                 }
             }
-            res.render('index', { title: 'Libros', libros: libro, activeInicio: 'active', content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA" })
+            res.render('index', { title: 'Libros', libros: libro, activeInicio: 'active', 
+            content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA", 
+            nombreUsuario: utils.getNombreUsuario(req) })
         }
     });
 });
