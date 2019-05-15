@@ -10,7 +10,7 @@ const filterByName = 'WHERE gen_nombre like ?';
 const filterById = 'WHERE gen_id = ?';
 const UPDATE = 'UPDATE Generos SET gen_nombre = ?, gen_descripcion = ? WHERE gen_id = ?';
 
-const fullINFO = 'SELECT lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descripcion_fisica, ' +
+const fullINFO = 'SELECT lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.fecha_pub, ' +
     'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
     ' img.img_filename AS filename,  ' +
     'aut.aut_id AS autor_id, gen.gen_id AS gen_id ' +
