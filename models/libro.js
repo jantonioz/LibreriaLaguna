@@ -101,7 +101,7 @@ class Libro {
                     if (err) {
                         reject(err);
                     } else {
-                        console.log(res)
+                        console.log(res);
                         resolve(res);
                     }
                 });
