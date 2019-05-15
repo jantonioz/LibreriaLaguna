@@ -31,13 +31,13 @@ exports.fullInfo = fullINFO;
 
 const insert = "INSERT INTO libros" +
     "(titulo, orig_titulo, isbn, paginas, fecha_pub," +
-    " descripcion, editorial_id, genero_id)" +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    " descripcion, editorial_id, genero_id, ses_id, created_at, updated_at)" +
+    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
 const fields = {
     titulo: 'titulo', tituloOrig: 'orig_titulo', isbn: 'isbn', paginas: 'paginas',
     descripcion: 'descripcion', publicacion: 'fecha_pub', editorial_id: 'editorial_id',
-    genero_id: 'genero_id'
+    genero_id: 'genero_id', ses_id: 'ses_id'
 };
 
 const assignTo = ' = ? ';
@@ -52,10 +52,11 @@ const update = 'UPDATE libros SET ' +
     fields.publicacion + assignTo + ', ' +
     fields.genero_id + assignTo + ', ' +
     fields.editorial_id + assignTo +
+    'updated_at = NOW() ' +
     'WHERE lib_id' + assignTo;
 
 class Libro {
-    constructor(titulo, tituloO, isbn, paginas, descripcion, publicacion, gen_id, ed_id, lib_id = 0) {
+    constructor(titulo, tituloO, isbn, paginas, descripcion, publicacion, ses_id, gen_id, ed_id, lib_id = 0) {
         this.id = lib_id;
         this.titulo = titulo;
         this.tituloOrig = tituloO;
@@ -66,6 +67,7 @@ class Libro {
         this.editorial_id = ed_id;
         this.genero_id = gen_id;
         this.lib_id = lib_id;
+        this.ses_id = ses_id;
     }
 
     save() {
@@ -73,7 +75,7 @@ class Libro {
             sql.query(insert,
                 [this.titulo, this.tituloOrig, this.isbn, this.paginas,
                 this.publicacion, this.descripcion, this.editorial_id,
-                this.genero_id],
+                this.genero_id, this.ses_id],
                 (err, res) => {
                     if (err) {
                         console.log("error :", err);
@@ -90,19 +92,20 @@ class Libro {
 
 
     update(result) {
-        sql.query(update,
-            [this.titulo, this.tituloOrig, this.isbn, this.paginas,
-            this.descripcion, this.publicacion, this.genero_id,
-            this.editorial_id, this.id],
-            (err, res) => {
-                if (err) {
-                    console.log("error :", err)
-                    result(err, null)
-                } else {
-                    console.log(res)
-                    result(null, res)
-                }
-            });
+        return new Promise((resolve, reject) => {
+            sql.query(update,
+                [this.titulo, this.tituloOrig, this.isbn, this.paginas,
+                this.descripcion, this.publicacion, this.genero_id,
+                this.editorial_id, this.id],
+                (err, res) => {
+                    if (err) {
+                        reject(err):
+                    } else {
+                        console.log(res)
+                        resolve(res);
+                    }
+                });
+        });
     }
 
     getAutor() {
