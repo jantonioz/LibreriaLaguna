@@ -33,7 +33,7 @@ class Autor {
         return new Promise((resolve, reject) => {
             sql.query(insert, [this.nombre, this.fecnac, this.biografia, this.ses_id], (err, res) => {
                 if (!err) {
-                    resolve(res);
+                    resolve(res.insertId);
                 } else {
                     reject(err);
                 }

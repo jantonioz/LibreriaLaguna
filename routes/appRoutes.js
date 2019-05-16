@@ -128,7 +128,4 @@ router.get('/proveedores/', autoMiddleware, proveedor.listAll);
 router.get('/proveedores/e/:prov_id', checkAdmin, proveedor.formEditar);
 router.post('/proveedores/edit', checkAdmin, proveedor.postEditar);
 
-//router.get('/inicio/', libro = new Object());
-
-
 module.exports = router;

@@ -45,9 +45,9 @@ block content
             div(class="form-group")
                 div(class="row")
                     div(class="col col-sm-2")
-                        label(for="descripcion_fisica" class="col col-lg") Descripcion fisica:
+                        label(for="fecha_pub" class="col col-lg") Fecha publicación:
                     div(class="col")
-                        input(type="text" class="form-control" id="descripcion_fisica" name="descripcion_fisica" placeholer="Ingresa un titulo" autocomplete="off" required)
+                        input(type="date" class="form-control" id="fecha_pub" name="fecha_pub" placeholer="Fecha publicación" autocomplete="off" required)
             
             div(class="form-group")
                 div(class="row")
@@ -60,7 +60,7 @@ block content
                                 each editorial in editoriales 
                                     option(value=editorial.ed_id) !{editorial.ed_nombre}
                     div(class="col-sm-2")
-                        a(class="btn btn-success text-light", href="/editoriales/crear") Agregar Nuevo
+                        a(class="btn btn-success text-light", href="/editoriales/registrar") Agregar Nuevo
 
             div(class="form-group")
                 div(class="row")

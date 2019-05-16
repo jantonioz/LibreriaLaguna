@@ -46,25 +46,13 @@ exports.formCrear = (req, res) => {
     res.render('editorial/crear', { title: 'Registra una editorial', mensaje: 'Registra una editorial' })
 }
 
-exports.create = (req, result) => {
+exports.create = async (req, result) => {
 
-    var nuevaEditorial = new Editorial(req.body.nombre, req.body.correo);
-    nuevaEditorial.save((err, res) => {
-        if (err)
-            console.log("ERROR: ", err);
-        else {
-            result.redirect('/editoriales/');
-        }
-    })
+    var nuevaEditorial = new Editorial(req.body.nombre, req.body.correo, req.session.user.ses_id);
 
-    // Editorial.create(newGenero, (err, res) => {
-    //     if (err) {
-    //         result.send("ERROR");
-    //     }
-    //     else {
-    //         result.json(res)
-    //     }
-    // })
+    let insertId = await nuevaEditorial.save();
+
+    res.send("OK " + insertId);
 }
 
 exports.formEditar = (req, result) => {

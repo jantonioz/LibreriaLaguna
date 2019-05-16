@@ -42,7 +42,7 @@ class Editorial {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(res);
+                    resolve(res.insertId);
                 }
             });
         });
