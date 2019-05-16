@@ -30,9 +30,15 @@ router.get('/', (req, res) => {
                     libro[i].imgdata = data64;
                 }
             }
+
+            // BAD WAY FOR DOING THIS
+            let admin = null;
+            if (req.session.user)
+                admin = req.session.user.isAdmin;
+
             res.render('index', { title: 'Libros', libros: libro, activeInicio: 'active', 
             content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA", 
-            nombreUsuario: utils.getNombreUsuario(req) })
+            nombreUsuario: utils.getNombreUsuario(req), isAdmin: admin==1 })
         }
     });
 });
@@ -59,7 +65,6 @@ var redirectLogin = (req, res, next) => {
 }
 
 var checkAdmin = (req, res, next) => {
-    setName(req);
     console.log("CHECK ADMIN");
     if (req.session == null || req.session.user == null || req.cookies.sid == null) {
         console.log("USUARIO: ", req.session.user);

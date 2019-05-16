@@ -57,7 +57,7 @@ exports.formEditar = async (req, res) => {
             title: 'Editar libro', editoriales: eds, autores: auts,
             generos: gens, libro: libro, lib_id: req.params.libroId, 
             nombreUsuario: utils.getNombreUsuario(req)
-        })
+        });
 }
 
 
@@ -67,7 +67,7 @@ exports.formCreate_libro = async function (req, res) {
     var auts = await getAuts();
     var gens = await getGens();
     res.render('libro/create', { title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens,
-     nombreUsuario: utils.getNombreUsuario(req)});
+     nombreUsuario: utils.getNombreUsuario(req), ses_id: req.session.user.ses_id});
 }
 
 exports.create_a_libro = async (req, res) => {
@@ -75,6 +75,9 @@ exports.create_a_libro = async (req, res) => {
     if (req.files == null || Object.keys(req.files).length == 0) {
         res.status(400).send('No files were uploaded.');
     }
+
+    // ======= SESION =======
+    var sid = req.session.user.ses_id;
 
     var titulo = req.body.titulo;
     var tituloO = req.body.tituloorig;
@@ -88,48 +91,49 @@ exports.create_a_libro = async (req, res) => {
 
     var libro = new Libro(titulo, tituloO, isbn, paginas,
         descripcion, descripcionFis, genero_id, editorial_id);
-    var alib = new AutorLibro(autor_id, insertIdLibro);
+    
 
     var id_libro = await libro.save(); // GUARDA EL LIBRO
+
+    var alib = new AutorLibro(autor_id, id_libro);
     var id_autorlibro = await alib.save(); // GUARDA LA RELACION ENTRE AUTOR Y LIBRO
 
     // GUARDAR LAS IMAGENES DEL LIBRO
     if (id_libro != -1 && id_autorlibro != -1) {
-
         for (var i = 0; i < Object.keys(req.files.imagen).length; i++) {
             console.log(req.files.imagen[i].name);
             var data = req.files.imagen[i].data;
             var filename = req.files.imgane[i].name;
-            var imagen = new Imagen(id_libro, data, filename);
+            var imagen = new Imagen(id_libro, data, filename, sid);
             imagen.save();
         }
     }
 
-    libro.save((err, insertIdLibro) => {
-        // GUARDAR IMAGEN
-        if (!err) {
-            // LINKEAR AUTOR CON LIBRO
-            console.log("ID LIBRO: ", insertIdLibro);
+    // libro.save((err, insertIdLibro) => {
+    //     // GUARDAR IMAGEN
+    //     if (!err) {
+    //         // LINKEAR AUTOR CON LIBRO
+    //         console.log("ID LIBRO: ", insertIdLibro);
 
 
-            alib.save((err, alibres) => {
-                if (err)
-                    console.log("ERROR", err);
-                else
-                    console.log("OK AUTOR_LIBRO");
+    //         alib.save((err, alibres) => {
+    //             if (err)
+    //                 console.log("ERROR", err);
+    //             else
+    //                 console.log("OK AUTOR_LIBRO");
 
-                // GUARDAR IMAGEN
-                var imgName = req.files.imagen.name;
-                var imgdata = req.files.imagen.data;
-                let img = new Imagen(insertIdLibro, imgdata, imgName);
-                img.save((err, imgres) => {
-                    if (!err) {
-                        res.send("OK");
-                    }
-                })
-            });
-        }
-    })
+    //             // GUARDAR IMAGEN
+    //             var imgName = req.files.imagen.name;
+    //             var imgdata = req.files.imagen.data;
+    //             let img = new Imagen(insertIdLibro, imgdata, imgName);
+    //             img.save((err, imgres) => {
+    //                 if (!err) {
+    //                     res.send("OK");
+    //                 }
+    //             })
+    //         });
+    //     }
+    // })
 }
 
 exports.find_a_libro = function (req, res) {
