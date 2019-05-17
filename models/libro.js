@@ -2,6 +2,7 @@
 
 var sql = require('./db.js')
 var AutorLibro = require('./autor_libro.js');
+const imagenLibro = require('./imagen_libro');
 
 
 
@@ -10,7 +11,12 @@ const selectors = 'lib.lib_id, lib.titulo, lib.orig_titulo, lib.isbn,lib.paginas
     ' img.img_filename AS filename,  ' +
     'aut.aut_id AS autor_id, gen.gen_id AS gen_id, lib.editorial_id, ed.ed_nombre AS editorial ';
 
-const genero = ' FROM libros AS lib' +
+const normalInfoHeaders =
+    'lib.lib_id, lib.titulo, lib.orig_titulo, lib.isbn,lib.paginas, lib.fecha_pub, ' +
+    'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, ' +
+    'aut.aut_id AS autor_id, gen.gen_id AS gen_id, lib.editorial_id, ed.ed_nombre AS editorial ';
+
+const completeInfo = ' FROM libros AS lib' +
     ' INNER JOIN generos AS gen ON (lib.genero_id = gen.gen_id) ' +
     ' LEFT JOIN autor_libro AS al ON (al.libro_id = lib.lib_id) ' +
     ' LEFT JOIN autores AS aut ON (aut.aut_id = al.autor_id) ' +
@@ -148,7 +154,7 @@ Libro.createLibro = function createUser(newLibro, result) {
 
 Libro.getLibroById = function createUser(libroId, result) {
     // '?' es un placeholder como %s o %d
-    sql.query("SELECT " + selectors + genero + imageJOIN + " WHERE lib.lib_id = ? ", libroId, function (err, res) {
+    sql.query("SELECT " + selectors + completeInfo + imageJOIN + " WHERE lib.lib_id = ? ", libroId, function (err, res) {
         if (err) {
             console.log("error :", err)
             result(err, null)
@@ -158,19 +164,33 @@ Libro.getLibroById = function createUser(libroId, result) {
     })
 }
 
-Libro.getAllLibros = function getAllLibros(result) {
-    sql.query("SELECT " + selectors + genero + imageJOIN, function (err, res) {
-        if (err) {
-            console.log("error: ", err)
-            result(err, null)
-        } else {
-            result(null, res)
-        }
-    })
+Libro.getAllLibros = async () => {
+    return new Promise((resolve, reject) => {
+        // NO FUNCA EL AWAIT DENTRO DEL QUERY AAAAAAAAAAAAAAA
+        sql.query("SELECT " + normalInfoHeaders + completeInfo, async (err, res) => {
+            if (!err) {
+                for(var i = 0; i < res.length; i++) {
+                    let imagenes = await imagenLibro.getImagesOfLibroID(res[i].lib_id);
+
+                    for(var j = 0; j < imagenes.length; j++) {
+                        let data64 = Buffer.from(imagenes[j].data, 'binary').toString('base64');
+                        imagenes[j].data = data64;
+                        imagenes[j].slideto = j;
+                        console.log(imagenes[j].img_filename);
+                    }
+                    res[i].imagenes = imagenes;
+                    res[i].imagenes[0].active = 1;
+                }
+                resolve(res);
+            } else {
+                console.log(err);
+            }
+        })
+    });
 }
 
 Libro.find = function findLibro(titulo, result) {
-    sql.query("SELECT " + selectors + genero + imageJOIN + " WHERE titulo LIKE ? OR " + fields.tituloOrig + " LIKE ?", [titulo, titulo], function (err, res) {
+    sql.query("SELECT " + selectors + completeInfo + imageJOIN + " WHERE titulo LIKE ? OR " + fields.tituloOrig + " LIKE ?", [titulo, titulo], function (err, res) {
         if (err) {
             console.log("error: ", err)
             result(null, err)
@@ -205,7 +225,7 @@ Libro.remove = function (id, result) {
 
 Libro.getAllFormatted = (result) => {
 
-    sql.query("SELECT " + selectors + genero + imageJOIN, function (err, res) {
+    sql.query("SELECT " + selectors + completeInfo + imageJOIN, function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(err, null);

@@ -102,9 +102,12 @@ exports.create_a_libro = async (req, res) => {
         for (var i = 0; i < Object.keys(req.files.imagen).length; i++) {
             console.log(req.files.imagen[i].name);
             var data = req.files.imagen[i].data;
-            var filename = req.files.imgane[i].name;
+            var filename = req.files.imagen[i].name;
             var imagen = new Imagen(id_libro, data, filename, sid);
-            imagen.save();
+            let img_insertId = await imagen.save();
+            if (img_insertId == -1) {
+                res.send("ERROR IMG SAVE");
+            }
         }
     }
     res.send("OK! :)");

@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+
 var libro = require("../controllers/LibrosController");
 var usuario = require("../controllers/UsuariosController");
 var autor = require("../controllers/AutoresController");
@@ -8,38 +9,24 @@ var editorial = require("../controllers/EditorialesController");
 var busqueda = require("../controllers/BusquedaController");
 var proveedor = require("../controllers/ProveedoresController");
 const utils = require("../controllers/Utils");
-//var stockLibro = require("../models/libro");
+/* var stockLibro = require("../models/libro"); */
 
 var modelLibro = require("../models/libro");
 var mUsuario = require("../models/usuario");
 
 /* GET home page. */
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
+    let libros = await modelLibro.getAllLibros();
+    libros = libros
+    let admin = null;
+    if (req.session.user)
+        admin = req.session.user.isAdmin;
 
-    modelLibro.getAllLibros((err, libro) => {
-        console.log("libros controller")
-        if (err) {
-            res.send(err)
-        }
-        else {
-            for (let i = 0; i < libro.length; i++) {
-                if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
-                    //console.log(libro[i].imgdata)
-                    let tempbin = libro[i].imgdata;
-                    let data64 = Buffer.from(tempbin, 'binary').toString('base64');
-                    libro[i].imgdata = data64;
-                }
-            }
-
-            // BAD WAY FOR DOING THIS
-            let admin = null;
-            if (req.session.user)
-                admin = req.session.user.isAdmin;
-
-            res.render('index', { title: 'Libros', libros: libro, activeInicio: 'active', 
-            content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA", 
-            nombreUsuario: utils.getNombreUsuario(req), isAdmin: admin==1 })
-        }
+    res.render('index', {
+        title: 'Libros', libros: libros, activeInicio: 'active',
+        content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA",
+        nombreUsuario: utils.getNombreUsuario(req), isAdmin: admin == 1
     });
 });
 

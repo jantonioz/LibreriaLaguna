@@ -6,10 +6,10 @@ const INSERT =
     'INSERT INTO imagen_libro(data, img_filename, libro_id, ses_id, created_at, updated_at)' +
     ' VALUES (?, ?, ?, ?, NOW(), NOW())';
 
-const UPDATEDATA = 
+const UPDATEDATA =
     'UPDATE imagen_libro SET data = ?, updated_at = NOW() WHERE img_id = ?';
 
-const UPDATE = 
+const UPDATE =
     'UPDATE imagen_libro SET data = ?, img_filename = ?, libro_id = ?, updated_at = NOW() WHERE img_id = ?';
 
 class ImagenLibro {
@@ -27,7 +27,7 @@ class ImagenLibro {
                 if (!err) {
                     resolve(res);
                 } else {
-                    reject(err);
+                    reject(-1);
                 }
             });
         });
@@ -60,13 +60,15 @@ class ImagenLibro {
 
 
 ImagenLibro.getImagesOfLibroID = (libro_id, result) => {
-    sql.query("SELECT * FROM imagen_libro WHERE libro_id = ?", libro_id, (err, res) => {
-        if (err) {
-            console.log("error:", err)
-            result(err, null)
-        }
-        result(null, res)
-    })
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT * FROM imagen_libro WHERE libro_id = ?", libro_id, (err, res) => {
+            if (err) {
+                resolve('undefined');
+            }
+            resolve(res);
+        })
+    });
+
 }
 
 
