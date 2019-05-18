@@ -73,6 +73,7 @@ var checkAdmin = (req, res, next) => {
 // RUTAS [ruta, controlador]
 router.get('/libros/', libro.list_all_libros);
 
+// ==== LIBROS ====
 router.get('/libros/d/:libroId', autoMiddleware, libro.get_a_libro);
 //router.delete('/libros/:libroId', autoMiddleware, libro.delete_a_libro);
 router.post('/libros/find?:searchName/', autoMiddleware, libro.find_a_libro);
@@ -81,6 +82,7 @@ router.post('/libros/crear/', checkAdmin, libro.create_a_libro);
 router.get('/libros/e/:libroId', checkAdmin, libro.formEditar);
 router.post('/libros/update', checkAdmin, libro.update_a_libro);
 
+// ==== USUARIOS ====
 router.get('/usuarios/', usuario.list_all_users);
 router.get('/login', redirectHome, usuario.formLogin);
 router.post('/login', redirectHome, usuario.login);
@@ -91,16 +93,19 @@ router.post('/usuarios/register', redirectHome, usuario.create_usr);
 router.get('/cuenta', redirectLogin, usuario.userInfo);
 router.get('/admin/add', checkAdmin, usuario.getRegister);
 
+// ==== AUTORES ====
 router.get('/autores/', autoMiddleware, autor.list_all_authors);
 router.get('/autores/d/:aut_id', autoMiddleware, autor.listBooksOf);
 router.get('/autores/crear', checkAdmin, autor.formCrear);
 router.post('/autores/crear', checkAdmin, autor.create);
 
+// ==== GENEROS ====
 router.get('/generos/', autoMiddleware, genero.list_all_generos);
 router.get('/generos/d/:gen_id', autoMiddleware, genero.getLibrosBy);
 router.get('/generos/crear/', checkAdmin, genero.formCrear);
 router.post('/generos/crear', checkAdmin, genero.create);
 
+// ==== EDITORIALES ====
 router.get('/editoriales/', autoMiddleware, editorial.list_all_editoriales);
 router.get('/editoriales/d/:id', autoMiddleware, editorial.getLibrosBy);
 router.get('/editoriales/registrar', checkAdmin, editorial.formCrear);
@@ -108,12 +113,22 @@ router.post('/editoriales/crear', checkAdmin, editorial.create);
 router.get('/editoriales/e/:id', checkAdmin, editorial.formEditar);
 router.post('/editoriales/editar', checkAdmin, editorial.editar);
 
+// ==== BUSQUEDA ====
 router.post('/find?:busqueda', busqueda.find);
 
+// ==== PROVEEDORES ====
 router.get('/proveedores/register', checkAdmin, proveedor.register);
 router.post('/proveedores/register', checkAdmin, proveedor.registerPost);
 router.get('/proveedores/', autoMiddleware, proveedor.listAll);
 router.get('/proveedores/e/:prov_id', checkAdmin, proveedor.formEditar);
 router.post('/proveedores/edit', checkAdmin, proveedor.postEditar);
+
+// ==== LOTES ====
+router.get('/lotes/', checkAdmin, lote.viewAll);
+router.get('/lotes/d/:id', checkAdmin, lote.detalleView);
+router.get('/lotes/add/', checkAdmin, lote.addView);
+router.post('/lotes/add/', checkAdmin, lote.addPost);
+router.get('/lotes/e/:id', checkAdmin, lote.editView);
+router.post('/lotes/e/', checkAdmin, lote.editPost);
 
 module.exports = router;
