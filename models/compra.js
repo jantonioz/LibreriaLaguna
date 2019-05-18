@@ -1,6 +1,7 @@
 'use strict';
 
-var sql = require('./db.js')
+const sql = require('./db.js');
+const ItemCompra = require('./item_compra');
 
 // comp_id    
 // comp_verif 
@@ -9,7 +10,7 @@ var sql = require('./db.js')
 // comp_estado 
 // usuario_id 
 // empleado_id
-// ses_id	  i
+// ses_id	  
 // updated_at 
 // created_at 
 
@@ -37,12 +38,17 @@ class Compra {
         return new Promise((resolve, reject) => {
             sql.query(INSERT, getParams(), (err, res) => {
                 if (!err) {
+                    this.id = res.insertId;
                     resolve(res);
                 } else {
                     reject(err);
                 }
             });
         });
+    }
 
+    async getItems() {
+        list = await ItemCompra.getByCompra(this.id);
+        return list;
     }
 }
