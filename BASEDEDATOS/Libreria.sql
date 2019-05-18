@@ -40,8 +40,8 @@ CREATE TABLE Proveedores (
   PRIMARY KEY (prov_id));
 CREATE TABLE Lotes (
   lot_id           int(10) NOT NULL AUTO_INCREMENT, 
-  lote_descripcion varchar(50) NOT NULL, 
-  fentrega         date NOT NULL, 
+  lot_descripcion varchar(50) NOT NULL, 
+  lot_fentrega         date NOT NULL, 
   proveedor_id     int(10) NOT NULL, 
   ses_id	   	   int(10) NOT NULL, -- SESION
   updated_at       timestamp NULL, 
