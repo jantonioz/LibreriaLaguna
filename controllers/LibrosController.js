@@ -10,38 +10,54 @@ var paginate = require('express-paginate');
 var dateFormat = require('dateformat');
 const utils = require("./Utils");
 
-exports.list_all_libros = function (req, res) {
+exports.list_all_libros = async (req, res) => {
+    // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
+    let libros = await Libro.getAllLibros();
+    //res.json(libros[0].imagenes[0].data);
+    let admin = null;
+    if (req.session.user)
+        admin = req.session.user.isAdmin;
 
+    let itemCount = libros.length;
+    let pageCount = Math.ceil(itemCount / req.query.limit);
 
-    Libro.getAllLibros((err, libro) => {
-        console.log("libros controller")
-        if (err) {
-            res.send(err)
-        }
-        let itemCount = libro.length;
-        let pageCount = Math.ceil(itemCount / req.query.limit);
+    libros = libros.slice(req.skip, req.skip + req.query.limit);
 
-        libro = libro.slice(req.skip, req.skip + req.query.limit);
+    res.render('libro/listView', {
+        title: 'Libros', libros: libros, activeLibros: 'active', pageCount, itemCount,
+        pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
+        actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req), isAdmin: admin == 1
+    });
 
-        for (let i = 0; i < libro.length; i++) {
-            if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
-                //console.log(libro[i].imgdata)
-                let tempbin = libro[i].imgdata;
-                let data64 = Buffer.from(tempbin, 'binary').toString('base64');
-                libro[i].imgdata = data64;
-                //console.log(libro[i].imgdata);
-            }
-        }
+    // Libro.getAllLibros((err, libro) => {
+    //     console.log("libros controller")
+    //     if (err) {
+    //         res.send(err)
+    //     }
+    //     let itemCount = libro.length;
+    //     let pageCount = Math.ceil(itemCount / req.query.limit);
 
-        res.render('libro/listView',
-            {
-                title: 'Libros', libros: libro, activeLibros: 'active',
-                pageCount,
-                itemCount,
-                pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
-                actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req)
-            });
-    })
+    //     libro = libro.slice(req.skip, req.skip + req.query.limit);
+
+    //     for (let i = 0; i < libro.length; i++) {
+    //         if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
+    //             //console.log(libro[i].imgdata)
+    //             let tempbin = libro[i].imgdata;
+    //             let data64 = Buffer.from(tempbin, 'binary').toString('base64');
+    //             libro[i].imgdata = data64;
+    //             //console.log(libro[i].imgdata);
+    //         }
+    //     }
+
+    //     res.render('libro/listView',
+    //         {
+    //             title: 'Libros', libros: libro, activeLibros: 'active',
+    //             pageCount,
+    //             itemCount,
+    //             pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
+    //             actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req)
+    //         });
+    // })
 }
 
 exports.formEditar = async (req, res) => {
@@ -55,7 +71,7 @@ exports.formEditar = async (req, res) => {
     res.render('libro/editView',
         {
             title: 'Editar libro', editoriales: eds, autores: auts,
-            generos: gens, libro: libro, lib_id: req.params.libroId, 
+            generos: gens, libro: libro, lib_id: req.params.libroId,
             nombreUsuario: utils.getNombreUsuario(req)
         });
 }
@@ -66,8 +82,10 @@ exports.formCreate_libro = async function (req, res) {
     var eds = await getEds();
     var auts = await getAuts();
     var gens = await getGens();
-    res.render('libro/create', { title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens,
-     nombreUsuario: utils.getNombreUsuario(req), ses_id: req.session.user.ses_id});
+    res.render('libro/create', {
+        title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens,
+        nombreUsuario: utils.getNombreUsuario(req), ses_id: req.session.user.ses_id
+    });
 }
 
 exports.create_a_libro = async (req, res) => {
@@ -90,7 +108,7 @@ exports.create_a_libro = async (req, res) => {
     var autor_id = req.body.autor_id;
 
     let libro = new Libro(titulo, tituloO, isbn, paginas, descripcion, fecha_pub, sid, genero_id, editorial_id);
-    
+
 
     var id_libro = await libro.save(); // GUARDA EL LIBRO
 

@@ -40,7 +40,9 @@ exports.login = async (req, res) => {
     var os = req.useragent.os;
 
     // ADD A NEW SESSION
-    let newSession = new Sesion(user.id, '' + user.id + user.username + user.password + timeStampUnix, now, expire, ip, os);
+    let newSession = new Sesion(user.id, 
+        '' + user.id + user.username + user.password + timeStampUnix, 
+        now, expire, ip, os);
     let sid = await newSession.save();
     req.session.user = {name: user.nombre, username: user.username, password: user.password, ses_id: sid, token: newSession.token, isAdmin: user.admin };
 
@@ -48,7 +50,10 @@ exports.login = async (req, res) => {
 }
 
 exports.getRegister = function(req, res){
-    res.render('usuario/crear', {ses_id: req.session.user.ses_id, isAdmin: req.session.user.isAdmin, nombreUsuario: utils.getNombreUsuario(req) });
+    let admin = null;
+    if (req.session.user)
+        admin = req.session.user.isAdmin;
+    res.render('usuario/crear', {isAdmin: admin});
 }
 
 exports.create_usr = async function(req, res){

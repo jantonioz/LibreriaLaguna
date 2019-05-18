@@ -68,7 +68,7 @@ CREATE TABLE Usuarios (
   usr_password   varchar(255) NOT NULL, 
   usr_TipoInicio varchar(255) NULL, 
   usr_fnac       date NOT NULL, 
-  direccion_id   int(10) NOT NULL, 
+  direccion_id   int(10) NULL, -- NO ES OBLIGATORIO QUE TENGAN
   ses_id	     int(10) NOT NULL, -- SESION
   updated_at     timestamp NULL, 
   created_at     timestamp NOT NULL, 

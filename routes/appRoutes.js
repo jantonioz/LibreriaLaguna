@@ -18,7 +18,7 @@ var mUsuario = require("../models/usuario");
 router.get('/', async (req, res) => {
     // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
     let libros = await modelLibro.getAllLibros();
-    libros = libros
+    
     let admin = null;
     if (req.session.user)
         admin = req.session.user.isAdmin;
@@ -74,7 +74,7 @@ var checkAdmin = (req, res, next) => {
 router.get('/libros/', libro.list_all_libros);
 
 router.get('/libros/d/:libroId', autoMiddleware, libro.get_a_libro);
-router.delete('/libros/:libroId', autoMiddleware, libro.delete_a_libro);
+//router.delete('/libros/:libroId', autoMiddleware, libro.delete_a_libro);
 router.post('/libros/find?:searchName/', autoMiddleware, libro.find_a_libro);
 router.get('/libros/crear/', checkAdmin, libro.formCreate_libro);
 router.post('/libros/crear/', checkAdmin, libro.create_a_libro);
@@ -85,10 +85,11 @@ router.get('/usuarios/', usuario.list_all_users);
 router.get('/login', redirectHome, usuario.formLogin);
 router.post('/login', redirectHome, usuario.login);
 router.get('/logout', redirectLogin, usuario.logout);
-router.get('/signup', redirectHome, usuario.getRegister);
+router.get('/registro', redirectHome, usuario.getRegister);
 router.get('/usuarios/register/', checkAdmin, usuario.getRegister);
 router.post('/usuarios/register', redirectHome, usuario.create_usr);
 router.get('/cuenta', redirectLogin, usuario.userInfo);
+router.get('/admin/add', checkAdmin, usuario.getRegister);
 
 router.get('/autores/', autoMiddleware, autor.list_all_authors);
 router.get('/autores/d/:aut_id', autoMiddleware, autor.listBooksOf);
