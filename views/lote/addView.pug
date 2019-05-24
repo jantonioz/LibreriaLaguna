@@ -1,0 +1,39 @@
+extends ../layout
+
+
+block content
+    div.controls
+        form(role="form", action="/lotes/add/", method="POST", autocomplete="off")
+            div.entry.input-group.contro-group.mb-3
+                input.form-control(type="text", name="addmore[]", placeholder="Ingresa texto")
+                span.input-group-btn
+                    button.btn.btn-success.btn-add(type="button")
+                        span.glyphicon.glyphicon-plus Agregar
+
+
+block scripts
+    script.
+        $(function()
+        {
+            $(document).on('click', '.btn-add', function(e)
+            {
+                e.preventDefault();
+
+                var controlForm = $('.controls form:first'),
+                    currentEntry = $(this).parents('.entry:first'),
+                    newEntry = $(currentEntry.clone()).appendTo(controlForm);
+
+                newEntry.find('input').val('');
+                controlForm.find('.entry:not(:last) .btn-add')
+                    .removeClass('btn-add').addClass('btn-remove')
+                    .removeClass('btn-success').addClass('btn-danger')
+                    .html('<span class="glyphicon glyphicon-minus"></span> Quitar');
+            }).on('click', '.btn-remove', function(e)
+            {
+                $(this).parents('.entry:first').remove();
+
+                e.preventDefault();
+                return false;
+            });
+        });
+

@@ -9,6 +9,7 @@ var editorial = require("../controllers/EditorialesController");
 var busqueda = require("../controllers/BusquedaController");
 var proveedor = require("../controllers/ProveedoresController");
 const utils = require("../controllers/Utils");
+const lote = require("../controllers/LotesController");
 /* var stockLibro = require("../models/libro"); */
 
 var modelLibro = require("../models/libro");
@@ -20,7 +21,7 @@ router.get('/', async (req, res) => {
     let libros = await modelLibro.getAllLibros();
     
     let admin = null;
-    if (req.session.user)
+    if (req.session.user)   
         admin = req.session.user.isAdmin;
 
     res.render('index', {
@@ -127,8 +128,8 @@ router.post('/proveedores/edit', checkAdmin, proveedor.postEditar);
 router.get('/lotes/', checkAdmin, lote.viewAll);
 router.get('/lotes/d/:id', checkAdmin, lote.detalleView);
 router.get('/lotes/add/', checkAdmin, lote.addView);
-router.post('/lotes/add/', checkAdmin, lote.addPost);
-router.get('/lotes/e/:id', checkAdmin, lote.editView);
-router.post('/lotes/e/', checkAdmin, lote.editPost);
+// router.post('/lotes/add/', checkAdmin, lote.addPost);
+// router.get('/lotes/e/:id', checkAdmin, lote.editView);
+// router.post('/lotes/e/', checkAdmin, lote.editPost);
 
 module.exports = router;
