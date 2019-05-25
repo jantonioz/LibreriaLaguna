@@ -5,6 +5,7 @@ block content
         div(class="row justify-content-center align-items-center h-100")
             div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5 mb-5")
                 form(action="/login", method="POST", enctype="multipart/form-data")
+                    input(type="hidden", name="gobackTo", value=gobackTo)
                     h1 Inicio de sesión
                     div(class="form-label-group")
                         input(type="text", class="form-control",id="username", name="username", placeholder="Nombre de usuario", autocomplete="off", required, autofocus)

@@ -18,7 +18,7 @@ exports.list_all_users = function(req, res){
 }   
 
 exports.formLogin = (req, res) => {
-    res.render('usuario/login', {title: 'Login usuario', nombreUsuario: utils.getNombreUsuario(req) });
+    res.render('usuario/login', {title: 'Login usuario'});
 }
 
 exports.login = async (req, res) => {
@@ -46,7 +46,11 @@ exports.login = async (req, res) => {
     let sid = await newSession.save();
     req.session.user = {name: user.nombre, username: user.username, password: user.password, ses_id: sid, token: newSession.token, isAdmin: user.admin };
 
-    res.redirect('/');
+    if (req.body.gobackTo) {
+        res.redirect(req.body.gobackTo);
+    } else {
+        res.redirect('/');
+    }
 }
 
 exports.getRegister = function(req, res){

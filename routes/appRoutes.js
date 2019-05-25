@@ -56,7 +56,11 @@ var checkAdmin = (req, res, next) => {
     console.log("CHECK ADMIN");
     if (req.session == null || req.session.user == null || req.cookies.sid == null) {
         console.log("USUARIO: ", req.session.user);
-        res.redirect('/login');
+        console.log(req.originalUrl);
+        req.gobackTo = req.originalUrl;
+        //res.redirect('/login');
+        res.render('usuario/login', {title: 'Login usuario', gobackTo: req.originalUrl});
+        return;
     }
     let username = req.session.user.username;
     let password = req.session.user.password;

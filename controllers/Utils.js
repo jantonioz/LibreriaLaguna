@@ -7,3 +7,10 @@ exports.getNombreUsuario = (req) => {
     console.log("NOT FOUND");
     return;
 }
+
+exports.isAdmin = (req) =>  {
+    let admin = null;
+    if (req.session.user)
+        admin = req.session.user.isAdmin;
+    return admin == 1;
+}

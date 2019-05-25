@@ -4,6 +4,7 @@ const Lote = require('../models/lote');
 const Proveedor = require('../models/proveedor');
 const Ejemplar = require('../models/ejemplar');
 const Libro = require('../models/libro');
+const Utils = require("./Utils");
 
 // lote.viewAll); X
 // min, lote.detalleVi X
@@ -13,24 +14,18 @@ const Libro = require('../models/libro');
 // n, lote.editPost);
 
 exports.viewAll = async (req, res) => {
-    let admin = null;
-    if (req.session.user)
-        admin = req.session.user.isAdmin;
 
-    var lotes = await Lote.
+    var lotes = await Lote.listAll();
     
-    res.render('lote/allView', {lotes: lotes, isAdmin: admin == 1});
+    res.render('lote/allView', {lotes: lotes, isAdmin: Utils.isAdmin(req), nombreUsuario: Utils.getNombreUsuario(req)});
 }
 
 exports.detalleView = async (req, res) => {
     let lote = await Lote.get(req.params.id);
-    let admin = null;
-    if (req.session.user)
-        admin = req.session.user.isAdmin;
 
-    res.render('lote/detalleView', {lote: lote, isAdmin: admin == 1});
+    res.render('lote/detalleView', {isAdmin: Utils.isAdmin(req), nombreUsuario: Utils.getNombreUsuario(req)});
 }
 
 exports.addView = (req, res) => {
-    res.render('lote/addView');
+    res.render('lote/addView', {isAdmin: Utils.isAdmin(req), nombreUsuario: Utils.getNombreUsuario(req)});
 }

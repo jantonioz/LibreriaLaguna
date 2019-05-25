@@ -7,7 +7,7 @@ var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'test_libreria2',
+    database: 'test_libreria',
 })
 
 connection.connect((err) => {
