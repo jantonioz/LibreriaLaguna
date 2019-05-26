@@ -75,12 +75,12 @@ var checkAdmin = (req, res, next) => {
     });
 }
 
+
 // RUTAS [ruta, controlador]
 router.get('/libros/', libro.list_all_libros);
 
 // ==== LIBROS ====
 router.get('/libros/d/:libroId', autoMiddleware, libro.get_a_libro);
-//router.delete('/libros/:libroId', autoMiddleware, libro.delete_a_libro);
 router.post('/libros/find?:searchName/', autoMiddleware, libro.find_a_libro);
 router.get('/libros/crear/', checkAdmin, libro.formCreate_libro);
 router.post('/libros/crear/', checkAdmin, libro.create_a_libro);
@@ -132,7 +132,7 @@ router.post('/proveedores/edit', checkAdmin, proveedor.postEditar);
 router.get('/lotes/', checkAdmin, lote.viewAll);
 router.get('/lotes/d/:id', checkAdmin, lote.detalleView);
 router.get('/lotes/add/', checkAdmin, lote.addView);
-// router.post('/lotes/add/', checkAdmin, lote.addPost);
+router.post('/lotes/add/', checkAdmin, lote.addPost);
 // router.get('/lotes/e/:id', checkAdmin, lote.editView);
 // router.post('/lotes/e/', checkAdmin, lote.editPost);
 

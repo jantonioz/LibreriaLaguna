@@ -99,6 +99,7 @@ CREATE TABLE Compras (
   PRIMARY KEY (comp_id));
 CREATE TABLE Imagen_libro (
   img_id       int(10) NOT NULL AUTO_INCREMENT, 
+  img_path     varchar(255) NOT NULL,
   -- data         blob NOT NULL, Ahora se guardan en el sistema de archivos del servidor
   img_filename varchar(50) NOT NULL, 
   libro_id     int(10) NOT NULL, 

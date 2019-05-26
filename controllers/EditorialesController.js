@@ -46,7 +46,7 @@ exports.formCrear = (req, res) => {
     res.render('editorial/crear', { title: 'Registra una editorial', mensaje: 'Registra una editorial' })
 }
 
-exports.create = async (req, result) => {
+exports.create = async (req, res) => {
 
     var nuevaEditorial = new Editorial(req.body.nombre, req.body.correo, req.session.user.ses_id);
 

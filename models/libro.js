@@ -169,17 +169,18 @@ Libro.getAllLibros = async () => {
         // NO FUNCA EL AWAIT DENTRO DEL QUERY AAAAAAAAAAAAAAA
         sql.query("SELECT " + normalInfoHeaders + completeInfo, async (err, res) => {
             if (!err) {
-                for(var i = 0; i < res.length; i++) {
-                    let imagenes = await imagenLibro.getImagesOfLibroID(res[i].lib_id);
-
-                    for(var j = 0; j < imagenes.length; j++) {
-                        let data64 = Buffer.from(imagenes[j].data, 'binary').toString('base64');
-                        imagenes[j].data = data64;
-                        imagenes[j].slideto = j;
-                        console.log(imagenes[j].img_filename);
+                for (var i = 0; i < res.length; i++) {
+                    let imagenes = await imagenLibro.getImagesOfLibroID(res[i].lib_id);  
+                    if (imagenes.length > 0) {
+                        for (var j = 0; j < imagenes.length; j++) {
+                            let data64 = Buffer.from(imagenes[j].data, 'binary').toString('base64');
+                            imagenes[j].data = data64;
+                            imagenes[j].slideto = j;
+                            console.log(imagenes[j].img_filename);
+                        }
+                        res[i].imagenes = imagenes;
+                        res[i].imagenes[0].active = 1;
                     }
-                    res[i].imagenes = imagenes;
-                    res[i].imagenes[0].active = 1;
                 }
                 resolve(res);
             } else {

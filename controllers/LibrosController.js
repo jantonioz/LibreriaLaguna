@@ -1,14 +1,16 @@
 'use strict';
 
-var Libro = require('../models/libro');
-var Imagen = require('../models/imagen_libro');
-var Editorial = require('../models/editorial');
-var Autor = require('../models/autor');
-var Genero = require('../models/genero');
-var AutorLibro = require('../models/autor_libro');
-var paginate = require('express-paginate');
-var dateFormat = require('dateformat');
+const Libro = require('../models/libro');
+const Imagen = require('../models/imagen_libro');
+const Editorial = require('../models/editorial');
+const Autor = require('../models/autor');
+const Genero = require('../models/genero');
+const AutorLibro = require('../models/autor_libro');
+const paginate = require('express-paginate');
+const dateFormat = require('dateformat');
 const utils = require("./Utils");
+const multer = require('multer');
+const fs = require('fs');
 
 exports.list_all_libros = async (req, res) => {
     // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
@@ -28,36 +30,6 @@ exports.list_all_libros = async (req, res) => {
         pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
         actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req), isAdmin: admin == 1
     });
-
-    // Libro.getAllLibros((err, libro) => {
-    //     console.log("libros controller")
-    //     if (err) {
-    //         res.send(err)
-    //     }
-    //     let itemCount = libro.length;
-    //     let pageCount = Math.ceil(itemCount / req.query.limit);
-
-    //     libro = libro.slice(req.skip, req.skip + req.query.limit);
-
-    //     for (let i = 0; i < libro.length; i++) {
-    //         if (typeof libro[i].imgdata !== 'undefined' && libro[i].imgdata != null) {
-    //             //console.log(libro[i].imgdata)
-    //             let tempbin = libro[i].imgdata;
-    //             let data64 = Buffer.from(tempbin, 'binary').toString('base64');
-    //             libro[i].imgdata = data64;
-    //             //console.log(libro[i].imgdata);
-    //         }
-    //     }
-
-    //     res.render('libro/listView',
-    //         {
-    //             title: 'Libros', libros: libro, activeLibros: 'active',
-    //             pageCount,
-    //             itemCount,
-    //             pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
-    //             actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req)
-    //         });
-    // })
 }
 
 exports.formEditar = async (req, res) => {
@@ -89,46 +61,60 @@ exports.formCreate_libro = async function (req, res) {
 }
 
 exports.create_a_libro = async (req, res) => {
-
-    if (req.files == null || Object.keys(req.files).length == 0) {
-        res.status(400).send('No files were uploaded.');
+    console.log(req.files);
+    for (var i = 0; i < req.files.length; i++) {
+        let file = req.files[i].destination + "/" + Date.now() + req.files[i].originalname;
+        console.log(file);
     }
-
-    // ======= SESION =======
-    var sid = req.session.user.ses_id;
-
-    var titulo = req.body.titulo;
-    var tituloO = req.body.tituloorig;
-    var isbn = req.body.isbn;
-    var paginas = req.body.paginas;
-    var descripcion = req.body.descripcion;
-    var fecha_pub = req.body.fecha_pub;
-    var editorial_id = req.body.editorial_id;
-    var genero_id = req.body.genero_id;
-    var autor_id = req.body.autor_id;
-
-    let libro = new Libro(titulo, tituloO, isbn, paginas, descripcion, fecha_pub, sid, genero_id, editorial_id);
+    res.send("OK");
 
 
-    var id_libro = await libro.save(); // GUARDA EL LIBRO
 
-    var alib = new AutorLibro(autor_id, id_libro, sid);
-    var id_autorlibro = await alib.save(); // GUARDA LA RELACION ENTRE AUTOR Y LIBRO
 
-    // GUARDAR LAS IMAGENES DEL LIBRO
-    if (id_libro != -1 && id_autorlibro != -1) {
-        for (var i = 0; i < Object.keys(req.files.imagen).length; i++) {
-            console.log(req.files.imagen[i].name);
-            var data = req.files.imagen[i].data;
-            var filename = req.files.imagen[i].name;
-            var imagen = new Imagen(id_libro, data, filename, sid);
-            let img_insertId = await imagen.save();
-            if (img_insertId == -1) {
-                res.send("ERROR IMG SAVE");
-            }
-        }
-    }
-    res.send("OK! :)");
+    // if (req.files == null || Object.keys(req.files).length == 0) {
+    //     res.status(400).send('No files were uploaded.');
+    // }
+
+    // // ======= SESION =======
+    // var sid = req.session.user.ses_id;
+
+    // var titulo = req.body.titulo;
+    // var tituloO = req.body.tituloorig;
+    // var isbn = req.body.isbn;
+    // var paginas = req.body.paginas;
+    // var descripcion = req.body.descripcion;
+    // var fecha_pub = req.body.fecha_pub;
+    // var editorial_id = req.body.editorial_id;
+    // var genero_id = req.body.genero_id;
+    // var autor_id = req.body.autor_id;
+
+    // let libro = new Libro(titulo, tituloO, isbn, paginas, descripcion, fecha_pub, sid, genero_id, editorial_id);
+    // var id_libro = await libro.save(); // GUARDA EL LIBRO
+
+    // var alib = new AutorLibro(autor_id, id_libro, sid);
+    // var id_autorlibro = await alib.save(); // GUARDA LA RELACION ENTRE AUTOR Y LIBRO
+
+    // // GUARDAR LAS IMAGENES DEL LIBRO
+    // if (id_libro != -1 && id_autorlibro != -1) {
+    //     const tempPath = req.imagenes.
+
+
+
+
+
+
+    //     for (var i = 0; i < Object.keys(req.files.imagen).length; i++) {
+    //         console.log(req.files.imagen[i].name);
+    //         var data = req.files.imagen[i].data;
+    //         var filename = req.files.imagen[i].name;
+    //         var imagen = new Imagen(id_libro, data, filename, sid);
+    //         let img_insertId = await imagen.save();
+    //         if (img_insertId == -1) {
+    //             res.send("ERROR IMG SAVE");
+    //         }
+    //     }
+    // }
+    // res.send("OK! :)");
 }
 
 exports.find_a_libro = function (req, res) {

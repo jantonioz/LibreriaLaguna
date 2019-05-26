@@ -29,3 +29,7 @@ exports.detalleView = async (req, res) => {
 exports.addView = (req, res) => {
     res.render('lote/addView', {isAdmin: Utils.isAdmin(req), nombreUsuario: Utils.getNombreUsuario(req)});
 }
+
+exports.addPost = (req, res) => {
+    res.json(req.body);
+}

@@ -5,7 +5,7 @@ block content
     each libro in libros
         div(class="row m-3")
             div(class="col col-sm-2")
-                if(libro.imagenes!=null || libro.imagenes.length > 0)
+                if(libro.imagenes!=null && libro.imagenes != 'undefined' && libro.imagenes.length > 0)
                     img(class="img-fluid" src='data:image/png;base64,'+libro.imagenes[0].data, style="max-width=50px; max-height=90px;")
             div(class="col")    
                 -var genLink = "<a href='/generos/d/" + libro.gen_id +"'> " + libro.genero + "</a>"

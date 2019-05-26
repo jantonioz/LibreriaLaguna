@@ -1,5 +1,3 @@
-'use strict';
-
 const Usuario = require('../models/usuario.js');
 const Direccion = require('../models/direccion.js');
 const Sesion = require('../models/sesion');
@@ -24,11 +22,13 @@ exports.formLogin = (req, res) => {
 exports.login = async (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
-
+    console.log(req.body, username, password);
     let user = await Usuario.login(username, password);
-    if (user == null) {
+    console.log(user);
+    if (user == null) { 
         res.send("ERROR");
     } 
+    console.log("OK")
 
     var now = moment().utcOffset('-0500').format('YYYY-MM-DD HH:mm');
     var expire = moment().utcOffset('-0500').add(2, 'h').format('YYYY-MM-DD HH:mm');
