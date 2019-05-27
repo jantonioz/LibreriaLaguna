@@ -62,10 +62,9 @@ exports.formCreate_libro = async function (req, res) {
 
 exports.create_a_libro = async (req, res) => {
     console.log(req.files);
-    for (var i = 0; i < req.files.length; i++) {
-        let file = req.files[i].destination + "/" + Date.now() + req.files[i].originalname;
-        console.log(file);
-    }
+    req.files.forEach( (value, index) => {
+        console.log(value.originalname);
+    });
     res.send("OK");
 
 

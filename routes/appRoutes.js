@@ -10,6 +10,8 @@ var busqueda = require("../controllers/BusquedaController");
 var proveedor = require("../controllers/ProveedoresController");
 const utils = require("../controllers/Utils");
 const lote = require("../controllers/LotesController");
+const multer = require("multer");
+const path = require('path');
 /* var stockLibro = require("../models/libro"); */
 
 var modelLibro = require("../models/libro");
@@ -75,6 +77,16 @@ var checkAdmin = (req, res, next) => {
     });
 }
 
+const storeImage = multer.diskStorage({
+    destination: './public/uploads/',
+    filename: (req, file, cb) => {
+        cb(null, file.filename + '_' + Date.now() + 
+        path.extname(file.originalname));
+    }
+})
+
+const upload = multer({storage: storeImage});
+
 
 // RUTAS [ruta, controlador]
 router.get('/libros/', libro.list_all_libros);
@@ -83,7 +95,7 @@ router.get('/libros/', libro.list_all_libros);
 router.get('/libros/d/:libroId', autoMiddleware, libro.get_a_libro);
 router.post('/libros/find?:searchName/', autoMiddleware, libro.find_a_libro);
 router.get('/libros/crear/', checkAdmin, libro.formCreate_libro);
-router.post('/libros/crear/', checkAdmin, libro.create_a_libro);
+router.post('/libros/crear/', checkAdmin, upload.array('imagenes', 3), libro.create_a_libro);
 router.get('/libros/e/:libroId', checkAdmin, libro.formEditar);
 router.post('/libros/update', checkAdmin, libro.update_a_libro);
 
