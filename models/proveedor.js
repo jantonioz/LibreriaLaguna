@@ -8,8 +8,8 @@ const fields = { id: 'prov_id', nombre: 'prov_nombre', email: 'prov_email', dire
 
 const COMMA = ', ';
 
-const INSERT = 'INSERT INTO ' + table + '('
-    + fields.nombre + COMMA + fields.email + COMMA + fields.direccion + COMMA + fields.ses_id + COMMA
+const INSERT = 'INSERT INTO ' + table + ' ('
+    + fields.nombre + COMMA + fields.email + COMMA + fields.direccion + COMMA + fields.ses_id + COMMA +
     'created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())';
 
 const ASSIGN = ' = ? ';
@@ -41,6 +41,7 @@ class Proveedor {
 
     save() {
         return new Promise((resolve, reject) => {
+            console.log(INSERT, [this.nombre, this.email, this.direccion_id, this.ses_id]);
             sql.query(INSERT, [this.nombre, this.email, this.direccion_id, this.ses_id], (err, res) => {
                 if (err) {
                     reject(err);

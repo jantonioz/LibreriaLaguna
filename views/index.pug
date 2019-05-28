@@ -30,10 +30,10 @@ block fullpageContent
                     each imagen in libro.imagenes
                       if imagen.active
                         div.carousel-item.active
-                          img.d-block.w-100(src='data:image/png;base64,'+imagen.data)
+                          img.d-block.w-100(src='/uploads/'+imagen.img_filename)
                       else 
                         div.carousel-item
-                          img.d-block.w-100(src='data:image/png;base64,'+imagen.data)
+                          img.d-block.w-100(src='/uploads/'+imagen.img_filename)
                   a.carousel-control-prev(href="#indicators" + libro.lib_id, reole="button", data-slide="prev")
                     span.carousel-control-prev-icon(aria-hidden="true")
                     span.sr-only Anterior

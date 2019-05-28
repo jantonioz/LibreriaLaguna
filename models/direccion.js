@@ -17,7 +17,7 @@ const INSERT = 'INSERT INTO direcciones(' +
     fields.ciudad + comma +
     fields.pais + comma + 
     fields.cp + comma + 
-    fields.ses_id + comma + 'created_at, updated_at VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
+    fields.ses_id + comma + 'created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
 
 const UPDATE = 'UPDATE direcciones SET ' +
             fields.calle + assign + comma +
@@ -41,18 +41,18 @@ class Direccion {
         this.ses_id = ses_id;
     }
 
-    save(result) {
-        sql.query(INSERT, [this.calle, this.numero, this.colonia, this.ciudad, this.pais, this.cp, this.ses_id],
-            (err, res) => {
-                if (err) {
-                    console.log("ERROR: ", err);
-                    result(err, null);
+    save() {
+        return new Promise((resolve, reject) => {
+            sql.query(INSERT, [this.calle, this.numero, this.colonia, this.ciudad, this.pais, this.cp, this.ses_id],
+                (err, res) => {
+                    if (!err) {
+                        resolve(res.insertId);
+                    } else  {
+                        resolve(-1);
+                    }
                 }
-                else {
-                    result(null, res);
-                }
-            }
-        );
+            );
+        });
     }
 
     update() {

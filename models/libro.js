@@ -7,7 +7,7 @@ const imagenLibro = require('./imagen_libro');
 
 
 const selectors = 'lib.lib_id, lib.titulo, lib.orig_titulo, lib.isbn,lib.paginas, lib.fecha_pub, ' +
-    'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
+    'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.img_path AS path,' +
     ' img.img_filename AS filename,  ' +
     'aut.aut_id AS autor_id, gen.gen_id AS gen_id, lib.editorial_id, ed.ed_nombre AS editorial ';
 
@@ -25,7 +25,7 @@ const completeInfo = ' FROM libros AS lib' +
 const imageJOIN = ' LEFT JOIN imagen_libro AS img ON (lib.lib_id = img.libro_id) ';
 
 const fullINFO = ' lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.fecha_pub, ' +
-    'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.data AS imgdata,' +
+    'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.img_path AS path,' +
     ' img.img_filename AS filename,  ' +
     'aut.aut_id AS autor_id, gen.gen_id AS gen_id ' +
     ' FROM libros AS lib' +
@@ -97,7 +97,7 @@ class Libro {
     }
 
 
-    update(result) {
+    update() {
         return new Promise((resolve, reject) => {
             sql.query(update,
                 [this.titulo, this.tituloOrig, this.isbn, this.paginas,
@@ -135,25 +135,24 @@ class Libro {
 }
 
 
-Libro.createLibro = function createUser(newLibro, result) {
+// Libro.createLibro = function createUser(newLibro, result) {
 
-    sql.query(insert,
-        [newLibro.titulo, newLibro.tituloOrig, newLibro.isbn, newLibro.paginas,
-        newLibro.descripcion_fisica, newLibro.descripcion, newLibro.editorial_id,
-        newLibro.genero_id],
-        (err, res) => {
-            if (err) {
-                console.log("error :", err)
-                result(err, null)
-            } else {
-                console.log(res.insertId)
-                result(null, res.insertId)
-            }
-        })
-}
+//     sql.query(insert,
+//         [newLibro.titulo, newLibro.tituloOrig, newLibro.isbn, newLibro.paginas,
+//         newLibro.descripcion_fisica, newLibro.descripcion, newLibro.editorial_id,
+//         newLibro.genero_id],
+//         (err, res) => {
+//             if (err) {
+//                 console.log("error :", err)
+//                 result(err, null)
+//             } else {
+//                 console.log(res.insertId)
+//                 result(null, res.insertId)
+//             }
+//         })
+// }
 
 Libro.getLibroById = function createUser(libroId, result) {
-    // '?' es un placeholder como %s o %d
     sql.query("SELECT " + selectors + completeInfo + imageJOIN + " WHERE lib.lib_id = ? ", libroId, function (err, res) {
         if (err) {
             console.log("error :", err)
@@ -170,17 +169,12 @@ Libro.getAllLibros = async () => {
         sql.query("SELECT " + normalInfoHeaders + completeInfo, async (err, res) => {
             if (!err) {
                 for (var i = 0; i < res.length; i++) {
-                    let imagenes = await imagenLibro.getImagesOfLibroID(res[i].lib_id);  
+                    let imagenes = await imagenLibro.getImagesOfLibroID(res[i].lib_id); 
+                    console.log(imagenes);
                     if (imagenes.length > 0) {
-                        for (var j = 0; j < imagenes.length; j++) {
-                            let data64 = Buffer.from(imagenes[j].data, 'binary').toString('base64');
-                            imagenes[j].data = data64;
-                            imagenes[j].slideto = j;
-                            console.log(imagenes[j].img_filename);
-                        }
                         res[i].imagenes = imagenes;
                         res[i].imagenes[0].active = 1;
-                    }
+                    } 
                 }
                 resolve(res);
             } else {

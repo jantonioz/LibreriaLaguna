@@ -88,15 +88,11 @@ block content
                         a(class="btn btn-success text-light", href="/autores/crear") Agregar Nuevo
                             
 
-            div(class="form-group")
-                div(class="row")
-                    div(class="col col-sm-2")
-                        label(for="imagen") Imagen:
-                    div(class="col col-lg-5")
-                        div(class="custom-file")
-                            input(type="file", class="custom-file-input", id="imagenes", name="imagenes" onChange="changelabel()" required multiple="multiple")
-                            label(class="custom-file-label", for="imagenes", id="lblimagen") Selecciona una imagen
-                    img(class="card-img-top" src="http://placehold.it/500x325" alt="" style="width:200px; height:200px;")
+            div(class="custom-file")
+                input(type="file", class="custom-file-input", id="imagenes", lang="es", name="imagenes", required, multiple="multiple")
+                label(class="custom-file-label", for="imagenes") Seleccionar Archivo
+
+            //- img(class="card-img-top" src="http://placehold.it/500x325" alt="" style="width:200px; height:200px;")
             hr
             div(class="form-group")
                 div(class="row")

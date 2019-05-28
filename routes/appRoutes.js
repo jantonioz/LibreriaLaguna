@@ -21,9 +21,10 @@ var mUsuario = require("../models/usuario");
 router.get('/', async (req, res) => {
     // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
     let libros = await modelLibro.getAllLibros();
-    
+    console.log(libros);
+
     let admin = null;
-    if (req.session.user)   
+    if (req.session.user)
         admin = req.session.user.isAdmin;
 
     res.render('index', {
@@ -61,7 +62,7 @@ var checkAdmin = (req, res, next) => {
         console.log(req.originalUrl);
         req.gobackTo = req.originalUrl;
         //res.redirect('/login');
-        res.render('usuario/login', {title: 'Login usuario', gobackTo: req.originalUrl});
+        res.render('usuario/login', { title: 'Login usuario', gobackTo: req.originalUrl });
         return;
     }
     let username = req.session.user.username;
@@ -77,15 +78,33 @@ var checkAdmin = (req, res, next) => {
     });
 }
 
-const storeImage = multer.diskStorage({
-    destination: './public/uploads/',
+const storeImage = multer.memoryStorage({
+    destination: (req, file, cb) => {
+        cb(null, './uploads');
+    },
     filename: (req, file, cb) => {
-        cb(null, file.filename + '_' + Date.now() + 
-        path.extname(file.originalname));
+        const now = new Date().toISOString(); 
+        const date = now.replace(/:/g, '-'); 
+        cb(null, date + file.originalname);
     }
-})
+});
 
-const upload = multer({storage: storeImage});
+const fileFilter = (req, file, cb) => {
+    console.log(file);
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
+
+const uploadLibros = multer({
+    storage: storeImage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+});
 
 
 // RUTAS [ruta, controlador]
@@ -95,7 +114,7 @@ router.get('/libros/', libro.list_all_libros);
 router.get('/libros/d/:libroId', autoMiddleware, libro.get_a_libro);
 router.post('/libros/find?:searchName/', autoMiddleware, libro.find_a_libro);
 router.get('/libros/crear/', checkAdmin, libro.formCreate_libro);
-router.post('/libros/crear/', checkAdmin, upload.array('imagenes', 3), libro.create_a_libro);
+router.post('/libros/crear/', uploadLibros.array('imagenes', 3), libro.create_a_libro);
 router.get('/libros/e/:libroId', checkAdmin, libro.formEditar);
 router.post('/libros/update', checkAdmin, libro.update_a_libro);
 
