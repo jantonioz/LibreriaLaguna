@@ -48,6 +48,8 @@ const fields = {
 
 const assignTo = ' = ? ';
 
+const SELECT_ONLY_ID = 'SELECT * FROM libros';
+
 
 const update = 'UPDATE libros SET ' +
     fields.titulo + assignTo + ', ' +
@@ -181,6 +183,18 @@ Libro.getAllLibros = async () => {
                 console.log(err);
             }
         })
+    });
+}
+
+Libro.getAllLibrosSimple = () => {
+    return new Promise((resolve, reject) => {
+        sql.query(SELECT_ONLY_ID, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                resolve(null);
+            }
+        });
     });
 }
 

@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+    .row
+        .col-md-2.m-2.bg-danger
+            h5 Mas vendidos
+        .col.bg-success.m-2
+            .ml-5
+                h2 !{usr.usr_nombre + ' ' + usr.usr_apellidos}
+                small !{usr.usr_email}
+
+
+            .container.bg-light
+                h4 Ultimas compras
+                ul
+                    each sesion in sesiones
+                        li !{sesion.ses_id}
+        .col-md2.bg-warning.m-2
+            h5 Navbar a la derecha
+    

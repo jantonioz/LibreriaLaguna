@@ -26,8 +26,12 @@ exports.detalleView = async (req, res) => {
     res.render('lote/detalleView', {isAdmin: Utils.isAdmin(req), nombreUsuario: Utils.getNombreUsuario(req)});
 }
 
-exports.addView = (req, res) => {
-    res.render('lote/addView', {isAdmin: Utils.isAdmin(req), nombreUsuario: Utils.getNombreUsuario(req)});
+exports.addView = async (req, res) => {
+    let libros = await Libro.getAllLibrosSimple();
+    let proveedores = await Proveedor.getAllSimple();
+    res.render('lote/addView', {isAdmin: Utils.isAdmin(req), 
+        nombreUsuario: Utils.getNombreUsuario(req), libros: libros, 
+        proveedores: proveedores});
 }
 
 exports.addPost = (req, res) => {

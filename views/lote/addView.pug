@@ -30,43 +30,50 @@ block content
             .row
                 .col-sm-3
                     h4 Ejemplares en el lote
-                .col 
+                .col
                     hr
                     br
 
+            div.bodyEjemps
+                div.entry.mb-5.p-3.border.border-secondary.rounded
+                    .row.mb-2
+                        .col
+                            p Ejemplar 1
+                        .col-sm-3
+                            span.input-group-btn
+                            button.btn.btn-info.btn-add.text-light(type="button")
+                                span.glyphicon.glyphicon-plus Agregar otro ejemplar
+                    .form-group.input-group
+                        .input-group-prepend
+                            span.input-group-text N
+                        input.form-control(type="text", id="ejem", name="cantidades", placeholder="Cantidad")
+                        .input-group-subpend
+                            span.input-group-text ...
+                            
+                    .form-group.input-group
+                        .input-group-prepend
+                            span.input-group-text $
+                        input.form-control(type="text", id="ejem", name="precios", placeholder="Precio")                
 
-            div.entry.mb-5.p-3.border.border-secondary.rounded
-                .row.mb-2
-                    .col
-                        p Ejemplar 1
-                    .col-sm-3
-                        span.input-group-btn
-                        button.btn.btn-info.btn-add.text-light(type="button")
-                            span.glyphicon.glyphicon-plus Agregar otro ejemplar
-                .form-group.input-group
-                    .input-group-prepend
-                        span.input-group-text $
-                    input.form-control(type="text", id="ejem", name="cantidades[]", placeholder="Cantidad")
-                        
-                .form-group.input-group
-                    .input-group-prepend
-                        span.input-group-text $
-                    input.form-control(type="text", id="ejem", name="precios[]", placeholder="Precio")                
-
-                div(class="form-group")
-                    div(class="row")
-                        div(class="col col-sm-2")
-                            label(for="libro_id", ) Libro:
-                        div(class="col")
-                            select(class="custom-select" name="libros[]", required)
-                                option(selected) Selecciona un libro
-                                if libros != null
-                                    each libro in libros 
-                                        option(value=libro.lib_id) !{libro.titulo}
-                        div(class="col-sm-2")
-                            a(class="btn btn-success text-light", href="/libros/crear") Agregar libro
+                    div(class="form-group")
+                        div(class="row")
+                            div(class="col col-sm-2")
+                                label(for="libro_id", ) Libro:
+                            div(class="col")
+                                select(class="custom-select" name="libros", required)
+                                    option(selected) Selecciona un libro
+                                    if libros != null
+                                        each libro in libros 
+                                            option(value=libro.lib_id) !{libro.titulo} - !{libro.fecha_pub} [!{libro.orig_titulo}]
+                            div(class="col-sm-2")
+                                a(class="btn btn-success text-light", href="/libros/crear") Agregar libro
 
                 
+                
+                
+                
+                
+            button(type="submit", class="btn btn-lg btn-primary btn-block") Registrar
 
 
 block scripts
@@ -79,7 +86,7 @@ block scripts
             {
                 e.preventDefault();
 
-                var controlForm = $('.controls form:first'),
+                var controlForm = $('.controls form:first .bodyEjemps'),
                     currentEntry = $(this).parents('.entry:first'),
                     newEntry = $(currentEntry.clone()).appendTo(controlForm);
                 contador++;

@@ -16,9 +16,6 @@ exports.list_all_libros = async (req, res) => {
     // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
     let libros = await Libro.getAllLibros();
     //res.json(libros[0].imagenes[0].data);
-    let admin = null;
-    if (req.session.user)
-        admin = req.session.user.isAdmin;
 
     let itemCount = libros.length;
     let pageCount = Math.ceil(itemCount / req.query.limit);
@@ -28,7 +25,7 @@ exports.list_all_libros = async (req, res) => {
     res.render('libro/listView', {
         title: 'Libros', libros: libros, activeLibros: 'active', pageCount, itemCount,
         pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
-        actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req), isAdmin: admin == 1
+        actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req)
     });
 }
 
@@ -44,7 +41,7 @@ exports.formEditar = async (req, res) => {
         {
             title: 'Editar libro', editoriales: eds, autores: auts,
             generos: gens, libro: libro, lib_id: req.params.libroId,
-            nombreUsuario: utils.getNombreUsuario(req)
+            nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req)
         });
 }
 
@@ -56,7 +53,7 @@ exports.formCreate_libro = async function (req, res) {
     var gens = await getGens();
     res.render('libro/create', {
         title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens,
-        nombreUsuario: utils.getNombreUsuario(req), ses_id: req.session.user.ses_id
+        nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req), ses_id: req.session.user.ses_id
     });
 }
 
@@ -112,7 +109,9 @@ exports.find_a_libro = function (req, res) {
         if (err)
             console.log(err)
 
-        res.render('libro/listView', { title: 'Libros', libros: libros, activeLibros: 'active', nombreUsuario: utils.getNombreUsuario(req) })
+        res.render('libro/listView', 
+        { title: 'Libros', libros: libros, activeLibros: 'active', 
+        nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req) })
     })
 }
 
@@ -129,9 +128,13 @@ exports.get_a_libro = function (req, res) {
             console.log(data64)
             let img = 'data:image/png;base64,' + data64;
 
-            res.render('libro/singleView', { title: libro[0].titulo, libro: libro[0], imgsrc: img, nombreUsuario: utils.getNombreUsuario(req) })
+            res.render('libro/singleView', 
+            { title: libro[0].titulo, libro: libro[0], imgsrc: img, 
+                nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req) })
         }
-        res.render('libro/singleView', { title: libro[0].titulo, libro: libro[0], nombreUsuario: utils.getNombreUsuario(req) })
+        res.render('libro/singleView', 
+        { title: libro[0].titulo, libro: libro[0], 
+            nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req) })
     })
 }
 

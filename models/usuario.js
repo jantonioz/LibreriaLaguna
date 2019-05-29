@@ -32,8 +32,8 @@ const Delete = 'DELETE FROM Usuarios WHERE usr_id = ?';
 const VerifyQuery = 'SELECT * FROM usuarios WHERE ' + fields.username +
     ' = ? AND ' + fields.password + ' = ? LIMIT 1';
 
-const VerifyAdmin = 'SELECT * FROM usuarios WHERE ' 
-    + fields.username + assign + ' AND ' 
+const VerifyAdmin = 'SELECT * FROM usuarios WHERE '
+    + fields.username + assign + ' AND '
     + fields.password + assign + ' AND '
     + 'usr_admin = 1 LIMIT 1';
 
@@ -115,15 +115,16 @@ Usuario.getUserById = function (usrId, result) {
     })
 }
 
-Usuario.getUserByUsername = function (usrname, result) {
-    sql.query("SELECT * FROM usuarios WHERE " + fields.username + assign, usrname, function (err, res) {
-        if (err) {
-            console.log("error :", err);
-            result(err, null);
-        } else {
-            result(null, res);
-        }
-    })
+Usuario.getUserByUsername = function (usrname) {
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT * FROM usuarios WHERE usr_username = ? LIMIT 1;", [usrname], function (err, res) {
+            if (err) {
+                resolve(null);
+            } else {
+                resolve(res);
+            }
+        });
+    });
 }
 
 Usuario.getAllUsuarios = function getAllLibros(result) {
@@ -142,16 +143,16 @@ Usuario.login = (username, password) => {
         sql.query(VerifyQuery, [username, password], (err, res) => {
             if (!err && res.length == 1) {
                 var user = new Usuario(
-                            res[0].usr_nombre, 
-                            res[0].usr_apellidos, 
-                            res[0].usr_email, 
-                            res[0].usr_username,
-                            res[0].usr_password, 
-                            res[0].usr_fnac,
-                            res[0].direccion_id,
-                            res[0].usr_id,
-                            res[0].ses_id,
-                            res[0].usr_admin[0]);
+                    res[0].usr_nombre,
+                    res[0].usr_apellidos,
+                    res[0].usr_email,
+                    res[0].usr_username,
+                    res[0].usr_password,
+                    res[0].usr_fnac,
+                    res[0].direccion_id,
+                    res[0].usr_id,
+                    res[0].ses_id,
+                    res[0].usr_admin[0]);
                 resolve(user);
             } else {
                 resolve(null);

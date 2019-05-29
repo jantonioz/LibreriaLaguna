@@ -42,9 +42,13 @@ block content
           
       div(class="col")
         h1= libro.titulo 
-          a(href="/libros/e/" + libro.lib_id, class="btn btn-secondary ml-5") Editar
+          if (isAdmin)
+            a(href="/libros/e/" + libro.lib_id, class="btn btn-secondary ml-5") Editar
+            a.ml-2.btn.btn-danger(href="/libros/d/" + libro.lib_id) Eliminar
         small Autor 
           a(href="/autores/d/" + libro.autor_id) #{libro.autor}
           | !{" \u2022 "} !{genLink}
         p= libro.descripcion
-        
+
+      .col-md-3 
+        h5 Ejemplares disponibles:

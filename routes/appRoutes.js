@@ -49,7 +49,9 @@ var redirectHome = (req, res, next) => {
 
 var redirectLogin = (req, res, next) => {
     if (!req.session || !req.session.user || !req.cookies.sid) {
-        res.redirect('/login');
+        req.gobackTo = req.originalUrl;
+        res.render('usuario/login', { title: 'Login usuario', gobackTo: req.originalUrl });
+        return;
     } else {
         next();
     }

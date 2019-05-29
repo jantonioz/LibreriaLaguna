@@ -110,8 +110,13 @@ function createDireccion(calle, numero, colonia, ciudad, pais){
 }
 
 
-exports.userInfo = (req, res) => {
-    res.json({cookie: req.cookies.sid, session: req.session.user});
+// CUENTA
+exports.userInfo = async (req, res) => {
+    let usuario = await Usuario.getUserByUsername(req.session.user.username);
+    let sesiones = await Sesion.getAllByUserId(usuario[0].usr_id);
+    console.log(usuario);
+    res.render('usuario/cuenta', {usr: usuario[0], sesiones: sesiones, 
+        isAdmin : utils.isAdmin(req), nombreUsuario: utils.getNombreUsuario(req)});
 }
 
 

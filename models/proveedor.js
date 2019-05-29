@@ -124,4 +124,16 @@ Proveedor.findById = (id) => {
     });
 }
 
+Proveedor.getAllSimple = () => {
+    return new Promise((resolve, reject) => {
+        sql.query('SELECT * FROM proveedores', (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+}
+
 module.exports = Proveedor
