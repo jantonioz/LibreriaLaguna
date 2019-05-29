@@ -5,23 +5,23 @@ block content
   div(class="container")
     div(class="row")
       div(class="col-3")
-        if(imagnes!=null)
+        if(imagenes!=null)
           //- CAROUSEL
           div.carousel.slide(id="indicators" + libro.lib_id, data-ride="carousel")
             ol.carousel-indicators
-              each imagen in libro.imagenes
+              each imagen in imagenes
                 if imagen.active
                   li.active(data-target="#indicators" + libro.lib_id, data-slide-to="" + imagen.slideto)
                 else
                   li(data-target="#indicators" + libro.lib_id, data-slide-to="" + imagen.slideto)
             div.carousel-inner
-              each imagen in libro.imagenes
+              each imagen in imagenes
                 if imagen.active
                   div.carousel-item.active
-                    img.d-block.w-100(src='data:image/png;base64,'+imagen.data)
+                    img.d-block.w-100(src=imagen.img_path)
                 else 
                   div.carousel-item
-                    img.d-block.w-100(src='data:image/png;base64,'+imagen.data)
+                    img.d-block.w-100(src=imagen.img_path)
             a.carousel-control-prev(href="#indicators" + libro.lib_id, reole="button", data-slide="prev")
               span.carousel-control-prev-icon(aria-hidden="true")
               span.sr-only Anterior

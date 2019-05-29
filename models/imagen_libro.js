@@ -59,7 +59,7 @@ class ImagenLibro {
 }
 
 
-ImagenLibro.getImagesOfLibroID = (libro_id, result) => {
+ImagenLibro.getImagesOfLibroID = (libro_id) => {
     return new Promise((resolve, reject) => {
         sql.query("SELECT * FROM imagen_libro WHERE libro_id = ?", libro_id, (err, res) => {
             if (err) {

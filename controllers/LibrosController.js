@@ -10,7 +10,6 @@ const paginate = require('express-paginate');
 const dateFormat = require('dateformat');
 const utils = require("./Utils");
 const path = require('path');
-const Resize = require('./Resize');
 
 exports.list_all_libros = async (req, res) => {
     // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
@@ -91,12 +90,22 @@ exports.create_a_libro = async (req, res) => {
 
     var alib = new AutorLibro(autor_id, id_libro, sid);
     var id_autorlibro = await alib.save(); // GUARDA LA RELACION ENTRE AUTOR Y LIBRO
+
+
     console.log("Guardado libro y autor libro");
     if (id_libro != -1 && id_autorlibro != -1) {
-        for (let index = 0; index < req.files.length; index++) {
-            let img = new Imagen(id_libro, req.files[index].path, req.files[index].filename, sid);
-            console.log(filename, req.files[index].filename);
-            await img.save();
+        for (let index = 0; index < req.files.imagenes.length; index++) {
+            console.log(req.files.imagenes[index]);
+            let file = req.files.imagenes[index];
+            let filename = file.name;
+            file.mv("./uploads/" + filename, async (err) => {
+                if (!err) {
+                    let img = new Imagen(id_libro, "/upload/" + filename, filename, sid);
+                    console.log(await img.save());
+                } else {
+                    console.log(err);
+                }
+            })
         }
     }
 
@@ -115,26 +124,22 @@ exports.find_a_libro = function (req, res) {
     })
 }
 
-exports.get_a_libro = function (req, res) {
+exports.get_a_libro = async function (req, res) {
     console.log(req.params.libroId)
-    Libro.getLibroById(req.params.libroId, function (err, libro) {
+    Libro.getLibroById(req.params.libroId, async function (err, libro) {
         if (err)
             res.send(err)
-        //console.log(libro)
-        if (libro[0].imgdata != null) {
-            let imgdata = libro[0].imgdata
-            let imgname = libro[0].filename
-            let data64 = Buffer.from(imgdata, 'binary').toString('base64');
-            console.log(data64)
-            let img = 'data:image/png;base64,' + data64;
+        console.log("AQUI VIENE EL LOG")
+        console.log(libro);
 
-            res.render('libro/singleView', 
-            { title: libro[0].titulo, libro: libro[0], imgsrc: img, 
-                nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req) })
+        let imgs = await Imagen.getImagesOfLibroID(libro[0].lib_id);
+        if (imgs.length > 0) {
+            imgs[0].active = true;
         }
+        
         res.render('libro/singleView', 
         { title: libro[0].titulo, libro: libro[0], 
-            nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req) })
+            nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req), imagenes: imgs })
     })
 }
 

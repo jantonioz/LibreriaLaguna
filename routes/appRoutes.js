@@ -10,8 +10,6 @@ var busqueda = require("../controllers/BusquedaController");
 var proveedor = require("../controllers/ProveedoresController");
 const utils = require("../controllers/Utils");
 const lote = require("../controllers/LotesController");
-const multer = require("multer");
-const path = require('path');
 /* var stockLibro = require("../models/libro"); */
 
 var modelLibro = require("../models/libro");
@@ -80,35 +78,6 @@ var checkAdmin = (req, res, next) => {
     });
 }
 
-const storeImage = multer.memoryStorage({
-    destination: (req, file, cb) => {
-        cb(null, './uploads');
-    },
-    filename: (req, file, cb) => {
-        const now = new Date().toISOString(); 
-        const date = now.replace(/:/g, '-'); 
-        cb(null, date + file.originalname);
-    }
-});
-
-const fileFilter = (req, file, cb) => {
-    console.log(file);
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
-}
-
-const uploadLibros = multer({
-    storage: storeImage,
-    limits: {
-        fileSize: 1024 * 1024 * 5
-    },
-    fileFilter: fileFilter
-});
-
-
 // RUTAS [ruta, controlador]
 router.get('/libros/', libro.list_all_libros);
 
@@ -116,7 +85,7 @@ router.get('/libros/', libro.list_all_libros);
 router.get('/libros/d/:libroId', autoMiddleware, libro.get_a_libro);
 router.post('/libros/find?:searchName/', autoMiddleware, libro.find_a_libro);
 router.get('/libros/crear/', checkAdmin, libro.formCreate_libro);
-router.post('/libros/crear/', uploadLibros.array('imagenes', 3), libro.create_a_libro);
+router.post('/libros/crear/', /*uploadLibros.array('imagenes', 3),*/ libro.create_a_libro);
 router.get('/libros/e/:libroId', checkAdmin, libro.formEditar);
 router.post('/libros/update', checkAdmin, libro.update_a_libro);
 

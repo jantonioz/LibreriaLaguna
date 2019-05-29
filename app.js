@@ -9,6 +9,8 @@ const session = require('express-session');
 const paginate = require('express-paginate');
 const userAgent = require('express-useragent');
 const bodyparser = require('body-parser');
+const fileUpload = require('express-fileupload');
+
 var appRouter = require('./routes/appRoutes');
 var app = express();
 
@@ -32,6 +34,7 @@ app.use(userAgent.express());
 
 // PAGINACION
 app.use(paginate.middleware(5, 50));
+
 // SESSIONES
 app.use(session({
   key: 'sid',
@@ -50,6 +53,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(fileUpload());
 
 // IMPLEMENTAR TODO EL SISTEMA DE RUTAS
 app.use('/', appRouter);
