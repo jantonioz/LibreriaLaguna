@@ -1,14 +1,17 @@
-'use strict';
+const Usuario = require('../models/usuario.js');
+const Direccion = require('../models/direccion.js');
+const Sesion = require('../models/sesion');
+const moment = require('moment');
+const requestIP = require('request-ip');
+const utils = require("./Utils");
 
-var Usuario = require('../models/usuario.js');
-var Direccion = require('../models/direccion.js');
 
 
 exports.list_all_users = function(req, res){
     Usuario.getAllUsuarios(function(err, usr){
         if (err)
             res.send(err)
-        res.render('usuario/lista');
+        res.render('usuario/lista', {nombreUsuario: utils.getNombreUsuario(req) });
     })
 }   
 
@@ -16,27 +19,50 @@ exports.formLogin = (req, res) => {
     res.render('usuario/login', {title: 'Login usuario'});
 }
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
+    console.log(req.body, username, password);
+    let user = await Usuario.login(username, password);
+    console.log(user);
+    if (user == null) { 
+        res.send("ERROR");
+    } 
+    console.log("OK")
 
-    
+    var now = moment().utcOffset('-0500').format('YYYY-MM-DD HH:mm');
+    var expire = moment().utcOffset('-0500').add(2, 'h').format('YYYY-MM-DD HH:mm');
+    var timeStampUnix = moment().utcOffset('-0500').format('x');
+    var ip = "" + requestIP.getClientIp(req);
+    ip = ip.substr(7, 15);
+    if (ip == "")
+        ip = "LOCALHOST";
+    var os = req.useragent.os;
 
-    Usuario.verify(username, password, (err, usuario) => {
-        if (!err && usuario) {
-            
-            req.session.user = usuario[0];
-            res.redirect('/');
-        } else
-            res.send("ERROR");
-    });
+    // ADD A NEW SESSION
+    let newSession = new Sesion(user.id, 
+        '' + user.id + user.username + user.password + timeStampUnix, 
+        now, expire, ip, os);
+    let sid = await newSession.save();
+    req.session.user = {name: user.nombre, username: user.username, password: user.password, ses_id: sid, token: newSession.token, isAdmin: user.admin };
+
+    if (req.body.gobackTo) {
+        res.redirect(req.body.gobackTo);
+    } else {
+        res.redirect('/');
+    }
 }
 
 exports.getRegister = function(req, res){
-    res.render('usuario/crear');
+    let admin = null;
+    if (req.session.user)
+        admin = req.session.user.isAdmin;
+    res.render('usuario/crear', {isAdmin: admin});
 }
 
 exports.create_usr = async function(req, res){
+    let ses_id = req.body.ses_id;
+
     // =============== USUARIO ===================
     var nombre = req.body.nombre;
     var apellidos = req.body.apellidos;
@@ -44,6 +70,7 @@ exports.create_usr = async function(req, res){
     var username = req.body.username;
     var password = req.body.password;
     var fecha_nacimiento = req.body.fecha_nacimiento;
+    var admin = req.body.admin;
 
     // ================ DIRECCION ================
     var calle = req.body.calle;
@@ -83,8 +110,13 @@ function createDireccion(calle, numero, colonia, ciudad, pais){
 }
 
 
-exports.userInfo = (req, res) => {
-    res.json({cookie: req.cookies.sid, session: req.session.user});
+// CUENTA
+exports.userInfo = async (req, res) => {
+    let usuario = await Usuario.getUserByUsername(req.session.user.username);
+    let sesiones = await Sesion.getAllByUserId(usuario[0].usr_id);
+    console.log(usuario);
+    res.render('usuario/cuenta', {usr: usuario[0], sesiones: sesiones, 
+        isAdmin : utils.isAdmin(req), nombreUsuario: utils.getNombreUsuario(req)});
 }
 
 

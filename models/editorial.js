@@ -1,9 +1,15 @@
 'use strict';
 var sql = require('./db.js');
 
-const INSERT = 'INSERT INTO Editoriales(ed_nombre, ed_correo, created_at) VALUES(?, ?, NOW())';
-const UPDATE =  'UPDATE Editoriales SET ed_nombre = ?, ed_correo = ?, updated_at = NOW()' + 
-                'WHERE ed_id = ?';
+// ed_id     
+// ed_nombre 
+// ed_correo 
+// ses_id	 
+// updated_at
+// created_at
+const INSERT = 'INSERT INTO Editoriales(ed_nombre, ed_correo, ses_id, created_at) VALUES(?, ?, ?, NOW())';
+const UPDATE = 'UPDATE Editoriales SET ed_nombre = ?, ed_correo = ?, ses_id = ?, updated_at = NOW()' +
+    'WHERE ed_id = ?';
 const SELECT_ALL = 'SELECT * FROM Editoriales ';
 const findByName = 'WHERE ed_nombre like ?';
 const findById = 'WHERE ed_id = ?';
@@ -23,44 +29,37 @@ const fullINFO = 'SELECT lib.lib_id, lib.titulo, lib.isbn,lib.paginas, lib.descr
 const libroBy = fullINFO + ' WHERE ed.ed_id = ?';
 
 class Editorial {
-    constructor(ed_nombre, correo, id = 0) {
+    constructor(ed_nombre, correo, ses_id, id = 0) {
         this.nombre = ed_nombre;
         this.correo = correo;
+        this.ses_id = ses_id;
         this.id = id;
     }
 
-    save(result) {
-        sql.query(INSERT, [this.nombre, this.correo], (err, res) => {
-            if (err) {
-                console.log("ERROR:", err);
-                result(res, null);
-            } else {
-                result(null, res);
-            }
+    save() {
+        return new Promise((resolve, reject) => {
+            sql.query(INSERT, [this.nombre, this.correo, this.ses_id], (err, res) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(res.insertId);
+                }
+            });
         });
     }
 
-    update(result) {
-        sql.query(UPDATE, [this.nombre, this.correo, this.id], (err, res) => {
-            if (err) {
-                console.log("ERROR: ", err);
-                result(err, null);
-            } else {
-                result(null, res);
-            }
-        })
-    }
-}
+    update() {
+        return new Promise((resolve, reject) => {
+            sql.query(UPDATE, [this.nombre, this.correo, this.ses_id, this.id], (err, res) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(res);
+                }
+            });
+        });
 
-Editorial.create = (nEditorial, result) => {
-    sql.query(INSERT, nEditorial.nombre, (err, res) => {
-        if (err) {
-            console.log("ERROR:", err)
-            result(res, null)
-        } else {
-            result(null, res)
-        }
-    });
+    }
 }
 
 Editorial.find = (name, result) => {
@@ -74,7 +73,7 @@ Editorial.find = (name, result) => {
             result(null, res);
         }
     });
-} 
+}
 
 Editorial.findById = (id, result) => {
     console.log(id);

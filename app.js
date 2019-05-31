@@ -1,33 +1,39 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var fileUpload = require('express-fileupload');
-var session = require('express-session');
+// LOTS OF BUGS
 
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const session = require('express-session');
+const paginate = require('express-paginate');
+const userAgent = require('express-useragent');
+const bodyparser = require('body-parser');
+const fileUpload = require('express-fileupload');
 
-// RUTAS
 var appRouter = require('./routes/appRoutes');
-
-
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: false }));
 app.use(cookieParser());
 //app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
 
-// SOPORTAR IMAGENES EN POST FORMS
-app.use(fileUpload());
+// USER AGENT
+app.use(userAgent.express());
+
+// PAGINACION
+app.use(paginate.middleware(5, 50));
 
 // SESSIONES
 app.use(session({
@@ -40,7 +46,6 @@ app.use(session({
   }
 }));
 
-
 app.use((req, res, next) => {
   if (req.cookies.sid && !req.session.user) {
     res.clearCookie('sid');
@@ -48,17 +53,20 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(fileUpload());
 
 // IMPLEMENTAR TODO EL SISTEMA DE RUTAS
 app.use('/', appRouter);
 
+
+
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -67,8 +75,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-
 
 
 

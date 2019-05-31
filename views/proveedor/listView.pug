@@ -2,7 +2,25 @@ extends ../layout
 
 block content
     if proveedores
-        h1 Proveedores
-    each prov in proveedores
-        h3=prov.nombre
-        p=prov.email
+        h1 Proveedores 
+            a.btn.btn-success.ml-5(href="/proveedores/register") Agregar
+        
+        table.table 
+            thead
+                tr
+                    th(scope="col") ID
+                    th(scope="col") Nombre
+                    th(scope="col") Email
+                    th(scope="col") Direccion
+                    th(scope="col") ACCION
+            tbody
+                each prov in proveedores
+                    tr
+                        th(scope="col") !{prov.prov_id}
+                        td !{prov.prov_nombre}
+                        td !{prov.prov_email}
+                        td !{prov.dir_calle + ' #' + prov.dir_num + ' ' + prov.dir_cd + ' ' + prov.dir_pais}
+                        td 
+                            a.btn.btn-primary(href='/proveedores/e/'+prov.prov_id) Editar
+                            a.btn.btn-danger.ml-3(href='/proveedores/del/'+prov.prov_id) Eliminar
+                            a.btn.btn-info.ml-3(href='/lotes/p/'+prov.prov_id) Lotes

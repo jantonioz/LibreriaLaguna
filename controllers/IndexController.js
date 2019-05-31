@@ -24,7 +24,7 @@ exports.list_all_libros = function (req, res) {
             }
         }
 
-        res.render('libro/listView', { title: 'Libros', libros: libro, activeLibros: 'active' })
+        res.render('libro/listView', { title: 'Libros', libros: libro, activeLibros: 'active'})
     })
 
 }

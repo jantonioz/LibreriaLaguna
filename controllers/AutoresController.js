@@ -43,13 +43,8 @@ exports.formCrear = (req, res) => {
 }
 var dateFormat = require('dateformat');
 
-exports.create = (req, res) => {
-    let newAutor = new Autor(req.body.nombre, req.body.fnac);
-
-    Autor.create(newAutor, (err, insertedID) => {
-        if (err)
-            res.send("ERROR", err)
-        else 
-            res.render('autor/create', {title: 'Registra un autor', alerta: 'Autor creado con el id: ' + insertedID })
-    })
+exports.create = async (req, res) => {
+    let newAutor = new Autor(req.body.nombre, req.body.fnac, req.body.bio, req.session.user.ses_id);
+    let insertId = await newAutor.save();
+    res.json({id: insertId});
 }

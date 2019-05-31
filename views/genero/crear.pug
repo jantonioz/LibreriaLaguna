@@ -3,13 +3,20 @@ extends ../layout
 
 block content
     div(class="container")
-        form(action="/generos/crear", method="POST", enctype="multipart/form-data")
+        form(action="/generos/crear", method="POST")
             div(class="form-group")
                 div(class="row")
                     div(class="col col-sm-2")
                         label(for="nombre", class="col col-lg") Nombre genero:
                     div(class="col col-lg-5")
                         input(type="text", class="form-control", id="nombre", name="nombre", placeholer="Ingresa un nombre" autocomplete="off")
+
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="nombre", class="col col-lg") Descripcion:
+                    div(class="col col-lg-5")
+                        textarea(type="text", class="form-control", id="descripcion", name="descripcion", placeholer="Descripcion" autocomplete="off")
             div(class="form-group")
                 div(class="row")
                     div(class="col-sm-5 mx-auto")

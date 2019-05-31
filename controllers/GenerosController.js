@@ -48,14 +48,9 @@ exports.formCrear = (req, res) => {
     res.render('genero/crear', { title: 'Crea un genero' })
 }
 
-exports.create = (req, result) => {
-    let newGenero = new Genero(req.body.nombre);
-    Genero.create(newGenero, (err, res) => {
-        if (err) {
-            result.send("ERROR");
-        }
-        else {
-            result.json(res)
-        }
-    })
+exports.create = async (req, res) => {
+    let newGenero = new Genero(req.body.nombre, req.body.descripcion, req.session.user.ses_id);
+    let insertId = await newGenero.save();
+
+    res.json({id: insertId});
 }

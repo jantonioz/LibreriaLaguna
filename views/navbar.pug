@@ -1,30 +1,7 @@
-nav(class="navbar sticky-top navbar-expand-lg navbar-dark bg-danger pb-3 pt-3")
-    a(class="navbar-brand" href="/") Libreria
-    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
-        span(class="navbar-toggler-icon")
+if(isAdmin) 
+    nav(class="navbar sticky-top navbar-expand-lg navbar-dark bg-success pb-3 pt-3")
+        include colorNavbar.pug
+else 
+    nav(class="navbar sticky-top navbar-expand-lg navbar-dark bg-danger pb-3 pt-3")
+        include colorNavbar.pug
     
-    div(class="collapse navbar-collapse" id="navbarSupportedContent")
-        ul(class="navbar-nav mr-auto")
-            li(class="nav-item " + activeInicio )
-                a(class="nav-link" href="/") Inicio 
-                    span(class="sr-only") (Current)
-            li(class="nav-item " + [activeLibros] )
-                a(class="nav-link" href="/libros") Libros
-            li(class="nav-item dropdown")
-                a(class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Generos
-                div(class="dropdown-menu" aria-labelledby="navbarDropdown")
-                    //- if (generos)
-                    //-     each genero in generos
-                    //-         a(class="dropdown-item", href="/generos/d/" + genero.gen_id) !{genero.gen_nombre}
-                    a(class="dropdown-item" href="/generos/d/1") Novela
-                    a(class="dropdown-item" href="/generos/d/2") Ciencia Ficcion
-                    a(class="dropdown-item" href="/generos/d/3") Ficcion de aventuras
-                    a(class="dropdown-item" href="/generos/d/4") Novela Sci-fi
-                    div(class="dropdown-divider")
-                    a(class="dropdown-item" href="#") Mas comprados
-            li(class="nav-item")
-                //a(class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true") Disabled
-
-        form(class="form-inline my-2 my-lg-0" action="/find" method="post")
-            input(class="form-control mr-sm-2" name="search" autocomplete="off" type="search" placeholder="Buscar" aria-label="Search")
-            button(class="btn btn-outline-light my-2 my-sm-0" type="submit") Buscar

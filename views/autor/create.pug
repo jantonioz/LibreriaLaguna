@@ -10,7 +10,7 @@ block content
                 button(type="button", class="close", data-dismiss="alert", aria-label="Close")
                     span(aria-hidden="true") &times;
 
-        form(action="/autores/crear", method="POST", enctype="multipart/form-data")
+        form(action="/autores/crear", method="POST")
             div(class="form-group")
                 div(class="row")
                     div(class="col col-sm-2")
@@ -23,6 +23,12 @@ block content
                         label(for="fnac", class="col col-lg") Fecha de nacimiento:
                     div(class="col col-lg-5")
                         input(type="date", class="form-control", id="fnac", name="fnac", placeholer="Ingresa un nombre", autocomplete="off", min="1600-01-01")
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="nombre", class="col col-lg") Biografía:
+                    div(class="col col-lg-5")
+                        textarea(type="text", class="form-control", id="bio", name="bio", placeholer="Biografía" autocomplete="off")
 
         
 

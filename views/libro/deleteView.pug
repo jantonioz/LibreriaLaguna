@@ -41,23 +41,16 @@ block content
         //-     input(type="file" id="file-upload")
           
       div(class="col")
-        h1= libro.titulo 
+        .row
+            h1 ¿Seguro que deseas borrarlo?
+            form(action="/libros/delete", method="POST")
+                input(type="hidden", value=libro.lib_id, name="lib_id")
+                button.ml-3(type="submit" class="btn btn-primary") Aceptar 
+        h2 !{libro.titulo}
           if (isAdmin)
             a(href="/libros/e/" + libro.lib_id, class="btn btn-secondary ml-5") Editar
-            a.ml-2.btn.btn-danger(href="/libros/delete/" + libro.lib_id) Eliminar
+            a.ml-2.btn.btn-danger(href="/libros/d/" + libro.lib_id) Eliminar
         small Autor 
-          a(href="/autores/d/" + libro.autor_id) !{libro.autor}
+          a(href="/autores/d/" + libro.autor_id) #{libro.autor}
           | !{" \u2022 "} !{genLink}
         p= libro.descripcion
-
-      .col-md-3 
-        h5 Ejemplares disponibles:
-        if(ejemplares != null && ejemplares.length > 0)
-          each ejemplar in ejemplares 
-            .row
-              .col
-                p !{ejemplar.cantidad} Disponibles a $ !{ejemplar.precio}
-                  br
-                  small Por: !{ejemplar.proveedor}
-              .col-sm-2
-                a.btn.btn-primary.text-white(href="#") Comprar
