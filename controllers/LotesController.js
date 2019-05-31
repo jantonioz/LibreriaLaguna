@@ -34,6 +34,26 @@ exports.addView = async (req, res) => {
         proveedores: proveedores});
 }
 
-exports.addPost = (req, res) => {
-    res.json(req.body);
+exports.addPost = async (req, res) => {
+    let sid = req.session.user.ses_id;
+    let descripcion = req.body.descripcionLote;
+    let fecha_entrega = req.body.fentrega;
+    let proveedor_id = req.body.proveedor_id;
+    // LISTAS
+    let cantidades = req.body.cantidades;
+    let precios = req.body.precios;
+    let libros = req.body.libros;
+
+    let lote = new Lote(descripcion, fecha_entrega, proveedor_id, sid);
+    let lote_id = await lote.save();
+    console.log("RESULTADO LOTE: ", lote_id);
+
+    for (var index = 0; index < cantidades.length; index++) {
+        var utc = Date.now();
+        var ejemplar = new Ejemplar(cantidades[index], precios[index], utc, libros[index], lote_id, sid);
+        console.log("RESULTADO EJEMPLAR: ", await ejemplar.save());
+    }
+
+
+    res.send("OK :)");
 }

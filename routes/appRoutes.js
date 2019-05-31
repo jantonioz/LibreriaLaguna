@@ -88,6 +88,8 @@ router.get('/libros/crear/', checkAdmin, libro.formCreate_libro);
 router.post('/libros/crear/', /*uploadLibros.array('imagenes', 3),*/ libro.create_a_libro);
 router.get('/libros/e/:libroId', checkAdmin, libro.formEditar);
 router.post('/libros/update', checkAdmin, libro.update_a_libro);
+router.get('/libros/delete/:libroId', checkAdmin, libro.delete_form);
+router.post('/libros/delete', checkAdmin, libro.delete_a_libro);
 
 // ==== USUARIOS ====
 router.get('/usuarios/', usuario.list_all_users);

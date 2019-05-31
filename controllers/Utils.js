@@ -14,3 +14,10 @@ exports.isAdmin = (req) =>  {
         admin = req.session.user.isAdmin;
     return admin == 1;
 }
+
+exports.getSid = (req) => {
+    if (req.session && req.session.user) {
+        return req.session.ses_id;
+    }
+    return -1;
+}

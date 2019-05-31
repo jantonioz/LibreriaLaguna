@@ -22,7 +22,7 @@ class Lote {
                 [this.descripcion, this.fentrega, this.proveedor_id, this.ses_id],
                 (err, res) => {
                     if (!err) {
-                        resolve(res);
+                        resolve(res.insertId);
                     } else {
                         resolve(null);
                     }

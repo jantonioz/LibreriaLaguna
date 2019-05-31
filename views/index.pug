@@ -43,7 +43,7 @@ block fullpageContent
 
                 //--img(class="card-img-top mx-auto img-fluid mt-2", style="display: block;max-width:100px;max-height:155px;width: auto;height: auto;", src='data:image/png;base64,'+libro.imagenes[0].data, alt="")
               else  
-                img(class="card-img-top mx-auto img-fluid mt-2", style="display: block;max-width:100px;max-height:180px;width: auto;height: auto;", src="http://placehold.it/100x170", alt="")
+                img.d-block.w-100(class="card-img-top mx-auto img-fluid mt-2", style="display: block;max-width:100px;max-height:180px;width: auto;height: auto;", src="http://placehold.it/100x170", alt="")
               div(class="card-body")
                 h4(class="card-title" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 400px;") !{libro.titulo}
                 p(class="card-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 400px;") !{libro.descripcion}

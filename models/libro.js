@@ -7,9 +7,10 @@ const imagenLibro = require('./imagen_libro');
 
 
 const selectors = 'lib.lib_id, lib.titulo, lib.orig_titulo, lib.isbn,lib.paginas, lib.fecha_pub, ' +
-    'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, img.img_path AS path,' +
-    ' img.img_filename AS filename,  ' +
+    'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, ' +
     'aut.aut_id AS autor_id, gen.gen_id AS gen_id, lib.editorial_id, ed.ed_nombre AS editorial ';
+const imgSelectors = ', img.img_path AS path,' +
+    ' img.img_filename AS filename  ';
 
 const normalInfoHeaders =
     'lib.lib_id, lib.titulo, lib.orig_titulo, lib.isbn,lib.paginas, lib.fecha_pub, ' +
@@ -154,15 +155,19 @@ class Libro {
 //         })
 // }
 
-Libro.getLibroById = function createUser(libroId, result) {
-    sql.query("SELECT " + selectors + completeInfo + imageJOIN + " WHERE lib.lib_id = ? ", libroId, function (err, res) {
-        if (err) {
-            console.log("error :", err)
-            result(err, null)
-        } else {
-            result(null, res)
-        }
-    })
+Libro.getLibroById = function createUser(libroId) {
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT " + selectors + completeInfo + " WHERE lib.lib_id = ? ", libroId, function (err, res) {
+            if (!err) {
+                console.log("ok :", res)
+                resolve(res);
+            } else {
+                console.log(err);
+                resolve(null);
+            }
+        })
+    });
+
 }
 
 Libro.getAllLibros = async () => {
@@ -171,12 +176,12 @@ Libro.getAllLibros = async () => {
         sql.query("SELECT " + normalInfoHeaders + completeInfo, async (err, res) => {
             if (!err) {
                 for (var i = 0; i < res.length; i++) {
-                    let imagenes = await imagenLibro.getImagesOfLibroID(res[i].lib_id); 
+                    let imagenes = await imagenLibro.getImagesOfLibroID(res[i].lib_id);
                     console.log(imagenes);
                     if (imagenes.length > 0) {
                         res[i].imagenes = imagenes;
                         res[i].imagenes[0].active = 1;
-                    } 
+                    }
                 }
                 resolve(res);
             } else {
@@ -199,7 +204,7 @@ Libro.getAllLibrosSimple = () => {
 }
 
 Libro.find = function findLibro(titulo, result) {
-    sql.query("SELECT " + selectors + completeInfo + imageJOIN + " WHERE titulo LIKE ? OR " + fields.tituloOrig + " LIKE ?", [titulo, titulo], function (err, res) {
+    sql.query("SELECT " + selectors + imgSelectors + completeInfo + imageJOIN + " WHERE titulo LIKE ? OR " + fields.tituloOrig + " LIKE ?", [titulo, titulo], function (err, res) {
         if (err) {
             console.log("error: ", err)
             result(null, err)
@@ -222,19 +227,21 @@ Libro.updateTitleById = function update(id, libro, result) {
 }
 
 Libro.remove = function (id, result) {
-    sql.query("DELETE FROM libros WHERE id = ?", [id], function (err, res) {
-        if (err) {
-            console.log("error: ", err)
-            result(null, err)
-        } else {
-            result(null, res)
-        }
-    })
+    return new Promise((resolve, reject) => {
+        sql.query("DELETE FROM libros WHERE lib_id = ?", id, function (err, res) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(res);
+            }
+        });
+    });
+
 }
 
 Libro.getAllFormatted = (result) => {
 
-    sql.query("SELECT " + selectors + completeInfo + imageJOIN, function (err, res) {
+    sql.query("SELECT " + selectors + imgSelectors + completeInfo + imageJOIN, function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(err, null);

@@ -10,6 +10,7 @@ const paginate = require('express-paginate');
 const dateFormat = require('dateformat');
 const utils = require("./Utils");
 const path = require('path');
+const Ejemplar = require('../models/ejemplar');
 
 exports.list_all_libros = async (req, res) => {
     // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
@@ -57,23 +58,15 @@ exports.formCreate_libro = async function (req, res) {
 }
 
 exports.create_a_libro = async (req, res) => {
-    // console.log(req.files);
-    // req.files.forEach( (value, index) => {
-    //     console.log(value.originalname);
-    // });
-    // res.send("OK");
 
     if (req.files == null || Object.keys(req.files).length == 0) {
         res.status(400).send('No files were uploaded.');
         console.log("no files");
+        return;
     }
 
-
-
-
-
     // ======= SESION =======
-    var sid = 1;
+    var sid = utils.getSid(req);
 
     var titulo = req.body.titulo;
     var tituloO = req.body.tituloorig;
@@ -100,7 +93,7 @@ exports.create_a_libro = async (req, res) => {
             let filename = file.name;
             file.mv("./uploads/" + filename, async (err) => {
                 if (!err) {
-                    let img = new Imagen(id_libro, "/upload/" + filename, filename, sid);
+                    let img = new Imagen(id_libro, "/uploads/" + filename, filename, sid);
                     console.log(await img.save());
                 } else {
                     console.log(err);
@@ -118,29 +111,34 @@ exports.find_a_libro = function (req, res) {
         if (err)
             console.log(err)
 
-        res.render('libro/listView', 
-        { title: 'Libros', libros: libros, activeLibros: 'active', 
-        nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req) })
+        res.render('libro/listView',
+            {
+                title: 'Libros', libros: libros, activeLibros: 'active',
+                nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req)
+            })
     })
 }
 
 exports.get_a_libro = async function (req, res) {
     console.log(req.params.libroId)
-    Libro.getLibroById(req.params.libroId, async function (err, libro) {
-        if (err)
-            res.send(err)
-        console.log("AQUI VIENE EL LOG")
-        console.log(libro);
+    let libro = await Libro.getLibroById(req.params.libroId);
+    console.log(libro);
+    if (libro == null)
+        return res.send("BAD");
+    
 
-        let imgs = await Imagen.getImagesOfLibroID(libro[0].lib_id);
-        if (imgs.length > 0) {
-            imgs[0].active = true;
-        }
-        
-        res.render('libro/singleView', 
-        { title: libro[0].titulo, libro: libro[0], 
-            nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req), imagenes: imgs })
-    })
+    let imgs = await Imagen.getImagesOfLibroID(req.params.libroId);
+    console.log(imgs);
+    if (imgs.length > 0) {
+        imgs[0].active = true;
+    }
+    let ejemplares = await Ejemplar.getAllByLibro(req.params.libroId);
+
+    res.render('libro/singleView', {
+        title: libro.titulo, libro: libro[0],
+        nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req), imagenes: imgs,
+        ejemplares: ejemplares
+    });
 }
 
 exports.update_a_libro = async function (req, res) {
@@ -173,12 +171,24 @@ exports.update_a_libro = async function (req, res) {
     });
 }
 
-exports.delete_a_libro = function (req, res) {
-    Libro.remove(req.params.libroId, function (err, libro) {
-        if (err)
-            res.send(err)
-        res.json(libro)
-    })
+exports.delete_form = async (req, res) => {
+    let mLibro = await Libro.getLibroById(req.params.libroId).catch((reason) => {
+        console.log("error: ", reason);
+    });
+
+    console.log("EL LIBRO: ", mLibro);
+
+
+    res.render('libro/deleteView', {libro: mLibro[0]});
+}
+
+exports.delete_a_libro = async (req, res) => {
+    let lib_id = req.body.lib_id;
+    var result = await Libro.remove(lib_id).catch((reason) => {
+        console.log(reason);
+    });
+
+    res.redirect('/libros');
 }
 
 
