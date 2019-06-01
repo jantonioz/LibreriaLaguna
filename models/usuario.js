@@ -29,8 +29,23 @@ const update =
 
 const Delete = 'DELETE FROM Usuarios WHERE usr_id = ?';
 
-const VerifyQuery = 'SELECT * FROM usuarios WHERE ' + fields.username +
-    ' = ? AND ' + fields.password + ' = ? LIMIT 1';
+// usr_nombre,
+// usr_apellidos,
+// usr_email,
+// usr_username,
+// usr_password,
+// usr_fnac,
+// direccion_id,
+// usr_id,
+// ses_id,
+// permisos);
+
+const VerifyQuery = 'CALL proc_loginUser(?, ?);';
+
+const GETPERMISOS = 'SELECT perm.perm_permisos ' +
+                    'FROM permisos AS perm ' +
+                    'INNER JOIN usuarios AS usr ON (usr.roles_id = perm.rol_id) ' +
+                    'WHERE usr.usr_id = ?';
 
 const VerifyAdmin = 'SELECT * FROM usuarios WHERE '
     + fields.username + assign + ' AND '
@@ -38,7 +53,7 @@ const VerifyAdmin = 'SELECT * FROM usuarios WHERE '
     + 'usr_admin = 1 LIMIT 1';
 
 class Usuario {
-    constructor(nombre, apellidos, email, username, password, fnac, direccion_id, id = 0, ses_id = 1, admin = 0) {
+    constructor(nombre, apellidos, email, username, password, fnac, direccion_id, id = 0, ses_id = 1, permisos = '') {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -48,7 +63,7 @@ class Usuario {
         this.fnac = fnac;
         this.direccion_id = direccion_id;
         this.ses_id = ses_id;
-        this.admin = admin;
+        this.permisos = permisos;
     }
 
     save() {
@@ -102,6 +117,12 @@ class Usuario {
             );
         });
     }
+
+    getPermisos() {
+        return new Promise((resolve, reject) => {
+            sql.query(GETPERMISOS, this.id, )
+        });
+    }
 }
 
 Usuario.getUserById = function (usrId, result) {
@@ -141,18 +162,21 @@ Usuario.getAllUsuarios = function getAllLibros(result) {
 Usuario.login = (username, password) => {
     return new Promise((resolve, reject) => {
         sql.query(VerifyQuery, [username, password], (err, res) => {
-            if (!err && res.length == 1) {
+            console.log(res);
+            console.log(err);
+            if (res) {
+                let row = res[0][0];
                 var user = new Usuario(
-                    res[0].usr_nombre,
-                    res[0].usr_apellidos,
-                    res[0].usr_email,
-                    res[0].usr_username,
-                    res[0].usr_password,
-                    res[0].usr_fnac,
-                    res[0].direccion_id,
-                    res[0].usr_id,
-                    res[0].ses_id,
-                    res[0].usr_admin[0]);
+                    row.nombre,
+                    row.apellidos,
+                    row.email,
+                    row.username,
+                    row.password,
+                    row.fnac,
+                    row.direccion_id,
+                    row.usr_id,
+                    0,
+                    row.permisos);
                 resolve(user);
             } else {
                 resolve(null);

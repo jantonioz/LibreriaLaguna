@@ -10,6 +10,7 @@ var busqueda = require("../controllers/BusquedaController");
 var proveedor = require("../controllers/ProveedoresController");
 const utils = require("../controllers/Utils");
 const lote = require("../controllers/LotesController");
+const middleware = require('../middleware/middleware');
 /* var stockLibro = require("../models/libro"); */
 
 var modelLibro = require("../models/libro");
@@ -78,6 +79,8 @@ var checkAdmin = (req, res, next) => {
     });
 }
 
+
+
 // RUTAS [ruta, controlador]
 router.get('/libros/', libro.list_all_libros);
 
@@ -101,6 +104,7 @@ router.get('/usuarios/register/', checkAdmin, usuario.getRegister);
 router.post('/usuarios/register', redirectHome, usuario.create_usr);
 router.get('/cuenta', redirectLogin, usuario.userInfo);
 router.get('/admin/add', checkAdmin, usuario.getRegister);
+router.post('/addCarrito', middleware.carritoMiddleware, usuario.addCarrito);
 
 // ==== AUTORES ====
 router.get('/autores/', autoMiddleware, autor.list_all_authors);

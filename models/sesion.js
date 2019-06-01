@@ -2,14 +2,16 @@
 
 var sql = require('./db.js');
 
-const INSERT = 
-'INSERT INTO sesiones(ses_token, ses_ultima_act, ses_fin, ses_ip, ses_os, usr_id, ' +
-'updated_at, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW());'
+const INSERT =
+    'INSERT INTO sesiones(ses_token, ses_ultima_act, ses_fin, ses_ip, ses_so, usr_id, ' +
+    'updated_at, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW());'
+
+const INSERTPROC = 'CALL registerSesion(?, ?, ?, ?, ?);'
 
 const SELECT_BY_USER = 'SELECT * FROM sesiones where usr_id = ?';
 
-class Sesion{
-    constructor(user_id, ses_token, ses_utlima_actividad = '1990-01-01 00:00', ses_fin = '1990-01-01 00:00', ses_ip = '0.0.0.0', ses_os = 'windows', ses_id=0) {
+class Sesion {
+    constructor(user_id, ses_token, ses_utlima_actividad = '1990-01-01 00:00', ses_fin = '1990-01-01 00:00', ses_ip = '0.0.0.0', ses_os = 'windows', ses_id = 0) {
         this.user_id = user_id;
         this.token = ses_token;
         this.ultima_act = ses_utlima_actividad;
@@ -21,11 +23,15 @@ class Sesion{
 
     save() {
         return new Promise((resolve, reject) => {
-            sql.query(INSERT, [this.token, this.ultima_act, this.fin, this.ip, this.os, this.user_id], (err, res) =>  {
-                if (!err) 
-                    resolve(res.insertId);
-                else 
+            sql.query(INSERTPROC, [this.token, this.fin, this.ip, this.os, this.user_id], (err, res) => {
+                if (!err) {
+                    console.log(res);
+                    resolve(res);
+                }
+                else {
+                    console.log(err);
                     reject(err);
+                }
             });
         });
     }

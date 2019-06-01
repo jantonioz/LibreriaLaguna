@@ -253,6 +253,41 @@ INSERT INTO `autores` (`aut_id`, `aut_nombre`, `aut_fecnac`, `aut_biografia`, `u
 (10, 'Brian Sanderson', '1975-12-19', '', NOW(), NOW()),
 (11, 'Brandon Sanderson', '1975-12-19', '', NOW(), NOW());
 
+/* FUNCIONES*/
+DELIMITER |
+CREATE FUNCTION getLastInsertIdSesion() 
+RETURNS INT
+BEGIN
+  DECLARE insertId;
+  SELECT MAX(ses_id) INTO insertId FROM sesiones;
+  RETURN insertId;
+END|
+/* PROCEDURES */
+CREATE PROCEDURE registerSesion(token CHAR(32), ip VARCHAR(15), fin DATETIME, os VARCHAR (20), u_id INT) 
+BEGIN 
+
+  INSERT INTO sesiones (ses_token , ses_ultima_act, ses_fin , ses_ip, ses_so, usr_id, updated_at, created_at) 
+  VALUES (token , NOW(), fin, ip, os, u_id, NOW(), NOW());
+  
+  SELECT getLastInsertIdSesion() AS 'insertId';
+END|
+
+CREATE PROCEDURE proc_loginUser(username VARCHAR(50), password VARCHAR(255)) 
+BEGIN
+  /* BUSCAR SI LOS DATOS COINCIDEN */
+  IF EXISTS( SELECT * FROM usuarios WHERE (usr_username = username) AND (usr_password = password) ) THEN
+    /* RETORNAR DATOS DEL USUARIO + PERMISOS */
+    SELECT usr.usr_nombre AS 'nombre', usr.usr_apellidos AS 'apellidos', usr.usr_email AS 'email',
+      usr.usr_username AS 'username', usr.usr_password AS 'password', usr.usr_fnac AS 'fnac', usr.direccion_id AS 'direccion_id',
+      usr.usr_id AS 'usr_id', perm.perm_permisos AS 'permisos'
+    FROM usuarios as usr
+    INNER JOIN permisos AS perm ON (usr.roles_id = perm.rol_id);
+  ELSE 
+  	SIGNAL SQLSTATE '45000';
+  END IF;
+END|
+
+DELIMITER ;
 
 -- CREATE TABLE Sesiones (
 --   ses_id			int(10) NOT NULL AUTO_INCREMENT,

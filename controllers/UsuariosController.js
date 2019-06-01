@@ -7,28 +7,29 @@ const utils = require("./Utils");
 
 
 
-exports.list_all_users = function(req, res){
-    Usuario.getAllUsuarios(function(err, usr){
+exports.list_all_users = function (req, res) {
+    Usuario.getAllUsuarios(function (err, usr) {
         if (err)
             res.send(err)
-        res.render('usuario/lista', {nombreUsuario: utils.getNombreUsuario(req) });
+        res.render('usuario/lista', { nombreUsuario: utils.getNombreUsuario(req) });
     })
-}   
+}
 
 exports.formLogin = (req, res) => {
-    res.render('usuario/login', {title: 'Login usuario'});
+    res.render('usuario/login', { title: 'Login usuario' });
 }
 
 exports.login = async (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
-    console.log(req.body, username, password);
+    
     let user = await Usuario.login(username, password);
     console.log(user);
-    if (user == null) { 
+    if (user == null) {
         res.send("ERROR");
-    } 
-    console.log("OK")
+        return;
+    }
+    console.log("USUARIOS CONTROLLER: OK");
 
     var now = moment().utcOffset('-0500').format('YYYY-MM-DD HH:mm');
     var expire = moment().utcOffset('-0500').add(2, 'h').format('YYYY-MM-DD HH:mm');
@@ -40,11 +41,19 @@ exports.login = async (req, res) => {
     var os = req.useragent.os;
 
     // ADD A NEW SESSION
-    let newSession = new Sesion(user.id, 
-        '' + user.id + user.username + user.password + timeStampUnix, 
-        now, expire, ip, os);
-    let sid = await newSession.save();
-    req.session.user = {name: user.nombre, username: user.username, password: user.password, ses_id: sid, token: newSession.token, isAdmin: user.admin };
+    let token = '' + user.id + user.username + user.password + timeStampUnix;
+    let newSession = new Sesion(user.id, token, now, expire, ip, os);
+    let res_sid = await newSession.save();
+    let sid = res_sid[0][0].insertId;
+    console.log(sid);
+    req.session.user =
+        {   name: user.nombre, 
+            username: user.username, 
+            password: user.password, 
+            ses_id: sid, 
+            token: newSession.token, 
+            permisos: user.permisos
+        };
 
     if (req.body.gobackTo) {
         res.redirect(req.body.gobackTo);
@@ -53,14 +62,14 @@ exports.login = async (req, res) => {
     }
 }
 
-exports.getRegister = function(req, res){
+exports.getRegister = function (req, res) {
     let admin = null;
     if (req.session.user)
         admin = req.session.user.isAdmin;
-    res.render('usuario/crear', {isAdmin: admin});
+    res.render('usuario/crear', { isAdmin: admin });
 }
 
-exports.create_usr = async function(req, res){
+exports.create_usr = async function (req, res) {
     let ses_id = req.body.ses_id;
 
     // =============== USUARIO ===================
@@ -79,12 +88,12 @@ exports.create_usr = async function(req, res){
     var ciudad = req.body.ciudad;
     var pais = req.body.pais;
 
-    if (!nombre || !apellidos || !email || !username || !password || !fecha_nacimiento 
+    if (!nombre || !apellidos || !email || !username || !password || !fecha_nacimiento
         || !calle || !numero || !colonia || !ciudad || !pais)
-        res.status(400).send({error: true, message: "ERROR AL CAPTURAR DATOS"});
+        res.status(400).send({ error: true, message: "ERROR AL CAPTURAR DATOS" });
 
     let direccion_id = await createDireccion(calle, numero, colonia, ciudad, pais);
-    
+
     let usuario = new Usuario(nombre, apellidos, email, username, password, fecha_nacimiento, direccion_id);
 
     usuario.save((err, queryResult) => {
@@ -95,7 +104,7 @@ exports.create_usr = async function(req, res){
     });
 }
 
-function createDireccion(calle, numero, colonia, ciudad, pais){
+function createDireccion(calle, numero, colonia, ciudad, pais) {
     return new Promise((resolve, reject) => {
         let direccion = new Direccion(calle, numero, colonia, ciudad, pais);
         direccion.save((err, res) => {
@@ -115,8 +124,10 @@ exports.userInfo = async (req, res) => {
     let usuario = await Usuario.getUserByUsername(req.session.user.username);
     let sesiones = await Sesion.getAllByUserId(usuario[0].usr_id);
     console.log(usuario);
-    res.render('usuario/cuenta', {usr: usuario[0], sesiones: sesiones, 
-        isAdmin : utils.isAdmin(req), nombreUsuario: utils.getNombreUsuario(req)});
+    res.render('usuario/cuenta', {
+        usr: usuario[0], sesiones: sesiones,
+        isAdmin: utils.isAdmin(req), nombreUsuario: utils.getNombreUsuario(req)
+    });
 }
 
 
@@ -127,4 +138,8 @@ exports.logout = (req, res) => {
     } else {
         res.redirect('/login');
     }
+}
+
+exports.addCarrito = (req, res) => {
+
 }
