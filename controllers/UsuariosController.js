@@ -46,19 +46,21 @@ exports.login = async (req, res) => {
     let res_sid = await newSession.save();
     let sid = res_sid[0][0].insertId;
     console.log(sid);
+    console.log(user.rol);
     req.session.user =
         {   name: user.nombre, 
             username: user.username, 
             password: user.password, 
             ses_id: sid, 
             token: newSession.token, 
-            permisos: user.permisos
+            permisos: user.permisos,
+            nombreRol: user.rol
         };
 
     if (req.body.gobackTo) {
         res.redirect(req.body.gobackTo);
     } else {
-        res.redirect('/');
+        res.redirect('/cuenta');
     }
 }
 

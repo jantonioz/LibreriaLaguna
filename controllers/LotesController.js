@@ -5,13 +5,7 @@ const Proveedor = require('../models/proveedor');
 const Ejemplar = require('../models/ejemplar');
 const Libro = require('../models/libro');
 const Utils = require("./Utils");
-
-// lote.viewAll); X
-// min, lote.detalleVi X
-// in, lote.addView);
-// min, lote.addPost);
-// min, lote.editView)
-// n, lote.editPost);
+const Tipos = require('../models/tipo_ejemplar');
 
 exports.viewAll = async (req, res) => {
 
@@ -29,9 +23,11 @@ exports.detalleView = async (req, res) => {
 exports.addView = async (req, res) => {
     let libros = await Libro.getAllLibrosSimple();
     let proveedores = await Proveedor.getAllSimple();
+    let tipos = await Tipos.getAll();
+
     res.render('lote/addView', {isAdmin: Utils.isAdmin(req), 
         nombreUsuario: Utils.getNombreUsuario(req), libros: libros, 
-        proveedores: proveedores});
+        proveedores: proveedores, tipos: tipos});
 }
 
 exports.addPost = async (req, res) => {

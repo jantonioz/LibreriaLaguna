@@ -1,16 +1,18 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var libro = require("../controllers/LibrosController");
-var usuario = require("../controllers/UsuariosController");
-var autor = require("../controllers/AutoresController");
-var genero = require("../controllers/GenerosController");
-var editorial = require("../controllers/EditorialesController");
-var busqueda = require("../controllers/BusquedaController");
-var proveedor = require("../controllers/ProveedoresController");
+const libro = require("../controllers/LibrosController");
+const usuario = require("../controllers/UsuariosController");
+const autor = require("../controllers/AutoresController");
+const genero = require("../controllers/GenerosController");
+const editorial = require("../controllers/EditorialesController");
+const busqueda = require("../controllers/BusquedaController");
+const proveedor = require("../controllers/ProveedoresController");
 const utils = require("../controllers/Utils");
 const lote = require("../controllers/LotesController");
 const middleware = require('../middleware/middleware');
+const mTipoE = require('../models/tipo_ejemplar');
+
 /* var stockLibro = require("../models/libro"); */
 
 var modelLibro = require("../models/libro");
@@ -143,5 +145,17 @@ router.get('/lotes/add/', checkAdmin, lote.addView);
 router.post('/lotes/add/', checkAdmin, lote.addPost);
 // router.get('/lotes/e/:id', checkAdmin, lote.editView);
 // router.post('/lotes/e/', checkAdmin, lote.editPost);
+
+router.get('/tipos/add', checkAdmin, (req, res) => {
+    res.render('tipos/add');
+});
+router.post('/tipos/add', checkAdmin, (req, res) => {
+    let descripcion = req.body.descripcion;
+    let dimensiones = req.body.dimensiones;
+    let ses_id = req.session.user.ses_id;
+    let nTipo = new mTipoE(descripcion, dimensiones, ses_id);
+    console.log(nTipo);
+    res.redirect('/lotes/add');
+});
 
 module.exports = router;

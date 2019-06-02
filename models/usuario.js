@@ -43,9 +43,14 @@ const Delete = 'DELETE FROM Usuarios WHERE usr_id = ?';
 const VerifyQuery = 'CALL proc_loginUser(?, ?);';
 
 const GETPERMISOS = 'SELECT perm.perm_permisos ' +
-                    'FROM permisos AS perm ' +
-                    'INNER JOIN usuarios AS usr ON (usr.roles_id = perm.rol_id) ' +
-                    'WHERE usr.usr_id = ?';
+    'FROM permisos AS perm ' +
+    'INNER JOIN usuarios AS usr ON (usr.roles_id = perm.rol_id) ' +
+    'WHERE usr.usr_id = ?';
+
+const GETROL = 'SELECT rol.rol_nombre ' +
+    'FROM roles AS rol ' +
+    'INNER JOIN usuarios AS usr ON (usr.roles_id = rol.rol_id) ' +
+    'WHERE usr.usr_id = ?';
 
 const VerifyAdmin = 'SELECT * FROM usuarios WHERE '
     + fields.username + assign + ' AND '
@@ -53,7 +58,7 @@ const VerifyAdmin = 'SELECT * FROM usuarios WHERE '
     + 'usr_admin = 1 LIMIT 1';
 
 class Usuario {
-    constructor(nombre, apellidos, email, username, password, fnac, direccion_id, id = 0, ses_id = 1, permisos = '') {
+    constructor(nombre, apellidos, email, username, password, fnac, direccion_id, id = 0, ses_id = 1, permisos = '', rol = '') {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -64,6 +69,7 @@ class Usuario {
         this.direccion_id = direccion_id;
         this.ses_id = ses_id;
         this.permisos = permisos;
+        this.rol = rol;
     }
 
     save() {
@@ -120,7 +126,25 @@ class Usuario {
 
     getPermisos() {
         return new Promise((resolve, reject) => {
-            sql.query(GETPERMISOS, this.id, )
+            sql.query(GETPERMISOS, this.id, (err, res) => {
+                if (!err) {
+                    resolve(res);
+                } else {
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    getRol() {
+        return new Promise((resolve, reject) => {
+            sql.query(GETROL, this.id, (err, res) => {
+                if (!err) {
+                    resolve(res);
+                } else {
+                    reject(err);
+                }
+            });
         });
     }
 }
@@ -176,7 +200,8 @@ Usuario.login = (username, password) => {
                     row.direccion_id,
                     row.usr_id,
                     0,
-                    row.permisos);
+                    row.permisos,
+                    row.rol);
                 resolve(user);
             } else {
                 resolve(null);

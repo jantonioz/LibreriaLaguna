@@ -58,6 +58,19 @@ block content
                     div(class="form-group")
                         div(class="row")
                             div(class="col col-sm-2")
+                                label(for="libro_id", ) Tipo ejemplar:
+                            div(class="col")
+                                select(class="custom-select" name="libros", required)
+                                    option(selected) Selecciona un tipo
+                                    if tipos != null
+                                        each tipo in tipos 
+                                            option(value=tipo.tipo_id) !{tipo.descripcion} - !{tipo.dimensiones}
+                            div(class="col-sm-2")
+                                a(class="btn btn-success text-light", href="/libros/crear") Agregar libro
+
+                    div(class="form-group")
+                        div(class="row")
+                            div(class="col col-sm-2")
                                 label(for="libro_id", ) Libro:
                             div(class="col")
                                 select(class="custom-select" name="libros", required)

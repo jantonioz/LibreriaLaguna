@@ -1,0 +1,56 @@
+extends ../layout
+
+block content
+  - var genLink = "<a href='/generos/d/" + libro.gen_id +"'> " + libro.genero + "</a>"
+  div(class="container")
+    div(class="row")
+      div(class="col-3")
+        if(imagenes!=null)
+          //- CAROUSEL
+          div.carousel.slide(id="indicators" + libro.lib_id, data-ride="carousel")
+            ol.carousel-indicators
+              each imagen in imagenes
+                if imagen.active
+                  li.active(data-target="#indicators" + libro.lib_id, data-slide-to="" + imagen.slideto)
+                else
+                  li(data-target="#indicators" + libro.lib_id, data-slide-to="" + imagen.slideto)
+            div.carousel-inner
+              each imagen in imagenes
+                if imagen.active
+                  div.carousel-item.active
+                    img.d-block.w-100(src=imagen.img_path)
+                else 
+                  div.carousel-item
+                    img.d-block.w-100(src=imagen.img_path)
+            a.carousel-control-prev(href="#indicators" + libro.lib_id, reole="button", data-slide="prev")
+              span.carousel-control-prev-icon(aria-hidden="true")
+              span.sr-only Anterior
+            a.carousel-control-next(href="#indicators" + libro.lib_id, reole="button", data-slide="next")
+              span.carousel-control-next-icon(aria-hidden="true")
+              span.sr-only Siguiente
+          div.mcontainer
+            img(class="img-fluid" src=imgsrc alt="")
+        else
+          img(class="card-img-top" src="http://placehold.it/500x325" alt="")
+          
+      div(class="col")
+        h1= libro.titulo 
+          if (isAdmin)
+            a(href="/libros/e/" + libro.lib_id, class="btn btn-secondary ml-5") Editar
+            a.ml-2.btn.btn-danger(href="/libros/delete/" + libro.lib_id) Eliminar
+        small Autor 
+          a(href="/autores/d/" + libro.autor_id) !{libro.autor}
+          | !{" \u2022 "} !{genLink}
+        p= libro.descripcion
+
+      .col-md-3 
+        h5 Ejemplares disponibles:
+        if(ejemplares != null && ejemplares.length > 0)
+          each ejemplar in ejemplares 
+            .row
+              .col
+                p !{ejemplar.cantidad} Disponibles a $ !{ejemplar.precio}
+                  br
+                  small Por: !{ejemplar.proveedor}
+              .col-sm-2
+                a.btn.btn-primary.text-white(href="#") Comprar

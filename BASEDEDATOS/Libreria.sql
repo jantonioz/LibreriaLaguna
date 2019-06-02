@@ -51,7 +51,7 @@ CREATE TABLE Usuarios (
   usr_id         int(10) NOT NULL AUTO_INCREMENT, 
   usr_nombre     varchar(50) NOT NULL, 
   usr_apellidos  varchar(50) NOT NULL, 
-  usr_admin      tinyint(1), 
+-- usr_admin      tinyint(1), 
   usr_email      varchar(50) NOT NULL UNIQUE, 
   usr_username   varchar(50) NOT NULL UNIQUE, 
   usr_password   varchar(255) NOT NULL, 
@@ -253,6 +253,15 @@ INSERT INTO `autores` (`aut_id`, `aut_nombre`, `aut_fecnac`, `aut_biografia`, `u
 (10, 'Brian Sanderson', '1975-12-19', '', NOW(), NOW()),
 (11, 'Brandon Sanderson', '1975-12-19', '', NOW(), NOW());
 
+INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('Proveedor', 1, NOW(), NOW());
+INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('0000000000F00FF00005', 1, 1, NOW(), NOW());
+
+INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('BookAdmin', 1, NOW(), NOW());
+INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('000000000111F00FFFF5', 1, 1, NOW(), NOW());
+
+INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('StockAdmin', 1, NOW(), NOW());
+INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('000000000111FFFFFFF5', 1, 1, NOW(), NOW());
+
 /* FUNCIONES*/
 DELIMITER |
 CREATE FUNCTION getLastInsertIdSesion() 
@@ -279,228 +288,26 @@ BEGIN
     /* RETORNAR DATOS DEL USUARIO + PERMISOS */
     SELECT usr.usr_nombre AS 'nombre', usr.usr_apellidos AS 'apellidos', usr.usr_email AS 'email',
       usr.usr_username AS 'username', usr.usr_password AS 'password', usr.usr_fnac AS 'fnac', usr.direccion_id AS 'direccion_id',
-      usr.usr_id AS 'usr_id', perm.perm_permisos AS 'permisos'
+      usr.usr_id AS 'usr_id', perm.perm_permisos AS 'permisos', rol.rol_nombre AS 'rol'
     FROM usuarios as usr
-    INNER JOIN permisos AS perm ON (usr.roles_id = perm.rol_id);
+    INNER JOIN permisos AS perm ON (usr.roles_id = perm.rol_id)
+    INNER JOIN roles AS rol ON (usr.roles_id = rol.rol_id);
   ELSE 
   	SIGNAL SQLSTATE '45000';
   END IF;
 END|
 
+-- CREATE TRIGGER trg_compra
+-- AFTER UPDATE ON compras
+-- FOR EACH ROW 
+-- BEGIN
+--   DECLARE lote INT;
+--   /* SI LA COMPRA SE REALIZÓ CON EXITO */
+--   IF (NEW.comp_verif = 1) THEN
+--     SELECT lot.lot_id INTO lote 
+--     FROM lotes AS lot 
+
+--   END IF;
+-- END|
+
 DELIMITER ;
-
--- CREATE TABLE Sesiones (
---   ses_id			int(10) NOT NULL AUTO_INCREMENT,
---   ses_token			char(32) NOT NULL,
---   ses_ultima_act	datetime NULL,
---   ses_fin			datetime NULL,
---   ses_ip			varchar(15) NULL,
---   ses_os			varchar(50) NULL,
---   usr_id			int(10) NOT NULL,
---   updated_at   		timestamp NULL, 
---   created_at   		timestamp NOT NULL,
---   PRIMARY KEY(ses_id)
--- );
--- CREATE TABLE Libros (
---   lib_id       int(10) NOT NULL AUTO_INCREMENT, 
---   titulo       varchar(255) NOT NULL, 
---   orig_titulo  varchar(255), 
---   isbn         bigint(15) NOT NULL UNIQUE, 
---   publicacion  date NOT NULL, 
---   paginas      int(4) NOT NULL, 
---   descripcion  text NOT NULL, 
---   fecha_pub    date NOT NULL, 
---   genero_id    int(10) NOT NULL, 
---   editorial_id int(10) NOT NULL, 
---   ses_id	   int(10) NOT NULL, -- SESION
---   updated_at   timestamp NULL, 
---   created_at   timestamp NOT NULL, 
---   PRIMARY KEY (lib_id));
--- CREATE TABLE Proveedores (
---   prov_id      int(10) NOT NULL AUTO_INCREMENT, 
---   prov_nombre  varchar(255) NOT NULL, 
---   prov_email   varchar(50) NOT NULL UNIQUE, 
---   direccion_id int(10) NOT NULL,
---   ses_id	   int(10) NOT NULL, -- SESION
---   updated_at   timestamp NULL, 
---   created_at   timestamp NOT NULL, 
---   PRIMARY KEY (prov_id));
--- CREATE TABLE Lotes (
---   lot_id           int(10) NOT NULL AUTO_INCREMENT, 
---   lot_descripcion varchar(50) NOT NULL, 
---   lot_fentrega         date NOT NULL, 
---   proveedor_id     int(10) NOT NULL, 
---   ses_id	   	     int(10) NOT NULL, -- SESION
---   updated_at       timestamp NULL, 
---   created_at       timestamp NOT NULL, 
---   PRIMARY KEY (lot_id));
--- CREATE TABLE Ejemplares (
---   ejem_id       int(10) NOT NULL AUTO_INCREMENT, 
---   ejem_cantidad int(100) NOT NULL, 
---   ejem_precio   int(10) NOT NULL, 
---   sku           varchar(20) NOT NULL, 
---   libro_id      int(10) NOT NULL, 
---   lote_id       int(10) NOT NULL, 
---   ses_id	      int(10) NOT NULL, -- SESION
---   tipo_id       int(10) NOT NULL,
---   updated_at    timestamp NULL, 
---   created_at    timestamp NOT NULL, 
---   PRIMARY KEY (ejem_id));
--- CREATE TABLE TipoEjemplar (
---   te_id         int(10) NOT NULL AUTO_INCREMENT,
---   te_nombre     varchar(20) NOT NULL,
---   ses_id        int(10) NOT NULL,
---   updated_at    timestamp NULL,
---   created_at    timestamp NOT NULL,
---   PRIMARY KEY (te_id));
--- CREATE TABLE Usuarios (
---   usr_id         int(10) NOT NULL AUTO_INCREMENT, 
---   usr_nombre     varchar(50) NOT NULL, 
---   usr_apellidos  varchar(50) NOT NULL, 
---   usr_admin      bit(1) NULL, 
---   usr_email      varchar(50) NOT NULL UNIQUE, 
---   usr_username   varchar(50) NOT NULL UNIQUE, 
---   usr_password   varchar(255) NOT NULL, 
---   usr_TipoInicio varchar(255) NULL, 
---   usr_fnac       date NOT NULL, 
---   direccion_id   int(10) NULL, -- NO ES OBLIGATORIO QUE TENGAN
---   ses_id	       int(10) NOT NULL, -- SESION
---   rol_id         int(10) NULL, -- ROL
---   updated_at     timestamp NULL, 
---   created_at     timestamp NOT NULL, 
---   PRIMARY KEY (usr_id));
--- CREATE TABLE Permisos (
---   perm_id         int(10) NOT NULL AUTO_INCREMENT,
---   perm_codigo     varchar(20) NULL,
---   rol_id          int(10) NOT NULL,
---   ses_id    	    int(10) NOT NULL, -- SESION
---   PRIMARY KEY(perm_id));
--- CREATE TABLE Roles (
---   rol_id          int(10) NOT NULL AUTO_INCREMENT,
---   rol_nombre      varchar(50) NOT NULL,
---   ses_id    	    int(10) NOT NULL, -- SESION
---   PRIMARY KEY (rol_id));
--- CREATE TABLE Direcciones (
---   dir_id      int(10) NOT NULL AUTO_INCREMENT, 
---   dir_calle   varchar(255) NOT NULL, 
---   dir_num     int(5) NOT NULL, 
---   dir_colonia varchar(50) NOT NULL, 
---   dir_cd      varchar(50) NOT NULL, 
---   dir_cp      int(5) NOT NULL, 
---   dir_pais    varchar(50) NOT NULL, 
---   ses_id	  int(10) NOT NULL, -- SESION
---   updated_at  timestamp NULL, 
---   created_at  timestamp NOT NULL, 
---   PRIMARY KEY (dir_id));
--- CREATE TABLE Compras (
---   comp_id     int(10) NOT NULL AUTO_INCREMENT, 
---   comp_verif  bit(1) NULL, -- NULL, 0, 1
---   comp_fpago  varchar(255) NOT NULL, 
---   comp_mpago  varchar(50) NOT NULL, 
---   comp_estado  varchar(255) NOT NULL, 
---   usuario_id  int(10) NOT NULL, 
---   empleado_id int(10) NOT NULL, 
---   ses_id	  int(10) NOT NULL, -- SESION
---   updated_at  timestamp NULL, 
---   created_at  timestamp NOT NULL, 
---   PRIMARY KEY (comp_id));
--- CREATE TABLE Imagen_libro (
---   img_id       int(10) NOT NULL AUTO_INCREMENT, 
---   img_path     varchar(255) NOT NULL,
---   -- data         blob NOT NULL, Ahora se guardan en el sistema de archivos del servidor
---   img_filename varchar(50) NOT NULL, 
---   libro_id     int(10) NOT NULL, 
---   ses_id	   int(10) NOT NULL, -- SESION
---   updated_at   timestamp NULL, 
---   created_at   timestamp NOT NULL, 
---   PRIMARY KEY (img_id));
--- CREATE TABLE Editoriales (
---   ed_id      int(10) NOT NULL AUTO_INCREMENT, 
---   ed_nombre  varchar(50) NOT NULL, 
---   ed_correo  varchar(50) NOT NULL UNIQUE, 
---   ses_id	 int(10) NOT NULL, -- SESION
---   updated_at timestamp NULL, 
---   created_at timestamp NOT NULL, 
---   PRIMARY KEY (ed_id));
--- CREATE TABLE Autores (
---   aut_id        int(10) NOT NULL AUTO_INCREMENT, 
---   aut_nombre    varchar(50) NOT NULL, 
---   aut_fecnac    date NOT NULL, 
---   aut_biografia text NOT NULL, 
---   ses_id	    int(10) NOT NULL, -- SESION
---   updated_at    timestamp NULL, 
---   created_at    timestamp NOT NULL, 
---   PRIMARY KEY (aut_id));
--- CREATE TABLE Autor_Libro (
---   ID         int(10) NOT NULL AUTO_INCREMENT,  -- ANTES NO TENIA EL AUTO INCREMENT
---   autor_id   int(10) NOT NULL, 
---   libro_id   int(10) NOT NULL, 
---   ses_id	 int(10) NOT NULL, -- SESION
---   updated_at timestamp NULL, 
---   created_at timestamp NOT NULL, 
---   PRIMARY KEY (ID, 
---   autor_id, 
---   libro_id));
--- CREATE TABLE Generos (
---   gen_id          int(10) NOT NULL AUTO_INCREMENT, 
---   gen_nombre      varchar(50) NOT NULL UNIQUE, 
---   gen_descripcion text NOT NULL, 
---   ses_id	  	  int(10) NOT NULL, -- SESION
---   updated_at      timestamp NULL, 
---   created_at      timestamp NOT NULL, 
---   PRIMARY KEY (gen_id));
--- CREATE TABLE Item_compra (
---   item_id       int(10) NOT NULL AUTO_INCREMENT, 
---   item_cantidad int(11) NOT NULL, 
---   item_preciou  int(11) NOT NULL, 
---   ejemplares_id int(10) NOT NULL, 
---   compras_id    int(10) NOT NULL, 
---   ses_id	    int(10) NOT NULL, -- SESION
---   created_at    timestamp NOT NULL, 
---   updated_at    timestamp NULL, 
---   PRIMARY KEY (item_id));
--- CREATE TABLE Transporte (
---   trans_id           int(10) NOT NULL AUTO_INCREMENT, 
---   envio_numero_track varchar(30) NOT NULL, 
---   ses_id	  		 int(10) NOT NULL, -- SESION
---   updated_at         timestamp NULL, 
---   created_at         timestamp NOT NULL, 
---   compras_id         int(10) NOT NULL, 
---   PRIMARY KEY (trans_id));
-
--- ALTER TABLE Lotes ADD CONSTRAINT FKLotes448903 FOREIGN KEY (proveedor_id) REFERENCES Proveedores (prov_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Usuarios ADD CONSTRAINT FKUsuarios227162 FOREIGN KEY (direccion_id) REFERENCES Direcciones (dir_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Compras ADD CONSTRAINT FKCompras824535 FOREIGN KEY (usuario_id) REFERENCES Usuarios (usr_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Imagen_libro ADD CONSTRAINT FKImagen_lib463402 FOREIGN KEY (libro_id) REFERENCES Libros (lib_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Libros ADD CONSTRAINT FKLibros994400 FOREIGN KEY (editorial_id) REFERENCES Editoriales (ed_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr149553 FOREIGN KEY (autor_id) REFERENCES Autores (aut_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr206080 FOREIGN KEY (libro_id) REFERENCES Libros (lib_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares412760 FOREIGN KEY (libro_id) REFERENCES Libros (lib_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares741490 FOREIGN KEY (lote_id) REFERENCES Lotes (lot_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplaresTIPO FOREIGN KEY (tipo_id) REFERENCES TipoEjemplar (te_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Libros ADD CONSTRAINT FKLibros809936 FOREIGN KEY (genero_id) REFERENCES Generos (gen_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Proveedores ADD CONSTRAINT FKProveedore993281 FOREIGN KEY (direccion_id) REFERENCES Direcciones (dir_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Item_compra ADD CONSTRAINT FKItem_compr354842 FOREIGN KEY (ejemplares_id) REFERENCES Ejemplares (ejem_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Item_compra ADD CONSTRAINT FKItem_compr537480 FOREIGN KEY (compras_id) REFERENCES Compras (comp_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Transporte ADD CONSTRAINT FKTransporte864377 FOREIGN KEY (compras_id) REFERENCES Compras (comp_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Permisos ADD CONTRAINT FKPermisosRol FOREIGN KEY (rol_id) REFERENCES Roles(rol_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Usuarios ADD CONSTRAINT FKUsuariosRol FOREIGN KEY (rol_id) REFERENCES Roles (rol_id) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- -- SESIONES
--- ALTER TABLE Sesiones 		ADD CONSTRAINT SESION_USER_ID 		FOREIGN KEY (usr_id) REFERENCES Usuarios (usr_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Usuarios 		ADD CONSTRAINT FKUsuariosSESID 		FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Autores 		ADD CONSTRAINT FKAutoresSESID 		FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Autor_Libro 	ADD CONSTRAINT FKAutorLibroSESID 	FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Compras 		ADD CONSTRAINT FKComprasSESID 		FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Libros 			ADD CONSTRAINT FKLibrosSESID 		FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Proveedores 	ADD CONSTRAINT FKProveedorSESID 	FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Lotes 			ADD CONSTRAINT FKLotesSESID 		FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Ejemplares 		ADD CONSTRAINT FKEjemplaresSESID 	FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Direcciones 	ADD CONSTRAINT FKDireccionesSESID 	FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Imagen_libro 	ADD CONSTRAINT FKImagenlibroSESID 	FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Editoriales 	ADD CONSTRAINT FKEditoralesSESID	FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Generos 		ADD CONSTRAINT FKGenerosSESID		FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Item_compra		ADD CONSTRAINT FKItemcompraSESID	FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Transporte		ADD CONSTRAINT FKTransporteSESID	FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Roles		    ADD CONSTRAINT FKRolesSESID	FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
--- ALTER TABLE Permisos		ADD CONSTRAINT FKPermisosSESID	FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;

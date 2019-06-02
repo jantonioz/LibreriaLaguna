@@ -1,0 +1,23 @@
+extends ../layout
+
+
+block content
+    div(class="container")
+        form(action="/tipos/add", method="POST")
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="descripcion", class="col col-lg") Descripción:
+                    div(class="col col-lg-5")
+                        input(type="text", class="form-control", id="descripcion", name="descripcion", placeholer="Ingresa una descripcion" autocomplete="off")
+
+            div(class="form-group")
+                div(class="row")
+                    div(class="col col-sm-2")
+                        label(for="dimensiones", class="col col-lg") Dimensiones:
+                    div(class="col col-lg-5")
+                        textarea(type="text", class="form-control", id="dimensiones", name="dimensiones", placeholer="Dimensiones" autocomplete="off")
+            div(class="form-group")
+                div(class="row")
+                    div(class="col-sm-5 mx-auto")
+                        button(type="submit", class="btn btn-success") Aceptar
