@@ -8,8 +8,8 @@ block content
         each libro in libros
             div(class="row m-3")
                 div(class="col col-sm-2")
-                    if(libro.imgdata!=null)
-                        img(class="card-img-top" src='data:image/png;base64,'+libro.imgdata, style="max-width=50px; max-height=90px;")
+                    if(libro.imagenes!=null)
+                        img(class="card-img-top" src='/uploads/'+libro.imagenes[0].img_filename, style="max-width=50px; max-height=90px;")
                 div(class="col")    
                     -var genLink = "<a href='/generos/d/" + libro.gen_id +"'> " + libro.genero + "</a>"
                     h2

@@ -6,14 +6,6 @@ block content
             div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5 mb-5")
                 form(action="/usuarios/register", method="POST", enctype="multipart/form-data")
 
-                    if(isAdmin)
-                        .form-group.row
-                            .col-sm-2 Admin
-                            .col-sm-10
-                                .div.form-check
-                                    input.form-check-input(type="checkbox", id="check1", name="setAdmin")
-                                    label.form-check-label(for="check1") Hacer administrador
-
                     div(class="form-label-group")
                         input(type="text", class="form-control",id="nombre", name="nombre", placeholder="Nombres", autocomplete = "off", required)
                         label(for="nombre") Nombres

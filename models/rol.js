@@ -41,3 +41,17 @@ Rol.getByUser = (usr_id) => {
         });
     });
 }
+
+Rol.getAll = () => {
+    return new Promise((resolve, reject) => {
+        sql.query(SELECTALL, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        });
+    });
+}
+
+module.exports = Rol;

@@ -2,7 +2,7 @@ const sql = require('./db');
 
 const GETALL = 'SELECT * FROM tipoejemplares;';
 
-const INSERT = 'INSERT INTO tipoejemplares(tipo_descripcion, tipo_dimensiones, ses_id, created_id, updated_id) ' +
+const INSERT = 'INSERT INTO tipoejemplares(tipo_descripcion, tipo_dimensiones, ses_id, created_at, updated_at) ' +
     'VALUES (?, ?, ?, NOW(), NOW())';
 
 const UPDATE = 'UPDATE tipoejemplares SET tipo_descripcion = ?, tipo_dimensiones = ?, ses_id = ?, updated_at = NOW();'

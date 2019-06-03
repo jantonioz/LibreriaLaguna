@@ -110,6 +110,7 @@ CREATE TABLE Autores (
   aut_nombre    varchar(50) NOT NULL, 
   aut_fecnac    date NOT NULL, 
   aut_biografia text NOT NULL, 
+  ses_id        int(10), -- NO ESTABA...
   updated_at    timestamp NULL, 
   created_at    timestamp NOT NULL, 
   PRIMARY KEY (aut_id));
@@ -227,6 +228,7 @@ ALTER TABLE Roles ADD CONSTRAINT FKRoles828971 FOREIGN KEY (ses_id) REFERENCES S
 ALTER TABLE Permisos ADD CONSTRAINT FKPermisos122620 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
 ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares487137 FOREIGN KEY (tipo_id) REFERENCES TipoEjemplares (tipo_id);
 ALTER TABLE TipoEjemplares ADD CONSTRAINT FKTipoEjempl362329 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
+ALTER TABLE Autores ADD CONSTRAINT FKAutores362329 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
 
 
 INSERT INTO `editoriales` (`ed_id`, `ed_nombre`, `ed_correo`, `updated_at`, `created_at`) VALUES
@@ -261,6 +263,9 @@ INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALU
 
 INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('StockAdmin', 1, NOW(), NOW());
 INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('000000000111FFFFFFF5', 1, 1, NOW(), NOW());
+
+INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('NormalUser', 1, NOW(), NOW());
+INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('00000000077700000005', 1, 1, NOW(), NOW());
 
 /* FUNCIONES*/
 DELIMITER |

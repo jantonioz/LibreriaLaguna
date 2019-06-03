@@ -64,9 +64,9 @@ block content
                                     option(selected) Selecciona un tipo
                                     if tipos != null
                                         each tipo in tipos 
-                                            option(value=tipo.tipo_id) !{tipo.descripcion} - !{tipo.dimensiones}
+                                            option(value=tipo.tipo_id) !{tipo.tipo_descripcion} - !{tipo.tipo_dimensiones}
                             div(class="col-sm-2")
-                                a(class="btn btn-success text-light", href="/libros/crear") Agregar libro
+                                a(class="btn btn-success text-light", href="/tipos/add") Agregar Tipo
 
                     div(class="form-group")
                         div(class="row")

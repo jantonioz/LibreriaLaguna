@@ -4,6 +4,7 @@ const Sesion = require('../models/sesion');
 const moment = require('moment');
 const requestIP = require('request-ip');
 const utils = require("./Utils");
+const Rol = require('../models/rol');
 
 
 
@@ -104,6 +105,20 @@ exports.create_usr = async function (req, res) {
         else
             res.redirect('/');
     });
+}
+
+exports.getRegisterWAdmin = async (req, res) => {
+    console.log("Reg admin");
+    let sesiones = null;
+    let roles = await Rol.getAll();
+    res.render('usuario/createAdmin', {
+        sesiones: sesiones, nombreUsuario: utils.getNombreUsuario(req),
+        roles : roles
+    });
+}
+
+exports.create_usrWAdmin = (req, res) => {
+
 }
 
 function createDireccion(calle, numero, colonia, ciudad, pais) {

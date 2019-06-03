@@ -1,12 +1,10 @@
 html
   head
     title= title
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
     meta(charset="utf-8")/
+    link(rel="stylesheet", href="/css/bootstrap.css")
     link(rel="stylesheet", href="/stylesheets/style.css")
-    <script src="/js/jquery-3.3.1.slim.min.js"></script>
-    <script src="/js/popper.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
   body
     include navbar.pug
 
@@ -23,4 +21,8 @@ html
         p(class="m-0 text-center text-white") Copyright &copy; Librería Laguna 2019
 
   block scripts
-<script src="/js/jumbobg.js"> </script>
+    <script src="/js/jquery-3.4.1.js" ></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jumbobg.js"></script>
+    

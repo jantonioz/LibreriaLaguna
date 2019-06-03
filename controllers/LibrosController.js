@@ -66,7 +66,8 @@ exports.create_a_libro = async (req, res) => {
     }
 
     // ======= SESION =======
-    var sid = utils.getSid(req);
+    var sid = req.session.user.ses_id;
+    console.log("LIBROS CONTROLLER: sid: ", sid);
 
     var titulo = req.body.titulo;
     var tituloO = req.body.tituloorig;
@@ -100,23 +101,40 @@ exports.create_a_libro = async (req, res) => {
                 }
             })
         }
+    } else {
+        console.log("NO SE GUARDARON LAS IMAGENES: LIBROSCONTROLLER")
     }
 
     res.send("OK! :)");
 }
 
-exports.find_a_libro = function (req, res) {
+exports.find_a_libro = async (req, res) => {
+    // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
+    let libros = await Libro.find(req.body.search);
+    console.log(libros);
+    //res.json(libros[0].imagenes[0].data);
 
-    Libro.find(req.body.search, function (err, libros) {
-        if (err)
-            console.log(err)
+    let itemCount = libros.length;
+    let pageCount = Math.ceil(itemCount / req.query.limit);
 
-        res.render('libro/listView',
-            {
-                title: 'Libros', libros: libros, activeLibros: 'active',
-                nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req)
-            })
-    })
+    libros = libros.slice(req.skip, req.skip + req.query.limit);
+
+    res.render('libro/listView', {
+        title: 'Libros', libros: libros, activeLibros: 'active', pageCount, itemCount,
+        pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
+        actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req)
+    });
+
+    // Libro.find(req.body.search, function (err, libros) {
+    //     if (err)
+    //         console.log(err)
+
+    //     res.render('libro/listView',
+    //         {
+    //             title: 'Libros', libros: libros, activeLibros: 'active',
+    //             nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req)
+    //         })
+    // })
 }
 
 exports.get_a_libro = async function (req, res) {

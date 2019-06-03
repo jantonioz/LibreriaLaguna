@@ -24,12 +24,14 @@ exports.addView = async (req, res) => {
     let libros = await Libro.getAllLibrosSimple();
     let proveedores = await Proveedor.getAllSimple();
     let tipos = await Tipos.getAll();
-
+    console.log(tipos);
     res.render('lote/addView', {isAdmin: Utils.isAdmin(req), 
         nombreUsuario: Utils.getNombreUsuario(req), libros: libros, 
         proveedores: proveedores, tipos: tipos});
 }
 
+// FALTA AGREGAR EL TIPO A CADA EJEMPLAR
+// HAY UN ERROR AL INSERTAR UN LOTE
 exports.addPost = async (req, res) => {
     let sid = req.session.user.ses_id;
     let descripcion = req.body.descripcionLote;
@@ -41,7 +43,10 @@ exports.addPost = async (req, res) => {
     let libros = req.body.libros;
 
     let lote = new Lote(descripcion, fecha_entrega, proveedor_id, sid);
-    let lote_id = await lote.save();
+    let lote_id = await lote.save().catch((reason) => {
+        console.log(reason);
+    });
+    
     console.log("RESULTADO LOTE: ", lote_id);
 
     for (var index = 0; index < cantidades.length; index++) {

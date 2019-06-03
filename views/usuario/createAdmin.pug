@@ -1,0 +1,113 @@
+extends ../layout
+
+block content
+      div(class="container-fluid")
+        div(class="justify-content-center align-items-center")
+            div(class="")
+                form(action="/usuarios/register", method="POST", enctype="multipart/form-data")
+
+                    div(class="form-label-group")
+                        input(type="text", class="form-control",id="nombre", name="nombre", placeholder="Nombres", autocomplete = "off", required)
+                        label(for="nombre") Nombres
+                        
+                    div(class="form-label-group")
+                        input(type="text", id="apellidos", class = "form-control",name = "apellidos", placeholder = "Apellidos" autocomplete = "off", required)
+                        label(for="apellidos") Apellidos
+                    
+                    div(class="form-label-group")
+                        input(type="email", id="email", class = "form-control", name = "email", placeholder = "email" autocomplete = "off", required)
+                        label(for="email") Email
+                    
+                    div(class="form-label-group")
+                        input(type="text", id="username", class = "form-control", name = "username", placeholder = "username" autocomplete = "off", required)
+                        label(for="username") Nombre de usuario
+
+                    div(class="form-label-group")
+                        input(type="password", class="form-control", id="password", name="password", placeholder = "Contraseña " autocomplete = "off", required)
+                        label(for="password") Contraseña
+
+
+                    div(class="form-group")
+                        label(for="fecha_nacimiento") Fecha de nacimiento
+                        input(type="date", class = "form-control", id = "fecha_nacimiento", name = "fecha_nacimiento", placeholder = "Fecha de nacimiento" autocomplete="off", required)
+
+                    div(class="form-group")
+                        div(class="row")
+                            div(class="col col-sm-2 ")
+                                label(for="libro_id", ) Rol:
+                            div(class="col col-md-5")
+                                select(class="custom-select" name="libros", required)
+                                    option(selected) Selecciona un rol
+                                    if roles != null
+                                        each rol in roles 
+                                            option(value=rol.rol_id) !{rol.rol_nombre}
+                
+                    //- div(class="row")
+                    //-     h4(class="col col-sm-2 text-muted") Permisos 
+                    //-     hr(class="col") 
+                    //- br
+
+                    //- div.form-group
+                    //-     .row
+                    //-         .col
+                    //-             label Usuarios
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="ver_usuarios",type="checkbox", id="cbvUsuarios", checked)
+                    //-                 label.custom-control-label(for="cbvUsuarios") Ver Usuarios
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="crear_usuarios", type="checkbox", id="cbCUsuarios", checked)
+                    //-                 label.custom-control-label(for="cbCUsuarios") Crear Usuarios
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="editar_usuarios", type="checkbox", id="cbEUsuarios", checked)
+                    //-                 label.custom-control-label(for="cbEUsuarios") Editar Usuarios
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="eliminar_usuarios", type="checkbox", id="cbDUsuarios", checked)
+                    //-                 label.custom-control-label(for="cbDUsuarios") Eliminar Usuarios
+
+                    //- div.form-group
+                    //-     .row
+                    //-         .col
+                    //-             label Libros
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="verlibros",type="checkbox", id="cbvLibro", checked)
+                    //-                 label.custom-control-label(for="cbvLibro") Ver Libros
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="crearlibros", type="checkbox", id="cbCLibro", checked)
+                    //-                 label.custom-control-label(for="cbCLibro") Crear Libros
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="editarlibros", type="checkbox", id="cbELibro", checked)
+                    //-                 label.custom-control-label(for="cbELibro") Editar Libros
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="eliminarlibros", type="checkbox", id="cbDLibro", checked)
+                    //-                 label.custom-control-label(for="cbDLibro") Eliminar Libros
+
+                    //- div.form-group
+                    //-     .row
+                    //-         .col
+                    //-             label Generos
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="ver_libros",type="checkbox", id="cbvGeneros", checked)
+                    //-                 label.custom-control-label(for="cbvGeneros") Ver Generos
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="crear_libros", type="checkbox", id="cbCGeneros", checked)
+                    //-                 label.custom-control-label(for="cbCGeneros") Crear Generos
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="editar_libros", type="checkbox", id="cbEGeneros", checked)
+                    //-                 label.custom-control-label(for="cbEGeneros") Editar Generos
+                    //-         .col    
+                    //-             div.custom-control.custom-checkbox
+                    //-                 input.custom-control-input(name="eliminar_libros", type="checkbox", id="cbDGeneros", checked)
+                    //-                 label.custom-control-label(for="cbDGeneros") Eliminar Generos
+
+                    button(type="submit", class="btn btn-lg btn-primary btn-block") Registrar

@@ -12,6 +12,7 @@ const utils = require("../controllers/Utils");
 const lote = require("../controllers/LotesController");
 const middleware = require('../middleware/middleware');
 const mTipoE = require('../models/tipo_ejemplar');
+const mGeneros = require('../models/genero');
 
 /* var stockLibro = require("../models/libro"); */
 
@@ -58,6 +59,10 @@ var redirectLogin = (req, res, next) => {
     }
 }
 
+function rolIs(req, rolnameToCheck) {
+    return (String.prototype.toLowerCase.apply(req.session.user.nombreRol) == rolnameToCheck);
+}
+
 var checkAdmin = (req, res, next) => {
     console.log("CHECK ADMIN");
     if (req.session == null || req.session.user == null || req.cookies.sid == null) {
@@ -68,19 +73,53 @@ var checkAdmin = (req, res, next) => {
         res.render('usuario/login', { title: 'Login usuario', gobackTo: req.originalUrl });
         return;
     }
-    let username = req.session.user.username;
-    let password = req.session.user.password;
-    mUsuario.verifyAdmin(username, password, (result) => {
-        if (result == true) {
-            console.log("NEXT");
-            next();
-        } else if (result) {
-            console.log("NOT ADMIN")
-            res.redirect('/login');
-        }
-    });
+
+    
+    if (rolIs(req, 'sysadmin')) {
+        next();
+    }
 }
 
+var checkProv = (req, res, next) => {
+    console.log("CHECK PROV");
+    if (req.session == null || req.session.user == null || req.cookies.sid == null) {
+        console.log("USUARIO: ", req.session.user);
+        console.log(req.originalUrl);
+        req.gobackTo = req.originalUrl;
+        //res.redirect('/login');
+        res.render('usuario/login', { title: 'Login usuario', gobackTo: req.originalUrl });
+        return;
+    }
+
+    if (rolIs(req, 'proveedor') || rolIs('sysadmin')) {
+        next();
+    }
+}
+
+var checkBookAdmin = (req, res, next) => {
+    console.log("CHECK Book");
+    if (req.session == null || req.session.user == null || req.cookies.sid == null) {
+        console.log("USUARIO: ", req.session.user);
+        console.log(req.originalUrl);
+        req.gobackTo = req.originalUrl;
+        //res.redirect('/login');
+        res.render('usuario/login', { title: 'Login usuario', gobackTo: req.originalUrl });
+        return;
+    }
+
+    if (rolIs(req, 'bookadmin') || rolIs(req, 'sysadmin')) {
+        next();
+    }
+}
+
+var navbarMiddleware = async (req, res, next) => {
+    let generos = await mGeneros.getAll().catch((reason) => {
+        generos = null;
+    });
+    if (generos != null && generos.length > 0) {
+        res.locals.generos = generos;
+    }
+}
 
 
 // RUTAS [ruta, controlador]
@@ -88,13 +127,14 @@ router.get('/libros/', libro.list_all_libros);
 
 // ==== LIBROS ====
 router.get('/libros/d/:libroId', autoMiddleware, libro.get_a_libro);
-router.post('/libros/find?:searchName/', autoMiddleware, libro.find_a_libro);
-router.get('/libros/crear/', checkAdmin, libro.formCreate_libro);
+//router.post('/libros/find?:searchName/', libro.find_a_libro);
+router.post('/libros/find', libro.find_a_libro);
+router.get('/libros/crear/', checkBookAdmin, libro.formCreate_libro);
 router.post('/libros/crear/', /*uploadLibros.array('imagenes', 3),*/ libro.create_a_libro);
-router.get('/libros/e/:libroId', checkAdmin, libro.formEditar);
-router.post('/libros/update', checkAdmin, libro.update_a_libro);
-router.get('/libros/delete/:libroId', checkAdmin, libro.delete_form);
-router.post('/libros/delete', checkAdmin, libro.delete_a_libro);
+router.get('/libros/e/:libroId', checkBookAdmin, libro.formEditar);
+router.post('/libros/update', checkBookAdmin, libro.update_a_libro);
+router.get('/libros/delete/:libroId', checkBookAdmin, libro.delete_form);
+router.post('/libros/delete', checkBookAdmin, libro.delete_a_libro);
 
 // ==== USUARIOS ====
 router.get('/usuarios/', usuario.list_all_users);
@@ -102,8 +142,8 @@ router.get('/login', redirectHome, usuario.formLogin);
 router.post('/login', redirectHome, usuario.login);
 router.get('/logout', redirectLogin, usuario.logout);
 router.get('/registro', redirectHome, usuario.getRegister);
-router.get('/usuarios/register/', checkAdmin, usuario.getRegister);
-router.post('/usuarios/register', redirectHome, usuario.create_usr);
+router.get('/usuarios/admin/register', /*checkAdmin, */usuario.getRegisterWAdmin);
+router.post('/usuarios/admin/register', /*redirectHome, */usuario.create_usrWAdmin);
 router.get('/cuenta', redirectLogin, usuario.userInfo);
 router.get('/admin/add', checkAdmin, usuario.getRegister);
 router.post('/addCarrito', middleware.carritoMiddleware, usuario.addCarrito);
@@ -149,11 +189,12 @@ router.post('/lotes/add/', checkAdmin, lote.addPost);
 router.get('/tipos/add', checkAdmin, (req, res) => {
     res.render('tipos/add');
 });
-router.post('/tipos/add', checkAdmin, (req, res) => {
+router.post('/tipos/add', checkAdmin, async (req, res) => {
     let descripcion = req.body.descripcion;
     let dimensiones = req.body.dimensiones;
     let ses_id = req.session.user.ses_id;
     let nTipo = new mTipoE(descripcion, dimensiones, ses_id);
+    await nTipo.save()
     console.log(nTipo);
     res.redirect('/lotes/add');
 });

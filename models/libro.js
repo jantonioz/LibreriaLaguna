@@ -137,24 +137,6 @@ class Libro {
     }
 }
 
-
-// Libro.createLibro = function createUser(newLibro, result) {
-
-//     sql.query(insert,
-//         [newLibro.titulo, newLibro.tituloOrig, newLibro.isbn, newLibro.paginas,
-//         newLibro.descripcion_fisica, newLibro.descripcion, newLibro.editorial_id,
-//         newLibro.genero_id],
-//         (err, res) => {
-//             if (err) {
-//                 console.log("error :", err)
-//                 result(err, null)
-//             } else {
-//                 console.log(res.insertId)
-//                 result(null, res.insertId)
-//             }
-//         })
-// }
-
 Libro.getLibroById = function createUser(libroId) {
     return new Promise((resolve, reject) => {
         sql.query("SELECT " + selectors + completeInfo + " WHERE lib.lib_id = ? ", libroId, function (err, res) {
@@ -203,15 +185,27 @@ Libro.getAllLibrosSimple = () => {
     });
 }
 
-Libro.find = function findLibro(titulo, result) {
-    sql.query("SELECT " + selectors + imgSelectors + completeInfo + imageJOIN + " WHERE titulo LIKE ? OR " + fields.tituloOrig + " LIKE ?", [titulo, titulo], function (err, res) {
-        if (err) {
-            console.log("error: ", err)
-            result(null, err)
-        } else {
-            result(null, res)
-        }
-    })
+Libro.find = function findLibro(titulo) {
+    return new Promise((resolve, reject) => {
+        titulo = '%' + titulo + '%';
+        sql.query("SELECT " + normalInfoHeaders + completeInfo  + " WHERE lib.titulo LIKE ? OR lib." + fields.tituloOrig + " LIKE ?", 
+        [titulo, titulo], async (err, res) => {
+            if (!err) {
+                for (var i = 0; i < res.length; i++) {
+                    let imagenes = await imagenLibro.getImagesOfLibroID(res[i].lib_id);
+                    console.log(imagenes);
+                    if (imagenes.length > 0) {
+                        res[i].imagenes = imagenes;
+                        res[i].imagenes[0].active = 1;
+                    }
+                }
+                resolve(res);
+            } else {
+                console.log(err);
+                reject(err);
+            }
+        })
+    });
 }
 
 Libro.updateTitleById = function update(id, libro, result) {
