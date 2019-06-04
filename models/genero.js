@@ -127,11 +127,13 @@ Genero.booksBy = (gen_id, result) => {
 
 Genero.getAll = () => {
     return new Promise((resolve, reject) => {
-        if (!err) {
-            resolve(res);
-        } else {
-            reject(err);
-        }
+        sql.query(SELECT_ALL, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        });
     });
 }
 

@@ -19,8 +19,19 @@ const mGeneros = require('../models/genero');
 var modelLibro = require("../models/libro");
 var mUsuario = require("../models/usuario");
 
+var navbarMiddleware = async (req, res, next) => {
+    let generos = await mGeneros.getAll().catch((reason) => {
+        console.log("ERROR CARGANDO GENEROS", reason);
+    });
+    console.log("CARGANDO GENEROS");
+    if (generos != null && generos.length > 0) {
+        res.locals.generos = generos;
+    }
+    next();
+}
+
 /* GET home page. */
-router.get('/', async (req, res) => {
+router.get('/', navbarMiddleware, async (req, res) => {
     // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
     let libros = await modelLibro.getAllLibros();
     console.log(libros);
@@ -112,29 +123,19 @@ var checkBookAdmin = (req, res, next) => {
     }
 }
 
-var navbarMiddleware = async (req, res, next) => {
-    let generos = await mGeneros.getAll().catch((reason) => {
-        generos = null;
-    });
-    if (generos != null && generos.length > 0) {
-        res.locals.generos = generos;
-    }
-}
-
-
 // RUTAS [ruta, controlador]
-router.get('/libros/', libro.list_all_libros);
+router.get('/libros/', navbarMiddleware, libro.list_all_libros);
 
 // ==== LIBROS ====
-router.get('/libros/d/:libroId', autoMiddleware, libro.get_a_libro);
+router.get('/libros/d/:libroId', navbarMiddleware, autoMiddleware, libro.get_a_libro);
 //router.post('/libros/find?:searchName/', libro.find_a_libro);
-router.post('/libros/find', libro.find_a_libro);
-router.get('/libros/crear/', checkBookAdmin, libro.formCreate_libro);
-router.post('/libros/crear/', /*uploadLibros.array('imagenes', 3),*/ libro.create_a_libro);
-router.get('/libros/e/:libroId', checkBookAdmin, libro.formEditar);
-router.post('/libros/update', checkBookAdmin, libro.update_a_libro);
-router.get('/libros/delete/:libroId', checkBookAdmin, libro.delete_form);
-router.post('/libros/delete', checkBookAdmin, libro.delete_a_libro);
+router.post('/libros/find', navbarMiddleware, libro.find_a_libro);
+router.get('/libros/crear/', navbarMiddleware, checkBookAdmin, libro.formCreate_libro);
+router.post('/libros/crear/', navbarMiddleware, /*uploadLibros.array('imagenes', 3),*/ libro.create_a_libro);
+router.get('/libros/e/:libroId', navbarMiddleware, checkBookAdmin, libro.formEditar);
+router.post('/libros/update', navbarMiddleware, checkBookAdmin, libro.update_a_libro);
+router.get('/libros/delete/:libroId', navbarMiddleware, checkBookAdmin, libro.delete_form);
+router.post('/libros/delete', navbarMiddleware, checkBookAdmin, libro.delete_a_libro);
 
 // ==== USUARIOS ====
 router.get('/usuarios/', usuario.list_all_users);

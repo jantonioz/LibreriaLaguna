@@ -45,8 +45,6 @@ exports.formEditar = async (req, res) => {
         });
 }
 
-
-
 exports.formCreate_libro = async function (req, res) {
     var eds = await getEds();
     var auts = await getAuts();
@@ -58,7 +56,6 @@ exports.formCreate_libro = async function (req, res) {
 }
 
 exports.create_a_libro = async (req, res) => {
-
     if (req.files == null || Object.keys(req.files).length == 0) {
         res.status(400).send('No files were uploaded.');
         console.log("no files");
@@ -124,17 +121,6 @@ exports.find_a_libro = async (req, res) => {
         pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
         actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req)
     });
-
-    // Libro.find(req.body.search, function (err, libros) {
-    //     if (err)
-    //         console.log(err)
-
-    //     res.render('libro/listView',
-    //         {
-    //             title: 'Libros', libros: libros, activeLibros: 'active',
-    //             nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req)
-    //         })
-    // })
 }
 
 exports.get_a_libro = async function (req, res) {
