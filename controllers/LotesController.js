@@ -33,6 +33,7 @@ exports.addView = async (req, res) => {
 // FALTA AGREGAR EL TIPO A CADA EJEMPLAR
 // HAY UN ERROR AL INSERTAR UN LOTE
 exports.addPost = async (req, res) => {
+
     let sid = req.session.user.ses_id;
     let descripcion = req.body.descripcionLote;
     let fecha_entrega = req.body.fentrega;
@@ -41,6 +42,7 @@ exports.addPost = async (req, res) => {
     let cantidades = req.body.cantidades;
     let precios = req.body.precios;
     let libros = req.body.libros;
+    let tipos = req.body.tipos;
 
     let lote = new Lote(descripcion, fecha_entrega, proveedor_id, sid);
     let lote_id = await lote.save().catch((reason) => {
@@ -51,7 +53,7 @@ exports.addPost = async (req, res) => {
 
     for (var index = 0; index < cantidades.length; index++) {
         var utc = Date.now();
-        var ejemplar = new Ejemplar(cantidades[index], precios[index], utc, libros[index], lote_id, sid);
+        var ejemplar = new Ejemplar(cantidades[index], precios[index], utc, libros[index], lote_id, sid, tipos[index]);
         console.log("RESULTADO EJEMPLAR: ", await ejemplar.save());
     }
 

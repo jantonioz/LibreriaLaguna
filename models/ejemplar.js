@@ -3,8 +3,8 @@
 const sql = require('./db');
 
 const INSERT =
-    'INSERT INTO ejemplares(ejem_cantidad, ejem_precio, sku, libro_id, lote_id, ses_id, created_at, updated_at)' +
-    ' VALUES(?, ?, ?, ?, ?, ?, NOW(), NOW())';
+    'INSERT INTO ejemplares(ejem_cantidad, ejem_precio, sku, libro_id, lote_id, tipo_id, ses_id, created_at, updated_at)' +
+    ' VALUES(?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
 
 const SELECTBYLIBRO = 
     'SELECT lib.titulo AS titulo, lib.descripcion AS descripcion, lib.fecha_pub AS publicacion, ' +
@@ -16,7 +16,7 @@ const SELECTBYLIBRO =
 
 
 class Ejemplar {
-    constructor(cantidad, precio, sku, libro_id, lote_id, ses_id, id = 0) {
+    constructor(cantidad, precio, sku, libro_id, lote_id, ses_id, tipo_id, id = 0) {
         this.cantidad = cantidad;
         this.precio = precio;
         this.sku = sku;
@@ -24,17 +24,18 @@ class Ejemplar {
         this.lote_id = lote_id;
         this.ses_id = ses_id;
         this.id = id;
+        this.tipo_id = tipo_id;
     }
 
     save() {
         return new Promise((resolve, reject) => {
             sql.query(INSERT,
-                [this.cantidad, this.precio, this.sku, this.libro_id, this.lote_id, this.ses_id],
+                [this.cantidad, this.precio, this.sku, this.libro_id, this.lote_id, this.tipo_id, this.ses_id],
                 (err, res) => {
                     if (!err) {
                         resolve(res);
                     } else {
-                        resolve(null);
+                        reject(err);
                     }
                 });
         });

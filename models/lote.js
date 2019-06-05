@@ -3,7 +3,7 @@
 const sql = require('./db');
 
 const INSERT =
-    'INSERT INTO lotes(lot_descripcion, lot_fentrega, proveedor_id, ses_id, created_at, updated_at)' +
+    'INSERT INTO lotes(lote_descripcion, fentrega, proveedor_id, ses_id, created_at, updated_at)' +
     ' VALUES(?, ?, ?, ?, NOW(), NOW())';
 const SELECT = 'SELECT * FROM lotes';
 
@@ -24,7 +24,7 @@ class Lote {
                     if (!err) {
                         resolve(res.insertId);
                     } else {
-                        resolve(null);
+                        reject(err);
                     }
                 });
         });
