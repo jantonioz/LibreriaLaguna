@@ -12,38 +12,24 @@ const utils = require("../controllers/Utils");
 const lote = require("../controllers/LotesController");
 const middleware = require('../middleware/middleware');
 const mTipoE = require('../models/tipo_ejemplar');
-const mGeneros = require('../models/genero');
+
 
 /* var stockLibro = require("../models/libro"); */
 
 var modelLibro = require("../models/libro");
 var mUsuario = require("../models/usuario");
 
-var navbarMiddleware = async (req, res, next) => {
-    let generos = await mGeneros.getAll().catch((reason) => {
-        console.log("ERROR CARGANDO GENEROS", reason);
-    });
-    console.log("CARGANDO GENEROS");
-    if (generos != null && generos.length > 0) {
-        res.locals.generos = generos;
-    }
-    next();
-}
+
 
 /* GET home page. */
-router.get('/', navbarMiddleware, async (req, res) => {
+router.get('/', async (req, res) => {
     // RETORNA UNA LISTA DE LIBROS CON UNA LISA DE IMAGENES
     let libros = await modelLibro.getAllLibros();
-    console.log(libros);
-
-    let admin = null;
-    if (req.session.user)
-        admin = req.session.user.isAdmin;
 
     res.render('index', {
         title: 'Libros', libros: libros, activeInicio: 'active',
         content: "LOS MEJORES LIBROS, EN LA MEJOR TIENDA",
-        nombreUsuario: utils.getNombreUsuario(req), isAdmin: admin == 1
+        nombreUsuario: utils.getNombreUsuario(req)
     });
 });
 
@@ -71,6 +57,10 @@ var redirectLogin = (req, res, next) => {
 }
 
 function rolIs(req, rolnameToCheck) {
+    if (!req.session)
+        return false;
+    if (!req.session.user)
+        return false;
     return (String.prototype.toLowerCase.apply(req.session.user.nombreRol) == rolnameToCheck);
 }
 
@@ -87,6 +77,7 @@ var checkAdmin = (req, res, next) => {
 
     
     if (rolIs(req, 'sysadmin')) {
+        res.locals.isAdmin = '1';
         next();
     }
 }
@@ -102,7 +93,8 @@ var checkProv = (req, res, next) => {
         return;
     }
 
-    if (rolIs(req, 'proveedor') || rolIs('sysadmin')) {
+    if (rolIs(req, 'stockadmin') || rolIs('sysadmin')) {
+        res.locals.isAdmin = true;
         next();
     }
 }
@@ -118,24 +110,23 @@ var checkBookAdmin = (req, res, next) => {
         return;
     }
 
+    
     if (rolIs(req, 'bookadmin') || rolIs(req, 'sysadmin')) {
         next();
+        res.locals.isAdmin = true;
     }
 }
 
-// RUTAS [ruta, controlador]
-router.get('/libros/', navbarMiddleware, libro.list_all_libros);
-
 // ==== LIBROS ====
-router.get('/libros/d/:libroId', navbarMiddleware, autoMiddleware, libro.get_a_libro);
-//router.post('/libros/find?:searchName/', libro.find_a_libro);
-router.post('/libros/find', navbarMiddleware, libro.find_a_libro);
-router.get('/libros/crear/', navbarMiddleware, checkBookAdmin, libro.formCreate_libro);
-router.post('/libros/crear/', navbarMiddleware, /*uploadLibros.array('imagenes', 3),*/ libro.create_a_libro);
-router.get('/libros/e/:libroId', navbarMiddleware, checkBookAdmin, libro.formEditar);
-router.post('/libros/update', navbarMiddleware, checkBookAdmin, libro.update_a_libro);
-router.get('/libros/delete/:libroId', navbarMiddleware, checkBookAdmin, libro.delete_form);
-router.post('/libros/delete', navbarMiddleware, checkBookAdmin, libro.delete_a_libro);
+router.get('/libros/', libro.list_all_libros);
+router.get('/libros/d/:libroId', libro.get_a_libro);
+router.post('/libros/find', libro.find_a_libro);
+router.get('/libros/crear/', checkBookAdmin, libro.formCreate_libro);
+router.post('/libros/crear/', checkBookAdmin, libro.create_a_libro);
+router.get('/libros/e/:libroId', checkBookAdmin, libro.formEditar);
+router.post('/libros/update', checkBookAdmin, libro.update_a_libro);
+router.get('/libros/delete/:libroId', checkBookAdmin, libro.delete_form);
+router.post('/libros/delete', checkBookAdmin, libro.delete_a_libro);
 
 // ==== USUARIOS ====
 router.get('/usuarios/', usuario.list_all_users);
@@ -147,7 +138,7 @@ router.get('/usuarios/admin/register', /*checkAdmin, */usuario.getRegisterWAdmin
 router.post('/usuarios/admin/register', /*redirectHome, */usuario.create_usrWAdmin);
 router.get('/cuenta', redirectLogin, usuario.userInfo);
 router.get('/admin/add', checkAdmin, usuario.getRegister);
-router.post('/addCarrito', middleware.carritoMiddleware, usuario.addCarrito);
+router.post('/addCarrito', redirectLogin, usuario.addCarrito);
 
 // ==== AUTORES ====
 router.get('/autores/', autoMiddleware, autor.list_all_authors);

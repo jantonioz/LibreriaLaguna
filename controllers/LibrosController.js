@@ -25,7 +25,7 @@ exports.list_all_libros = async (req, res) => {
     res.render('libro/listView', {
         title: 'Libros', libros: libros, activeLibros: 'active', pageCount, itemCount,
         pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
-        actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req)
+        actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req)
     });
 }
 
@@ -41,7 +41,7 @@ exports.formEditar = async (req, res) => {
         {
             title: 'Editar libro', editoriales: eds, autores: auts,
             generos: gens, libro: libro, lib_id: req.params.libroId,
-            nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req)
+            nombreUsuario: utils.getNombreUsuario(req)
         });
 }
 
@@ -51,7 +51,7 @@ exports.formCreate_libro = async function (req, res) {
     var gens = await getGens();
     res.render('libro/create', {
         title: 'Registra un libro', editoriales: eds, autores: auts, generos: gens,
-        nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req), ses_id: req.session.user.ses_id
+        nombreUsuario: utils.getNombreUsuario(req)
     });
 }
 
@@ -126,21 +126,21 @@ exports.find_a_libro = async (req, res) => {
 exports.get_a_libro = async function (req, res) {
     console.log(req.params.libroId)
     let libro = await Libro.getLibroById(req.params.libroId);
-    console.log(libro);
+
     if (libro == null)
         return res.send("BAD");
     
 
     let imgs = await Imagen.getImagesOfLibroID(req.params.libroId);
-    console.log(imgs);
     if (imgs.length > 0) {
         imgs[0].active = true;
     }
+
     let ejemplares = await Ejemplar.getAllByLibro(req.params.libroId);
 
     res.render('libro/singleView', {
         title: libro.titulo, libro: libro[0],
-        nombreUsuario: utils.getNombreUsuario(req), isAdmin: utils.isAdmin(req), imagenes: imgs,
+        nombreUsuario: utils.getNombreUsuario(req), imagenes: imgs,
         ejemplares: ejemplares
     });
 }
@@ -180,14 +180,20 @@ exports.delete_form = async (req, res) => {
         console.log("error: ", reason);
     });
 
-    console.log("EL LIBRO: ", mLibro);
+    let lib_id = mLibro[0].lib_id;
+
+    let imgs = await Imagen.getImagesOfLibroID(req.params.libroId);
+    if (imgs.length > 0) {
+        imgs[0].active = true;
+    }
 
 
-    res.render('libro/deleteView', {libro: mLibro[0]});
+    res.render('libro/deleteView', {title: 'alerta', libro: mLibro[0], imagenes: imgs});
 }
 
 exports.delete_a_libro = async (req, res) => {
     let lib_id = req.body.lib_id;
+    
     var result = await Libro.remove(lib_id).catch((reason) => {
         console.log(reason);
     });

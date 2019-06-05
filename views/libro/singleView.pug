@@ -45,6 +45,8 @@ block content
           if (isAdmin)
             a(href="/libros/e/" + libro.lib_id, class="btn btn-secondary ml-5") Editar
             a.ml-2.btn.btn-danger(href="/libros/delete/" + libro.lib_id) Eliminar
+          else
+            p No eres admin
         small Autor 
           a(href="/autores/d/" + libro.autor_id) !{libro.autor}
           | !{" \u2022 "} !{genLink}

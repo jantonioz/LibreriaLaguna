@@ -190,70 +190,70 @@ INSERT INTO Direcciones (dir_id, dir_calle, dir_num, dir_colonia, dir_cd, dir_pa
 VALUES (1, 'Calle 1', '666', 'Colonia 1', 'Matamoros', 'México', 1, NOW(), NOW());
 INSERT INTO Roles(rol_nombre, ses_id, created_at, updated_at) VALUES ('SysAdmin', 1, NOW(), NOW());
 INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('FFFFFFFFFFFFFFFFFFFF', 1, 1, NOW(), NOW());
-INSERT INTO Usuarios (usr_nombre, usr_apellidos, usr_admin, usr_email, usr_username, usr_password, usr_TipoInicio, usr_fnac, direccion_id, ses_id, roles_id, created_at, updated_at) 
-VALUES (  'Antonio', 'Zandate', 1, 'joseantoniosp@live.com.mx', 'joseantoniosp', '1234', 'email', '1998-12-16', 1, 1, 1, NOW(), NOW());
+INSERT INTO Usuarios (usr_nombre, usr_apellidos, usr_email, usr_username, usr_password, usr_TipoInicio, usr_fnac, direccion_id, ses_id, roles_id, created_at, updated_at) 
+VALUES (  'Antonio', 'Zandate', 'joseantoniosp@live.com.mx', 'joseantoniosp', '1234', 'email', '1998-12-16', 1, 1, 1, NOW(), NOW());
 INSERT INTO Sesiones (ses_id, ses_token, usr_id, created_at, updated_at) VALUES (1, 'abcdef123456', 1, NOW(), NOW());
 
-ALTER TABLE Lotes ADD CONSTRAINT FKLotes448903 FOREIGN KEY (proveedor_id) REFERENCES Proveedores (prov_id);
-ALTER TABLE Usuarios ADD CONSTRAINT FKUsuarios227162 FOREIGN KEY (direccion_id) REFERENCES Direcciones (dir_id);
-ALTER TABLE Compras ADD CONSTRAINT FKCompras256871 FOREIGN KEY (usr_id) REFERENCES Usuarios (usr_id);
-ALTER TABLE Imagen_libro ADD CONSTRAINT FKImagen_lib463402 FOREIGN KEY (libro_id) REFERENCES Libros (lib_id);
-ALTER TABLE Libros ADD CONSTRAINT FKLibros994400 FOREIGN KEY (editorial_id) REFERENCES Editoriales (ed_id);
-ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr149553 FOREIGN KEY (autor_id) REFERENCES Autores (aut_id);
-ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr206080 FOREIGN KEY (libro_id) REFERENCES Libros (lib_id);
-ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares412760 FOREIGN KEY (libro_id) REFERENCES Libros (lib_id);
-ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares741490 FOREIGN KEY (lote_id) REFERENCES Lotes (lot_id);
-ALTER TABLE Libros ADD CONSTRAINT FKLibros809936 FOREIGN KEY (genero_id) REFERENCES Generos (gen_id);
-ALTER TABLE Proveedores ADD CONSTRAINT FKProveedore993281 FOREIGN KEY (direccion_id) REFERENCES Direcciones (dir_id);
-ALTER TABLE Item_compra ADD CONSTRAINT FKItem_compr354842 FOREIGN KEY (ejemplares_id) REFERENCES Ejemplares (ejem_id);
-ALTER TABLE Item_compra ADD CONSTRAINT FKItem_compr537480 FOREIGN KEY (compras_id) REFERENCES Compras (comp_id);
-ALTER TABLE Compras ADD CONSTRAINT FKCompras569978 FOREIGN KEY (trans_id) REFERENCES Transporte (trans_id);
-ALTER TABLE Sesiones ADD CONSTRAINT FKSesiones768548 FOREIGN KEY (usr_id) REFERENCES Usuarios (usr_id);
-ALTER TABLE Usuarios ADD CONSTRAINT FKUsuarios547201 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Compras ADD CONSTRAINT FKCompras787282 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Transporte ADD CONSTRAINT FKTransporte340616 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Direcciones ADD CONSTRAINT FKDireccione632988 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares901705 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Lotes ADD CONSTRAINT FKLotes362415 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Libros ADD CONSTRAINT FKLibros848476 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr451044 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Generos ADD CONSTRAINT FKGeneros535449 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Imagen_libro ADD CONSTRAINT FKImagen_lib851063 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Editoriales ADD CONSTRAINT FKEditoriale684392 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Proveedores ADD CONSTRAINT FKProveedore781081 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Item_compra ADD CONSTRAINT FKItem_compr986280 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Permisos ADD CONSTRAINT FKPermisos607332 FOREIGN KEY (rol_id) REFERENCES Roles (rol_id);
-ALTER TABLE Usuarios ADD CONSTRAINT FKUsuarios277154 FOREIGN KEY (roles_id) REFERENCES Roles (rol_id);
-ALTER TABLE Roles ADD CONSTRAINT FKRoles828971 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Permisos ADD CONSTRAINT FKPermisos122620 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares487137 FOREIGN KEY (tipo_id) REFERENCES TipoEjemplares (tipo_id);
-ALTER TABLE TipoEjemplares ADD CONSTRAINT FKTipoEjempl362329 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
-ALTER TABLE Autores ADD CONSTRAINT FKAutores362329 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id);
+ALTER TABLE Lotes ADD CONSTRAINT FKLotes448903 FOREIGN KEY (proveedor_id) REFERENCES Proveedores (prov_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Usuarios ADD CONSTRAINT FKUsuarios227162 FOREIGN KEY (direccion_id) REFERENCES Direcciones (dir_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Compras ADD CONSTRAINT FKCompras256871 FOREIGN KEY (usr_id) REFERENCES Usuarios (usr_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Imagen_libro ADD CONSTRAINT FKImagen_lib463402 FOREIGN KEY (libro_id) REFERENCES Libros (lib_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Libros ADD CONSTRAINT FKLibros994400 FOREIGN KEY (editorial_id) REFERENCES Editoriales (ed_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr149553 FOREIGN KEY (autor_id) REFERENCES Autores (aut_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr206080 FOREIGN KEY (libro_id) REFERENCES Libros (lib_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares412760 FOREIGN KEY (libro_id) REFERENCES Libros (lib_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares741490 FOREIGN KEY (lote_id) REFERENCES Lotes (lot_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Libros ADD CONSTRAINT FKLibros809936 FOREIGN KEY (genero_id) REFERENCES Generos (gen_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Proveedores ADD CONSTRAINT FKProveedore993281 FOREIGN KEY (direccion_id) REFERENCES Direcciones (dir_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Item_compra ADD CONSTRAINT FKItem_compr354842 FOREIGN KEY (ejemplares_id) REFERENCES Ejemplares (ejem_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Item_compra ADD CONSTRAINT FKItem_compr537480 FOREIGN KEY (compras_id) REFERENCES Compras (comp_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Compras ADD CONSTRAINT FKCompras569978 FOREIGN KEY (trans_id) REFERENCES Transporte (trans_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Sesiones ADD CONSTRAINT FKSesiones768548 FOREIGN KEY (usr_id) REFERENCES Usuarios (usr_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Usuarios ADD CONSTRAINT FKUsuarios547201 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Compras ADD CONSTRAINT FKCompras787282 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Transporte ADD CONSTRAINT FKTransporte340616 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Direcciones ADD CONSTRAINT FKDireccione632988 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares901705 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Lotes ADD CONSTRAINT FKLotes362415 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Libros ADD CONSTRAINT FKLibros848476 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Autor_Libro ADD CONSTRAINT FKAutor_Libr451044 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Generos ADD CONSTRAINT FKGeneros535449 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Imagen_libro ADD CONSTRAINT FKImagen_lib851063 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Editoriales ADD CONSTRAINT FKEditoriale684392 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Proveedores ADD CONSTRAINT FKProveedore781081 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Item_compra ADD CONSTRAINT FKItem_compr986280 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Permisos ADD CONSTRAINT FKPermisos607332 FOREIGN KEY (rol_id) REFERENCES Roles (rol_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Usuarios ADD CONSTRAINT FKUsuarios277154 FOREIGN KEY (roles_id) REFERENCES Roles (rol_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Roles ADD CONSTRAINT FKRoles828971 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Permisos ADD CONSTRAINT FKPermisos122620 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Ejemplares ADD CONSTRAINT FKEjemplares487137 FOREIGN KEY (tipo_id) REFERENCES TipoEjemplares (tipo_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE TipoEjemplares ADD CONSTRAINT FKTipoEjempl362329 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Autores ADD CONSTRAINT FKAutores362329 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 
-INSERT INTO `editoriales` (`ed_id`, `ed_nombre`, `ed_correo`, `updated_at`, `created_at`) VALUES
+INSERT INTO editoriales (ses_id, ed_nombre, ed_correo, updated_at, created_at) VALUES
 (1, 'NoBooks', 'NoBooks@gmail.com'              , NOW(), NOW()),
-(2, 'Gnome Press', 'gnomepress@gmail.com'       , NOW(), NOW()),
-(3, 'Pierre-Jules Hetzel', 'jules_ed@hotmail.com', NOW(), NOW()),
-(4, 'Tor books', 'torbooks@gmail.com'           , NOW(), NOW()),
-(5, 'Una editorial mas', 'mieditorial@gmail.com', NOW(), NOW());
+(1, 'Gnome Press', 'gnomepress@gmail.com'       , NOW(), NOW()),
+(1, 'Pierre-Jules Hetzel', 'jules_ed@hotmail.com', NOW(), NOW()),
+(1, 'Tor books', 'torbooks@gmail.com'           , NOW(), NOW()),
+(1, 'Una editorial mas', 'mieditorial@gmail.com', NOW(), NOW());
 
 
-INSERT INTO `generos` (`gen_id`, `gen_nombre`, `gen_descripcion`, `updated_at`, `created_at`) VALUES
+INSERT INTO generos (ses_id, gen_nombre, gen_descripcion, updated_at, created_at) VALUES
 (1, 'Novela', ''               , NOW(), NOW()),
-(2, 'Ciencia Ficcion', ''      , NOW(), NOW()),
-(3, 'Ficcion de aventuras', '' , NOW(), NOW()),
-(4, 'Novela Sci-Fi', ''        , NOW(), NOW()),
-(5, 'Literatura fantástica', '', NOW(), NOW());
+(1, 'Ciencia Ficcion', ''      , NOW(), NOW()),
+(1, 'Ficcion de aventuras', '' , NOW(), NOW()),
+(1, 'Novela Sci-Fi', ''        , NOW(), NOW()),
+(1, 'Literatura fantástica', '', NOW(), NOW());
 
 
-INSERT INTO `autores` (`aut_id`, `aut_nombre`, `aut_fecnac`, `aut_biografia`, `updated_at`, `created_at`) VALUES
+INSERT INTO autores (ses_id, aut_nombre, aut_fecnac, aut_biografia, updated_at, created_at) VALUES
 (1, 'Herman Melville', '1819-08-01', '', NOW(), NOW()),
-(2, 'Isaac Asimov', '1920-01-02', '', NOW(), NOW()),
-(3, 'Julio Verne', '1828-02-08', '', NOW(), NOW()),
-(4, 'Pierce Brown', '1988-01-28', '', NOW(), NOW()),
-(10, 'Brian Sanderson', '1975-12-19', '', NOW(), NOW()),
-(11, 'Brandon Sanderson', '1975-12-19', '', NOW(), NOW());
+(1, 'Isaac Asimov', '1920-01-02', '', NOW(), NOW()),
+(1, 'Julio Verne', '1828-02-08', '', NOW(), NOW()),
+(1, 'Pierce Brown', '1988-01-28', '', NOW(), NOW()),
+(1, 'Brian Sanderson', '1975-12-19', '', NOW(), NOW()),
+(1, 'Brandon Sanderson', '1975-12-19', '', NOW(), NOW());
 
 INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('Proveedor', 1, NOW(), NOW());
 INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('0000000000F00FF00005', 1, 1, NOW(), NOW());
@@ -272,7 +272,7 @@ DELIMITER |
 CREATE FUNCTION getLastInsertIdSesion() 
 RETURNS INT
 BEGIN
-  DECLARE insertId;
+  DECLARE insertId INT;
   SELECT MAX(ses_id) INTO insertId FROM sesiones;
   RETURN insertId;
 END|

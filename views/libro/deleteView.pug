@@ -30,26 +30,16 @@ block content
               span.sr-only Siguiente
           div.mcontainer
             img(class="img-fluid" src=imgsrc alt="")
-            //- div.middle
-            //-   a.text-white.text(href="/libros/i/" + libro.lib_id) Agregar más
         else
           img(class="card-img-top" src="http://placehold.it/500x325" alt="")
-
-        
-        //- form(action="/libros/addImage/" + libro.lib_id, method="POST")
-        //-   label(for="file-upload" class="custom-file-upload text-light bg-danger") Agregar Imagen
-        //-     input(type="file" id="file-upload")
           
       div(class="col")
         .row
             h1 ¿Seguro que deseas borrarlo?
             form(action="/libros/delete", method="POST")
                 input(type="hidden", value=libro.lib_id, name="lib_id")
-                button.ml-3(type="submit" class="btn btn-primary") Aceptar 
+                button.ml-3.mt-2(type="submit" class="btn btn-primary") Aceptar 
         h2 !{libro.titulo}
-          if (isAdmin)
-            a(href="/libros/e/" + libro.lib_id, class="btn btn-secondary ml-5") Editar
-            a.ml-2.btn.btn-danger(href="/libros/d/" + libro.lib_id) Eliminar
         small Autor 
           a(href="/autores/d/" + libro.autor_id) #{libro.autor}
           | !{" \u2022 "} !{genLink}

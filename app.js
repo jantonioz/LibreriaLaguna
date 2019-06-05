@@ -10,6 +10,8 @@ const paginate = require('express-paginate');
 const userAgent = require('express-useragent');
 const bodyparser = require('body-parser');
 const fileUpload = require('express-fileupload');
+const favicon = require('serve-favicon');
+const mGeneros = require('./models/genero');
 
 var appRouter = require('./routes/appRoutes');
 var app = express();
@@ -18,6 +20,9 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+// favicon
+app.set(favicon(__dirname + '/public/favicon/favicon.ico'));
 
 app.use(logger('dev'));
 // app.use(express.urlencoded({ extended: false }));
@@ -54,6 +59,33 @@ app.use((req, res, next) => {
 });
 
 app.use(fileUpload());
+
+function rolIs(req, rolnameToCheck) {
+  if (!req.session)
+      return false;
+  if (!req.session.user)
+      return false;
+  return (String.prototype.toLowerCase.apply(req.session.user.nombreRol) == rolnameToCheck);
+}
+
+var navbarMiddleware = async (req, res, next) => {
+  let generos = await mGeneros.getAll().catch((reason) => {
+      console.log("ERROR CARGANDO GENEROS", reason);
+  });
+
+  console.log("CARGANDO GENEROS");
+  if (generos != null && generos.length > 0) {
+      res.locals.generos = generos;
+  }
+
+  if (rolIs(req, 'bookadmin') || rolIs(req, 'sysadmin') || rolIs(req, 'proveedor')) {
+      console.log("isAdmin set");
+      res.locals.isAdmin = 1;
+  }
+  next();
+}
+
+app.use('/', navbarMiddleware);
 
 // IMPLEMENTAR TODO EL SISTEMA DE RUTAS
 app.use('/', appRouter);
