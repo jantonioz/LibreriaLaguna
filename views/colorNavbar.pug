@@ -15,12 +15,6 @@ div(class="collapse navbar-collapse" id="navbarSupportedContent")
                 if (generos)
                     each genero in generos
                         a(class="dropdown-item", href="/generos/d/" + genero.gen_id) !{genero.gen_nombre}
-                //- a(class="dropdown-item" href="/generos/d/1") Novela
-                //- a(class="dropdown-item" href="/generos/d/2") Ciencia Ficcion
-                //- a(class="dropdown-item" href="/generos/d/3") Ficcion de aventuras
-                //- a(class="dropdown-item" href="/generos/d/4") Novela Sci-fi
-                //- div(class="dropdown-divider")
-                //- a(class="dropdown-item" href="#") Mas comprados
         
 div.navbar-collapse.collapse.w-100.order-3.dual-collapse2
     ul.navbar-nav.ml-auto
@@ -30,6 +24,11 @@ div.navbar-collapse.collapse.w-100.order-3.dual-collapse2
                 div(class="dropdown-menu" aria-labelledby="navbarDropdown")
                     a(class="dropdown-item" href="/cuenta") Cuenta
                     a(class="dropdown-item" href="/logout") Logout
+        else
+            li.nav-item
+                a.nav-link(href="/login") Iniciar sesion
+            li.nav-item
+                a.nav-link(href="/registro") Registrarse
         
     form(class="form-inline my-2 my-lg-0" action="/libros/find" method="post")
         input(class="form-control mr-sm-2" name="search" autocomplete="off" type="search" placeholder="Buscar" aria-label="Search")

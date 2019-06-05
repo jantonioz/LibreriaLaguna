@@ -4,7 +4,8 @@ block content
       div(class="container-fluid")
         div(class="justify-content-center align-items-center")
             div(class="")
-                form(action="/usuarios/register", method="POST", enctype="multipart/form-data")
+                h2 Registro administrador
+                form(action="/usuarios/admin/register", method="POST")
 
                     div(class="form-label-group")
                         input(type="text", class="form-control",id="nombre", name="nombre", placeholder="Nombres", autocomplete = "off", required)

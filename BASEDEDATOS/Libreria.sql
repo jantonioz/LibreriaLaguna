@@ -255,8 +255,8 @@ INSERT INTO autores (ses_id, aut_nombre, aut_fecnac, aut_biografia, updated_at, 
 (1, 'Brian Sanderson', '1975-12-19', '', NOW(), NOW()),
 (1, 'Brandon Sanderson', '1975-12-19', '', NOW(), NOW());
 
-INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('Proveedor', 1, NOW(), NOW());
-INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('0000000000F00FF00005', 1, 1, NOW(), NOW());
+-- INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('Proveedor', 1, NOW(), NOW());
+-- INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('0000000000F00FF00005', 1, 1, NOW(), NOW());
 
 INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('BookAdmin', 1, NOW(), NOW());
 INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('000000000111F00FFFF5', 1, 1, NOW(), NOW());

@@ -118,7 +118,7 @@ exports.getRegisterWAdmin = async (req, res) => {
 }
 
 exports.create_usrWAdmin = (req, res) => {
-
+    
 }
 
 function createDireccion(calle, numero, colonia, ciudad, pais) {
