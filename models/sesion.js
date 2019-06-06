@@ -23,7 +23,7 @@ class Sesion {
 
     save() {
         return new Promise((resolve, reject) => {
-            sql.query(INSERTPROC, [this.token, this.fin, this.ip, this.os, this.user_id], (err, res) => {
+            sql.query(INSERTPROC, [this.token, this.ip, this.fin, this.os, this.user_id], (err, res) => {
                 if (!err) {
                     console.log(res);
                     resolve(res);

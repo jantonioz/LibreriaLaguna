@@ -57,7 +57,7 @@ CREATE TABLE Usuarios (
   usr_password   varchar(255) NOT NULL, 
   usr_TipoInicio varchar(255) NOT NULL, 
   usr_fnac       date NOT NULL, 
-  direccion_id   int(10) NOT NULL, 
+  direccion_id   int(10) NULL,  /* NULLABLE */
   updated_at     timestamp NULL, 
   created_at     timestamp NOT NULL, 
   ses_id         int(10) NOT NULL, 
@@ -276,6 +276,8 @@ BEGIN
   SELECT MAX(ses_id) INTO insertId FROM sesiones;
   RETURN insertId;
 END|
+
+
 /* PROCEDURES */
 CREATE PROCEDURE registerSesion(token CHAR(32), ip VARCHAR(15), fin DATETIME, os VARCHAR (20), u_id INT) 
 BEGIN 
@@ -292,8 +294,9 @@ BEGIN
   IF EXISTS( SELECT * FROM usuarios WHERE (usr_username = username) AND (usr_password = password) ) THEN
     /* RETORNAR DATOS DEL USUARIO + PERMISOS */
     SELECT usr.usr_nombre AS 'nombre', usr.usr_apellidos AS 'apellidos', usr.usr_email AS 'email',
-      usr.usr_username AS 'username', usr.usr_password AS 'password', usr.usr_fnac AS 'fnac', usr.direccion_id AS 'direccion_id',
-      usr.usr_id AS 'usr_id', perm.perm_permisos AS 'permisos', rol.rol_nombre AS 'rol'
+      usr.usr_username AS 'username', usr.usr_password AS 'password', usr.usr_fnac AS 'fnac', 
+      usr.direccion_id AS 'direccion_id', usr.usr_id AS 'usr_id', usr.ses_id AS 'usr_ses_id', 
+      perm.perm_permisos AS 'permisos', rol.rol_id AS 'rol_id', rol.rol_nombre AS 'rol'
     FROM usuarios as usr
     INNER JOIN permisos AS perm ON (usr.roles_id = perm.rol_id)
     INNER JOIN roles AS rol ON (usr.roles_id = rol.rol_id);

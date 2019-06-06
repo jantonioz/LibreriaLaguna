@@ -117,8 +117,20 @@ exports.getRegisterWAdmin = async (req, res) => {
     });
 }
 
-exports.create_usrWAdmin = (req, res) => {
-    
+exports.create_usrWAdmin = async (req, res) => {
+    let nombre = req.body.nombre;
+    let apellidos = req.body.apellidos;
+    let email = req.body.email;
+    let username = req.body.username;
+    let password = req.body.password;
+    let fnac = req.body.fecha_nacimiento;
+    let rol_id = req.body.rol_id;
+    let ses_id = req.session.user.ses_id;
+
+    let admin = new Usuario(nombre, apellidos, email, username, password, fnac, NULL, rol_id, ses_id);
+    let admin_insert = await admin.save();
+    console.log(admin_insert);
+    res.send("OK :)");
 }
 
 function createDireccion(calle, numero, colonia, ciudad, pais) {

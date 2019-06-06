@@ -5,7 +5,7 @@ var sql = require('./db.js')
 const fields = {
     nombre: 'usr_nombre', apellidos: 'usr_apellidos', email: 'usr_email',
     username: 'usr_username', password: 'usr_password', fnac: 'usr_fnac',
-    direccion: 'direccion_id', ses_id: 'ses_id'
+    direccion: 'direccion_id', ses_id: 'ses_id', rol_id : 'roles_id'
 };
 
 const comma = ', ';
@@ -16,7 +16,7 @@ const Insert =
     'INSERT INTO usuarios (' +
     fields.nombre + comma + fields.apellidos + comma + fields.email + comma +
     fields.username + comma + fields.password + comma + fields.fnac + comma +
-    fields.direccion + comma + 'ses_id , created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
+    fields.direccion + comma + fields.ses_id + comma + fields.rol + comma+'created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
 
 const update =
     'UPDATE Usuarios SET ' + fields.nombre + assign + comma
@@ -28,17 +28,6 @@ const update =
     + ' WHERE usr_id = ?';
 
 const Delete = 'DELETE FROM Usuarios WHERE usr_id = ?';
-
-// usr_nombre,
-// usr_apellidos,
-// usr_email,
-// usr_username,
-// usr_password,
-// usr_fnac,
-// direccion_id,
-// usr_id,
-// ses_id,
-// permisos);
 
 const VerifyQuery = 'CALL proc_loginUser(?, ?);';
 
@@ -58,7 +47,7 @@ const VerifyAdmin = 'SELECT * FROM usuarios WHERE '
     + 'usr_admin = 1 LIMIT 1';
 
 class Usuario {
-    constructor(nombre, apellidos, email, username, password, fnac, direccion_id, id = 0, ses_id = 1, permisos = '', rol = '') {
+    constructor(nombre, apellidos, email, username, password, fnac, direccion_id, rol_id, ses_id, id = 0, permisos = '', rol = '') {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -68,6 +57,7 @@ class Usuario {
         this.fnac = fnac;
         this.direccion_id = direccion_id;
         this.ses_id = ses_id;
+        this.rol_id = rol_id;
         this.permisos = permisos;
         this.rol = rol;
     }
@@ -76,7 +66,7 @@ class Usuario {
         return new Promise((resolve, reject) => {
             sql.query(Insert,
                 [this.nombre, this.apellidos, this.email,
-                this.username, this.password, this.fnac, this.direccion_id, this.ses_id],
+                this.username, this.password, this.fnac, this.direccion_id, this.ses_id, this.rol_id],
                 (err, res) => {
                     if (err) {
                         console.log("ERROR:", err);
@@ -198,8 +188,9 @@ Usuario.login = (username, password) => {
                     row.password,
                     row.fnac,
                     row.direccion_id,
+                    row.rol_id,
+                    row.usr_ses_id,
                     row.usr_id,
-                    0,
                     row.permisos,
                     row.rol);
                 resolve(user);
