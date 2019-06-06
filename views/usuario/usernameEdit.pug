@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+      div(class="container-fluid h-100")
+        div(class="row justify-content-center align-items-center h-100")
+            div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5 mb-5")
+                form(action="/cuenta/username", method="POST")
+                    h1 Cambia tu nombre de usuario !{nombre}
+                    input(type="hidden", name="usr_id", value=usr_id)
+                    div(class="form-label-group")
+                        input(type="text", class="form-control",id="newUsername", name="newUsername", placeholder="Nombre de usuario", autocomplete="off", required, autofocus)
+                        label(for="newUsername") Nuevo nombre de usuario
+
+                    button(type="submit", class="btn btn-lg btn-primary btn-block") Guardar

@@ -186,13 +186,14 @@ CREATE TABLE TipoEjemplares (
   PRIMARY KEY (tipo_id));
   
 -- INIT Sesiones-Usuarios-Roles-Permisos
-INSERT INTO Direcciones (dir_id, dir_calle, dir_num, dir_colonia, dir_cd, dir_pais, ses_id, updated_at, created_at) 
-VALUES (1, 'Calle 1', '666', 'Colonia 1', 'Matamoros', 'México', 1, NOW(), NOW());
+INSERT INTO Direcciones (dir_id, dir_calle, dir_num, dir_colonia, dir_cd, dir_pais, dir_cp, ses_id, updated_at, created_at) 
+VALUES (1, 'Calle 1', '666', 'Colonia 1', 'Matamoros', 'México', '27400', 1, NOW(), NOW());
 INSERT INTO Roles(rol_nombre, ses_id, created_at, updated_at) VALUES ('SysAdmin', 1, NOW(), NOW());
 INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('FFFFFFFFFFFFFFFFFFFF', 1, 1, NOW(), NOW());
 INSERT INTO Usuarios (usr_nombre, usr_apellidos, usr_email, usr_username, usr_password, usr_TipoInicio, usr_fnac, direccion_id, ses_id, roles_id, created_at, updated_at) 
 VALUES (  'Antonio', 'Zandate', 'joseantoniosp@live.com.mx', 'joseantoniosp', '1234', 'email', '1998-12-16', 1, 1, 1, NOW(), NOW());
 INSERT INTO Sesiones (ses_id, ses_token, usr_id, created_at, updated_at) VALUES (1, 'abcdef123456', 1, NOW(), NOW());
+
 
 ALTER TABLE Lotes ADD CONSTRAINT FKLotes448903 FOREIGN KEY (proveedor_id) REFERENCES Proveedores (prov_id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE Usuarios ADD CONSTRAINT FKUsuarios227162 FOREIGN KEY (direccion_id) REFERENCES Direcciones (dir_id) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -231,6 +232,17 @@ ALTER TABLE TipoEjemplares ADD CONSTRAINT FKTipoEjempl362329 FOREIGN KEY (ses_id
 ALTER TABLE Autores ADD CONSTRAINT FKAutores362329 FOREIGN KEY (ses_id) REFERENCES Sesiones (ses_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 
+INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('BookAdmin', 1, NOW(), NOW());
+INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('000000000111F00FFFF5', 2, 1, NOW(), NOW());
+
+INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('StockAdmin', 1, NOW(), NOW());
+INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('000000000111FFFFFFF5', 3, 1, NOW(), NOW());
+
+INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('NormalUser', 1, NOW(), NOW());
+INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('00000000077700000005', 4, 1, NOW(), NOW());
+
+
+
 INSERT INTO editoriales (ses_id, ed_nombre, ed_correo, updated_at, created_at) VALUES
 (1, 'NoBooks', 'NoBooks@gmail.com'              , NOW(), NOW()),
 (1, 'Gnome Press', 'gnomepress@gmail.com'       , NOW(), NOW()),
@@ -255,17 +267,6 @@ INSERT INTO autores (ses_id, aut_nombre, aut_fecnac, aut_biografia, updated_at, 
 (1, 'Brian Sanderson', '1975-12-19', '', NOW(), NOW()),
 (1, 'Brandon Sanderson', '1975-12-19', '', NOW(), NOW());
 
--- INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('Proveedor', 1, NOW(), NOW());
--- INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('0000000000F00FF00005', 1, 1, NOW(), NOW());
-
-INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('BookAdmin', 1, NOW(), NOW());
-INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('000000000111F00FFFF5', 1, 1, NOW(), NOW());
-
-INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('StockAdmin', 1, NOW(), NOW());
-INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('000000000111FFFFFFF5', 1, 1, NOW(), NOW());
-
-INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('NormalUser', 1, NOW(), NOW());
-INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('00000000077700000005', 1, 1, NOW(), NOW());
 
 /* FUNCIONES*/
 DELIMITER |
@@ -288,10 +289,10 @@ BEGIN
   SELECT getLastInsertIdSesion() AS 'insertId';
 END|
 
-CREATE PROCEDURE proc_loginUser(username VARCHAR(50), password VARCHAR(255)) 
+CREATE PROCEDURE proc_loginUser(username VARCHAR(50), pwd VARCHAR(255)) 
 BEGIN
   /* BUSCAR SI LOS DATOS COINCIDEN */
-  IF EXISTS( SELECT * FROM usuarios WHERE (usr_username = username) AND (usr_password = password) ) THEN
+  IF EXISTS( SELECT * FROM usuarios WHERE (usr_username = username) AND (usr_password = pwd) ) THEN
     /* RETORNAR DATOS DEL USUARIO + PERMISOS */
     SELECT usr.usr_nombre AS 'nombre', usr.usr_apellidos AS 'apellidos', usr.usr_email AS 'email',
       usr.usr_username AS 'username', usr.usr_password AS 'password', usr.usr_fnac AS 'fnac', 
@@ -299,7 +300,8 @@ BEGIN
       perm.perm_permisos AS 'permisos', rol.rol_id AS 'rol_id', rol.rol_nombre AS 'rol'
     FROM usuarios as usr
     INNER JOIN permisos AS perm ON (usr.roles_id = perm.rol_id)
-    INNER JOIN roles AS rol ON (usr.roles_id = rol.rol_id);
+    INNER JOIN roles AS rol ON (usr.roles_id = rol.rol_id)
+    WHERE (usr.usr_username = username) AND (usr.usr_password = pwd);
   ELSE 
   	SIGNAL SQLSTATE '45000';
   END IF;

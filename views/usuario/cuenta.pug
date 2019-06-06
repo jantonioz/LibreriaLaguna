@@ -2,19 +2,63 @@ extends ../layout
 
 block content
     .row
-        .col-md-2.m-2.bg-danger
-            h5 Mas vendidos
-        .col.bg-success.m-2
+        .col-md-3.m-2
+            h4 Configuracion
+            a.mb-2(href="/cuenta/password") Cambiar contraseña <br>
+            a.mb-2(href="/cuenta/username") Cambiar nombre de usuario <br>
+            a.mb-2(href="/cuenta/name") Cambiar nombre <br>
+            a.mb-2(href="/cuenta/email") Cambiar correo <br>
+            a.mb-2(href="/cuenta/direccion") Cambiar direccion <br>
+            a.mb-2(href="/cuenta/fnac") Cambiar fecha nacimiento <br>
+        .col.m-2
             .ml-5
-                h2 !{usr.usr_nombre + ' ' + usr.usr_apellidos}
-                small !{usr.usr_email}
+                h2 !{usr.usr_nombre + ' ' + usr.usr_apellidos} - 
+                    small !{usr.usr_email}
 
 
-            .container.bg-light
-                h4 Ultimas compras
-                ul
-                    each sesion in sesiones
-                        li !{sesion.ses_id}
-        .col-md2.bg-warning.m-2
-            h5 Navbar a la derecha
+            .container.bg-light.mt-3
+                h4 Ultimas sesiones
+                table.table.table-hover
+                    thead
+                        tr
+                            th(scope="col") Id
+                            th(scope="col") Fecha
+                            th(scope="col") Ip
+                            th(scope="col") Sistema operativo
+                    tbody
+                        each sesion in sesiones
+                            tr
+                                th(scope="row") !{sesion.ses_id}
+                                td !{sesion.created_at}
+                                td !{sesion.ses_ip}
+                                td !{sesion.ses_so}
+                    
+        .col-md2.m-2
+    .row
+        .col.col-md-3
+
+        .col
+            if (direccion)
+                h4 Direccion
+                table.table
+                    thead
+                        tr
+                            th(scope="col") Calle
+                            th(scope="col") Número
+                            th(scope="col") Colonia
+                            th(scope="col") Ciudad
+                            th(scope="col") Código postal
+                            th(scope="col") País
+                    tbody   
+                        tr
+                            td !{direccion.calle}
+                            td !{direccion.num}
+                            td !{direccion.colonia}
+                            td !{direccion.ciudad}
+                            td !{direccion.cp}
+                            td !{direccion.pais}
+            else 
+                h4 
+                    a.btn.btn-primary.text-white(href="/usuario/e/direccion") Agregar direccion
+            
     

@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+      div(class="container-fluid h-100")
+        div(class="row justify-content-center align-items-center h-100")
+            div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5 mb-5")
+                form(action="/cuenta/email", method="POST")
+                    h1 Cambia tu email !{nombre}
+                    input(type="hidden", name="usr_id", value=usr_id)
+                    div(class="form-label-group")
+                        input(type="email", class="form-control",id="newEmail", name="newEmail", placeholder="Nombre de usuario", autocomplete="off", required, autofocus, value=email)
+                        label(for="newEmail") Email
+
+                    button(type="submit", class="btn btn-lg btn-primary btn-block") Guardar

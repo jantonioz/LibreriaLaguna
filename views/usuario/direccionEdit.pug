@@ -1,0 +1,44 @@
+extends ../layout
+
+block content
+      div(class="container-fluid h-100")
+        div(class="row justify-content-center align-items-center h-100")
+            div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5 mb-5")
+                form(action="/cuenta/direccion", method="POST")
+                    if (dir_id)
+                        input(type="hidden", name="dir_id", value=dir_id)
+                    div(class="row")
+                        h4(class="col col-auto text-muted") Cambiar direccion 
+                        hr(class="col")
+
+                    div(class="row")
+                        div(class="col")
+                            div(class="form-label-group")
+                                input(type="text", class="form-control", id="calle", name="calle", placeholder = "Calle " autocomplete = "off", required, value=calle)
+                                label(for="calle") Calle
+                        div(class="col col-sm-4")
+                            div(class="form-label-group")
+                                input(type="text", class="form-control", id="numero", name="numero", placeholder = "Numero" autocomplete = "off", required, value=numero)
+                                label(for="numero") Numero
+
+                    div(class="row")
+                        div(class="col")
+                            div(class="form-label-group")
+                                input(type="text", class="form-control", id="colonia", name="colonia", placeholder = "Colonia" autocomplete = "off", required, value=colonia)
+                                label(for="colonia") Colonia
+                        div(class="col")
+                            div(class="form-label-group")
+                                input(type="text", class="form-control", id="ciudad", name="ciudad", placeholder = "Ciudad" autocomplete = "off", required, value=ciudad)
+                                label(for="ciudad") Ciudad
+
+                    div(class="form-label-group")
+                                input(type="text", class="form-control", id="pais", name="pais", placeholder = "Ciudad" autocomplete = "off", required, value=pais)
+                                label(for="pais") Pais
+                
+                    div(class="form-label-group")
+                                input(type="text", class="form-control", id="cp", name="cp", placeholder = "Codigo postal" autocomplete = "off", required, value=cp)
+                                label(for="cp") C.P.
+
+                    
+
+                    button(type="submit", class="btn btn-lg btn-primary btn-block") Registrar

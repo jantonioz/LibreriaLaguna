@@ -19,13 +19,19 @@ const INSERT = 'INSERT INTO direcciones(' +
     fields.cp + comma + 
     fields.ses_id + comma + 'created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
 
+const GETBYUSER = 'SELECT dir.dir_id AS id, dir.dir_calle AS calle, dir.dir_num AS num, ' +
+    'dir.dir_colonia AS colonia, dir.dir_cd AS ciudad, dir.dir_cp AS cp, dir.dir_pais AS pais ' +
+    'FROM direcciones AS dir ' + 
+    'INNER JOIN usuarios AS usr ON (usr.direccion_id = dir.dir_id) ' + 
+    'WHERE usr.usr_id = ?';
+
 const UPDATE = 'UPDATE direcciones SET ' +
             fields.calle + assign + comma +
             fields.numero + assign + comma +
             fields.colonia  + assign + comma +
             fields.ciudad + assign + comma +
             fields.pais  + assign + comma +
-            fields.cp + assign + 
+            fields.cp + assign + comma +
             fields.ses_id + assign +
             ' WHERE dir_id' + assign;
 
@@ -67,6 +73,32 @@ class Direccion {
                 });
         });
     }
+}
+
+Direccion.getById = (dir_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query('SELECT * FROM direcciones WHERE dir_id = ?', dir_id, (err, res) => {
+            if (!err) {
+                resolve(res[0]);
+                res = res[0];
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        });
+    });
+}
+
+Direccion.getByUser = (usr_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(GETBYUSER, usr_id, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        });
+    });
 }
 
 module.exports = Direccion;

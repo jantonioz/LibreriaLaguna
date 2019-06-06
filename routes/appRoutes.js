@@ -140,6 +140,20 @@ router.get('/cuenta', redirectLogin, usuario.userInfo);
 router.get('/admin/add', checkAdmin, usuario.getRegister);
 router.post('/addCarrito', redirectLogin, usuario.addCarrito);
 
+router.get('/cuenta/password', redirectLogin, usuario.formPassword);
+router.post('/cuenta/password', redirectLogin, usuario.changePassword);
+router.get('/cuenta/username', redirectLogin, usuario.formUsername);
+router.post('/cuenta/username', redirectLogin, usuario.changeUsername);
+router.get('/cuenta/name', redirectLogin, usuario.formNombre);
+router.post('/cuenta/name', redirectLogin, usuario.changeNombre);
+router.get('/cuenta/email', redirectLogin, usuario.formEmail);
+router.post('/cuenta/email', redirectLogin, usuario.changeEmail);
+router.get('/cuenta/fnac', redirectLogin, usuario.formFnac);
+router.post('/cuenta/fnac', redirectLogin, usuario.changeFnac);
+
+router.get('/cuenta/direccion', redirectLogin, usuario.formDireccion);
+router.post('/cuenta/direccion', redirectLogin, usuario.changeDir);
+
 // ==== AUTORES ====
 router.get('/autores/', autoMiddleware, autor.list_all_authors);
 router.get('/autores/d/:aut_id', autoMiddleware, autor.listBooksOf);

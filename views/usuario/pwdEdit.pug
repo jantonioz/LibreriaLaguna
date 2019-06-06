@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+      div(class="container-fluid h-100")
+        div(class="row justify-content-center align-items-center h-100")
+            div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5 mb-5")
+                form(action="/cuenta/password", method="POST")
+                    h1 Cambia tu constraseña !{nombre}
+                    input(type="hidden", name="usr_id", value=usr_id)
+                    div(class="form-label-group")
+                        input(type="password", class="form-control",id="password", name="password", placeholder="Nombre de usuario", autocomplete="off", required, autofocus)
+                        label(for="password") Contraseña
+
+                    div(class="form-label-group")
+                        input(type="password", class="form-control",id="password2", name="password2", placeholder="Contraseña", autocomplete="off", required)
+                        label(for="password2") Contraseña (repetir)
+
+                    button(type="submit", class="btn btn-lg btn-primary btn-block") Guardar

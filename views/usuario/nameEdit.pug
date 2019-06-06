@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+      div(class="container-fluid h-100")
+        div(class="row justify-content-center align-items-center h-100")
+            div(class="col col-sm-10 col-md-10 col-lg-10 col-xl-5 mb-5")
+                form(action="/cuenta/name", method="POST")
+                    h1 Cambia tu nombre !{nombre}
+                    input(type="hidden", name="usr_id", value=usr_id)
+                    div(class="form-label-group")
+                        input(type="text", class="form-control",id="newName", name="newName", placeholder="Nombre de usuario", autocomplete="off", required, autofocus, value=nombre)
+                        label(for="newName") Nombres
+
+                    div(class="form-label-group")
+                        input(type="text", class="form-control",id="newApellidos", name="newApellidos", placeholder="Nombre de usuario", autocomplete="off", required, value=apellidos)
+                        label(for="newApellidos") Apellidos
+
+                    button(type="submit", class="btn btn-lg btn-primary btn-block") Guardar
