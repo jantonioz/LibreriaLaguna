@@ -22,11 +22,42 @@ const UPDATE =
     'UPDATE compras SET comp_verif = ?, comp_fpago = ?, comp_mpago = ?, comp_estado = ?, ' +
     'updated_at = NOW() WHERE comp_id = ?';
 
-const GETLASTBYUSER = 
+const GETLASTBYUSER =
     'SELECT * FROM compras WHERE usuario_id = ? ORDER BY updated_at DESC limit 1';
 
-const GETALLBYUSER = 
+const GETALLBYUSER =
     'SELECT * FROM compras WHERE usuario_id = ? ORDER BY updated_at DESC';
+
+
+// const GET_ALL_BY_USER_COMPLETE = 
+//     'SELECT com.comp_verif AS verif, com.comp_fpago AS forma, com.comp_mpago AS metodo, ' +
+//     'com.com_estado AS estado, trans.trans_nombre AS transporte, item.item_cantidad AS cantidad, item.item_preciou AS precio, ' +
+//     'lib.titulo AS titulo, tipoe.tipo_descripcion AS tipo_desc ' +
+//     'FROM compras AS com ' +
+//     'LEFT JOIN transporte AS trans ON (com.trans_id = trans.trans_id) ' +
+//     'LEFT JOIN item_compra AS item ON (item.compras_id = com.comp_id) ' +
+//     'LEFT JOIN ejemplares AS ejem ON (ejem.ejem_id = item.ejemplares_id) ' +
+//     'LEFT JOIN libros AS lib ON (ejem.libro_id = lib.lib_id) '+
+//     'LEFT JOIN tipoejemplares AS tipoe ON (ejem.tipo_id = tipoe.tipo_id) ' +
+//     'WHERE com.usr_id = ?';
+
+const GET_ALL_BY_USER_COMPLETE =
+    'SELECT com.comp_id AS comp_id, com.comp_verif AS verif, com.comp_fpago AS forma, com.comp_mpago AS metodo, ' +
+    'com.com_estado AS estado, trans.trans_nombre AS transporte ' +
+    'FROM compras AS com ' +
+    'LEFT JOIN transporte AS trans ON (com.trans_id = trans.trans_id) ' +
+    'WHERE com.usr_id = ?';
+
+const GET_ALL_ITEMS = 
+    'SELECT item.item_cantidad AS cantidad, item.item_preciou AS precio, ' +
+    'lib.titulo AS titulo, tipoe.tipo_descripcion AS descripcion ' +
+    'FROM item_compra as item ' +
+    'INNER JOIN ejemplares AS ejem ON (item.ejemplares_id = ejem.ejem_id) ' +
+    'INNER JOIN libros AS lib ON (ejem.libro_id = lib.lib_id) ' +
+    'INNER JOIN tipoejemplares AS tipoe ON (ejem.tipo_id = tipoe.tipo_id) ' +
+    'WHERE item.compras_id = ?';
+
+const FINALIZAR_COMPRA = 'CALL proc_finalizar_compra(?, ?)';
 
 class Compra {
     constructor({ id = 0, verif = 0, forma = 'Debito', metodo = 'PayPal', estado = 'Shopping', usr_id = null, ses_id = null }) {
@@ -88,6 +119,18 @@ Compra.lastByUser = (user_id) => {
     })
 }
 
+Compra.finalizar = (usr_id, ses_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(FINALIZAR_COMPRA, [usr_id, ses_id], (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        });
+    });
+}
+
 Compra.getAllByUser = (user_id) => {
     return new Promise((resolve, reject) => {
         sql.query(GETALLBYUSER, [user_id], (err, res) => {
@@ -95,6 +138,30 @@ Compra.getAllByUser = (user_id) => {
                 resolve(res);
             } else {
                 resolve(-1);
+            }
+        });
+    });
+}
+
+Compra.getAllByUserComplete = (usr_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(GET_ALL_BY_USER_COMPLETE, usr_id, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        });
+    });
+}
+
+Compra.getItems = (comp_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(GET_ALL_ITEMS, comp_id, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
             }
         });
     });

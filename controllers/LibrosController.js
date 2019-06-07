@@ -33,10 +33,18 @@ exports.formEditar = async (req, res) => {
     var eds = await getEds();
     var auts = await getAuts();
     var gens = await getGens();
-    var libro = await getLibro(req.params.libroId);
+
+    let libro = await Libro.getLibroById(req.params.libroId);
+    libro = libro[0];
+    if (libro == null) {
+        return res.send("BAD");
+    }
+    
     libro.fecha_pub = dateFormat(libro.fecha_pub, "yyyy-mm-dd");
-    if (libro.imgdata !== 'undefined' && libro.imgdata !== null)
-        libro.imgdata = convertToBase64(libro.imgdata);
+
+    let imgs = await Imagen.getImagesOfLibroID(req.params.libroId);
+
+
     res.render('libro/editView',
         {
             title: 'Editar libro', editoriales: eds, autores: auts,
@@ -129,7 +137,7 @@ exports.get_a_libro = async function (req, res) {
 
     if (libro == null)
         return res.send("BAD");
-    
+
 
     let imgs = await Imagen.getImagesOfLibroID(req.params.libroId);
     if (imgs.length > 0) {
@@ -188,12 +196,12 @@ exports.delete_form = async (req, res) => {
     }
 
 
-    res.render('libro/deleteView', {title: 'alerta', libro: mLibro[0], imagenes: imgs});
+    res.render('libro/deleteView', { title: 'alerta', libro: mLibro[0], imagenes: imgs });
 }
 
 exports.delete_a_libro = async (req, res) => {
     let lib_id = req.body.lib_id;
-    
+
     var result = await Libro.remove(lib_id).catch((reason) => {
         console.log(reason);
     });

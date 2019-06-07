@@ -14,8 +14,6 @@ block fullpageContent
     div(class="container " )
       div(class="row text-center")
         each libro in libros
-
-        
           div(class="col-lg-3 col-md-6 mb-5")
             div(class="card ")
               if (libro.imagenes != null)
@@ -48,5 +46,4 @@ block fullpageContent
                 h4(class="card-title" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 400px;") !{libro.titulo}
                 p(class="card-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 400px;") !{libro.descripcion}
               div(class="card-footer")
-                a(href="#" class="btn btn-success btn-sm") Comprar
-                a(href="#" class="btn btn-outline-dark btn-sm") Carrito
+                a(href="/libros/d/"+ libro.lib_id, class="btn btn-success btn-sm") Ver

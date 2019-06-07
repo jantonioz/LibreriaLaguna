@@ -5,12 +5,14 @@ const moment = require('moment');
 const requestIP = require('request-ip');
 const utils = require("./Utils");
 const Rol = require('../models/rol');
+const Ejemplar = require('../models/ejemplar');
+const Item = require('../models/item_compra');
 
 exports.formFnac = async (req, res) => {
     let usuario = await Usuario.getUserById(req.session.user.usr_id);
     let fnac = moment(usuario.usr_fnac);
-    res.render('usuario/fnacEdit', 
-    { nombre: usuario.usr_nombre, fnac: fnac.format('YYYY-MM-DD'), usr_id : req.session.user.usr_id });
+    res.render('usuario/fnacEdit',
+        { nombre: usuario.usr_nombre, fnac: fnac.format('YYYY-MM-DD'), usr_id: req.session.user.usr_id });
 }
 
 exports.changeFnac = async (req, res) => {
@@ -248,10 +250,13 @@ exports.create_usr = async function (req, res) {
     var password = req.body.password;
     var fecha_nacimiento = req.body.fecha_nacimiento;
 
-    if (!nombre || !apellidos || !email || !username || !password || !fecha_nacimiento)
+    if (!nombre || !apellidos || !email || !username || !password || !fecha_nacimiento) {
         return res.status(400).send({ error: true, message: "ERROR AL CAPTURAR DATOS" });
+    }
 
-    let usuario = new Usuario(nombre, apellidos, email, username, password, fecha_nacimiento, null, 4, 1);
+    let tempDir = null;
+    let normalUser_id = 4;
+    let usuario = new Usuario(nombre, apellidos, email, username, password, fecha_nacimiento, tempDir, normalUser_id, 1);
     let result = usuario.save();
     if (!result)
         res.json(err);
@@ -326,6 +331,29 @@ exports.logout = (req, res) => {
     }
 }
 
-exports.addCarrito = (req, res) => {
+exports.addCarrito = async (req, res) => {
+    let ejemplar_id = req.body.ejemplar;
+    console.log(ejemplar_id);
+    let cantidad = req.body.cantidad;
+    let usr_id = req.session.user.usr_id;
+    let sid = req.session.user.ses_id;
 
+    // OBTENER CARRITO DEL USUARIO
+    let carrito_id = await Usuario.getCarrito(usr_id, sid);
+
+    // OBTENER EJEMPLAR
+    let ejem = await Ejemplar.getById(ejemplar_id).catch((reason) => {
+        console.log(reason);
+    });
+    console.log(carrito_id);
+    console.log(ejem);
+
+    if (carrito_id && ejem) {
+        // AGREGAR ejemplar a item compra
+        let item = new Item(cantidad, ejem.ejem_precio, ejemplar_id, carrito_id, sid);
+        let result = await item.save();
+        console.log(result);
+        res.redirect('/cuenta');
+    }
+    res.redirect('/');
 }

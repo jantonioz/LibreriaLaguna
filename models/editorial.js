@@ -109,4 +109,17 @@ Editorial.booksBy = (ed_id, result) => {
     });
 }
 
+
+Editorial.getAll = () => {
+    return new Promise((resolve, reject) => {
+        sql.query('SELECT * FROM editoriales LIMIT 5', (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        });
+    });
+}
+
 module.exports = Editorial;

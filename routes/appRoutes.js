@@ -12,7 +12,7 @@ const utils = require("../controllers/Utils");
 const lote = require("../controllers/LotesController");
 const middleware = require('../middleware/middleware');
 const mTipoE = require('../models/tipo_ejemplar');
-
+const compras = require('../controllers/ComprasController');
 
 /* var stockLibro = require("../models/libro"); */
 
@@ -77,7 +77,6 @@ var checkAdmin = (req, res, next) => {
 
     
     if (rolIs(req, 'sysadmin')) {
-        res.locals.isAdmin = '1';
         next();
     }
 }
@@ -94,7 +93,6 @@ var checkProv = (req, res, next) => {
     }
 
     if (rolIs(req, 'stockadmin') || rolIs('sysadmin')) {
-        res.locals.isAdmin = true;
         next();
     }
 }
@@ -113,7 +111,6 @@ var checkBookAdmin = (req, res, next) => {
     
     if (rolIs(req, 'bookadmin') || rolIs(req, 'sysadmin')) {
         next();
-        res.locals.isAdmin = true;
     }
 }
 
@@ -140,6 +137,12 @@ router.get('/cuenta', redirectLogin, usuario.userInfo);
 router.get('/admin/add', checkAdmin, usuario.getRegister);
 router.post('/addCarrito', redirectLogin, usuario.addCarrito);
 
+
+// ===== COMPRAS =====
+router.get('/compras', redirectLogin, compras.listAll);
+router.post('/compra/finalizar', redirectLogin, compras.finalizar);
+
+// ===== CUENTA =====
 router.get('/cuenta/password', redirectLogin, usuario.formPassword);
 router.post('/cuenta/password', redirectLogin, usuario.changePassword);
 router.get('/cuenta/username', redirectLogin, usuario.formUsername);
@@ -150,9 +153,9 @@ router.get('/cuenta/email', redirectLogin, usuario.formEmail);
 router.post('/cuenta/email', redirectLogin, usuario.changeEmail);
 router.get('/cuenta/fnac', redirectLogin, usuario.formFnac);
 router.post('/cuenta/fnac', redirectLogin, usuario.changeFnac);
-
 router.get('/cuenta/direccion', redirectLogin, usuario.formDireccion);
 router.post('/cuenta/direccion', redirectLogin, usuario.changeDir);
+
 
 // ==== AUTORES ====
 router.get('/autores/', autoMiddleware, autor.list_all_authors);

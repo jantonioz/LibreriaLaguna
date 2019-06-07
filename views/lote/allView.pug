@@ -4,5 +4,5 @@ extends ../layout
 block content
     each lote in lotes
         h1
-            a(href="/lotes/d/" + lote.lot_id ) !{lote}
-        small= 'Proveedor: ' + lote.proveedor_id + 	" \u2022 " + lote.lot_fcreacion
+            a(href="/lotes/d/" + lote.lot_id ) !{lote.lote_descripcion}
+        small= 'Proveedor: ' + lote.proveedor_id + 	" \u2022 " + lote.fentrega

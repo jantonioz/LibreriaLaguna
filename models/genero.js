@@ -6,7 +6,7 @@ const imagenLibro = require('./imagen_libro');
 
 
 const INSERT = 'INSERT INTO Generos(gen_nombre, gen_descripcion, ses_id, created_at, updated_at) VALUES(?, ?, ?, NOW(), NOW())';
-const SELECT_ALL = 'SELECT * FROM Generos ';
+const SELECT_ALL = 'SELECT * FROM Generos LIMIT 5';
 const filterByName = 'WHERE gen_nombre like ?';
 const filterById = 'WHERE gen_id = ?';
 const UPDATE = 'UPDATE Generos SET gen_nombre = ?, gen_descripcion = ? WHERE gen_id = ?';

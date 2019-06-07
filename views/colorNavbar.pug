@@ -7,20 +7,71 @@ div(class="collapse navbar-collapse" id="navbarSupportedContent")
         li(class="nav-item " + activeInicio )
             a(class="nav-link" href="/") Inicio 
                 span(class="sr-only") (Current)
-        li(class="nav-item " + [activeLibros] )
-            a(class="nav-link" href="/libros") Libros
+
+        if (sysadmin || bookadmin)
+            li.nav-item.dropdown
+                a.nav-link.dropdown-toggle(href="#", id="nbDdLibros", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Libros
+                .dropdown-menu(aria-labelledby="nbDdLibros") 
+                    a.dropdown-item(href="/libros") Ver libros
+                    .dropdown-divider
+                    a.dropdown-item(href="/libros/crear") Crear libros
+        else
+            li(class="nav-item " + [activeLibros] )
+                a(class="nav-link" href="/libros") Libros
+
         li(class="nav-item dropdown")
             a(class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Generos
             div(class="dropdown-menu" aria-labelledby="navbarDropdown")
+                a.dropdown-item(href="/generos") Ver generos
+                .dropdown-divider 
                 if (generos)
                     each genero in generos
                         a(class="dropdown-item", href="/generos/d/" + genero.gen_id) !{genero.gen_nombre}
+                if (sysadmin)
+                    .dropdown-divider 
+                    a.dropdown-item(href="/generos/crear") Crear genero
+
+        li(class="nav-item dropdown")
+            a(class="nav-link dropdown-toggle" href="#" id="navbarDropdownEds" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Editoriales
+            div(class="dropdown-menu" aria-labelledby="navbarDropdownEds")
+                a.dropdown-item(href="/editoriales") Ver editoriales
+                .dropdown-divider 
+                if (editoriales)
+                    each editorial in editoriales
+                        a(class="dropdown-item", href="/editorial/d/" + editorial.ed_id) !{editorial.ed_nombre}
+                if (sysadmin)
+                    .dropdown-divider 
+                    a.dropdown-item(href="/editorial/registrar") Crear editorial
+
+        li.nav-item.dropdown
+                a.nav-link.dropdown-toggle(href="#", id="nbDdUsuarios", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Autores
+                .dropdown-menu(aria-labelledby="nbDdUsuarios") 
+                    a.dropdown-item(href="/autores") Ver autores
+                    if (sysadmin)
+                        .dropdown-divider
+                        a.dropdown-item(href="/autores/crear") Crear autores
+
+        if (stockadmin || sysadmin) 
+            li.nav-item.dropdown
+                a.nav-link.dropdown-toggle(href="#", id="nbDdLotes", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Lotes
+                .dropdown-menu(aria-labelledby="nbDdLotes")
+                    a.dropdown-item(href="/lotes") Ver lotes
+                    .dropdown-divider 
+                    a.dropdown-item(href="/lotes/add") Agregar Lote
+        if (sysadmin)
+            li.nav-item.dropdown
+                a.nav-link.dropdown-toggle(href="#", id="nbDdUsuarios", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Usuarios
+                .dropdown-menu(aria-labelledby="nbDdUsuarios") 
+                    a.dropdown-item(href="/usuarios/admin/list") Ver usuarios
+                    .dropdown-divider
+                    a.dropdown-item(href="/usuarios/admin/register") Registrar administradores
+                
         
 div.navbar-collapse.collapse.w-100.order-3.dual-collapse2
     ul.navbar-nav.ml-auto
-        if (nombreUsuario) 
+        if (nombreUsuario || nombre) 
             li.nav-item.dropdown
-                a.text-white(class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") !{nombreUsuario} 
+                a.text-white(class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") !{nombreUsuario} !{nombre}
                 div(class="dropdown-menu" aria-labelledby="navbarDropdown")
                     a(class="dropdown-item" href="/cuenta") Cuenta
                     a(class="dropdown-item" href="/logout") Logout

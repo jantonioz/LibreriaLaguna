@@ -17,6 +17,7 @@ CREATE TABLE Libros (
   created_at   timestamp NOT NULL, 
   ses_id       int(10) NOT NULL, 
   PRIMARY KEY (lib_id));
+
 CREATE TABLE Proveedores (
   prov_id      int(10) NOT NULL AUTO_INCREMENT, 
   prov_nombre  varchar(255) NOT NULL, 
@@ -26,6 +27,7 @@ CREATE TABLE Proveedores (
   created_at   timestamp NOT NULL, 
   ses_id       int(10) NOT NULL, 
   PRIMARY KEY (prov_id));
+
 CREATE TABLE Lotes (
   lot_id           int(10) NOT NULL AUTO_INCREMENT, 
   lote_descripcion varchar(50) NOT NULL, 
@@ -35,6 +37,7 @@ CREATE TABLE Lotes (
   created_at       timestamp NOT NULL, 
   ses_id           int(10) NOT NULL, 
   PRIMARY KEY (lot_id));
+
 CREATE TABLE Ejemplares (
   ejem_id       int(10) NOT NULL AUTO_INCREMENT, 
   ejem_cantidad int(100) NOT NULL, 
@@ -47,6 +50,7 @@ CREATE TABLE Ejemplares (
   ses_id        int(10) NOT NULL, 
   tipo_id       int(10) NOT NULL, 
   PRIMARY KEY (ejem_id));
+
 CREATE TABLE Usuarios (
   usr_id         int(10) NOT NULL AUTO_INCREMENT, 
   usr_nombre     varchar(50) NOT NULL, 
@@ -57,12 +61,13 @@ CREATE TABLE Usuarios (
   usr_password   varchar(255) NOT NULL, 
   usr_TipoInicio varchar(255) NOT NULL, 
   usr_fnac       date NOT NULL, 
-  direccion_id   int(10) NULL,  /* NULLABLE */
+  direccion_id   int(10) NULL,
   updated_at     timestamp NULL, 
   created_at     timestamp NOT NULL, 
   ses_id         int(10) NOT NULL, 
   roles_id       int(10) NOT NULL, 
   PRIMARY KEY (usr_id));
+
 CREATE TABLE Direcciones (
   dir_id      int(10) NOT NULL AUTO_INCREMENT, 
   dir_calle   varchar(255) NOT NULL, 
@@ -75,19 +80,20 @@ CREATE TABLE Direcciones (
   created_at  timestamp NOT NULL, 
   ses_id      int(10) NOT NULL, 
   PRIMARY KEY (dir_id));
+
 CREATE TABLE Compras (
   comp_id     int(10) NOT NULL AUTO_INCREMENT, 
   comp_verif  tinyint(1) NOT NULL, 
-  comp_fpago  varchar(255) NOT NULL, 
-  comp_mpago  varchar(50) NOT NULL, 
-  com_estado  varchar(255) NOT NULL, 
+  comp_fpago  varchar(255) NULL, 
+  comp_mpago  varchar(50) NULL, 
+  com_estado  varchar(255) NULL, 
   usr_id      int(10) NOT NULL, 
-  trans_id    int(10) NOT NULL, 
-  empleado_id int(10) NOT NULL, 
+  trans_id    int(10) NULL, 
   updated_at  timestamp NULL, 
   created_at  timestamp NOT NULL, 
   ses_id      int(10) NOT NULL, 
   PRIMARY KEY (comp_id));
+
 CREATE TABLE Imagen_libro (
   img_id       int(10) NOT NULL AUTO_INCREMENT, 
   img_path     varchar(255) NOT NULL, 
@@ -97,6 +103,7 @@ CREATE TABLE Imagen_libro (
   libro_id     int(10) NOT NULL, 
   ses_id       int(10) NOT NULL, 
   PRIMARY KEY (img_id));
+
 CREATE TABLE Editoriales (
   ed_id      int(10) NOT NULL AUTO_INCREMENT, 
   ed_nombre  varchar(50) NOT NULL, 
@@ -105,15 +112,17 @@ CREATE TABLE Editoriales (
   created_at timestamp NOT NULL, 
   ses_id     int(10) NOT NULL, 
   PRIMARY KEY (ed_id));
+
 CREATE TABLE Autores (
   aut_id        int(10) NOT NULL AUTO_INCREMENT, 
   aut_nombre    varchar(50) NOT NULL, 
   aut_fecnac    date NOT NULL, 
   aut_biografia text NOT NULL, 
-  ses_id        int(10), -- NO ESTABA...
+  ses_id        int(10),
   updated_at    timestamp NULL, 
   created_at    timestamp NOT NULL, 
   PRIMARY KEY (aut_id));
+
 CREATE TABLE Autor_Libro (
   ID         int(10) NOT NULL, 
   autor_id   int(10) NOT NULL, 
@@ -124,6 +133,7 @@ CREATE TABLE Autor_Libro (
   PRIMARY KEY (ID, 
   autor_id, 
   libro_id));
+
 CREATE TABLE Generos (
   gen_id          int(10) NOT NULL AUTO_INCREMENT, 
   gen_nombre      varchar(50) NOT NULL UNIQUE, 
@@ -132,6 +142,7 @@ CREATE TABLE Generos (
   created_at      timestamp NOT NULL, 
   ses_id          int(10) NOT NULL, 
   PRIMARY KEY (gen_id));
+
 CREATE TABLE Item_compra (
   item_id       int(10) NOT NULL AUTO_INCREMENT, 
   item_cantidad int(11) NOT NULL, 
@@ -142,14 +153,15 @@ CREATE TABLE Item_compra (
   updated_at    timestamp NULL, 
   ses_id        int(10) NOT NULL, 
   PRIMARY KEY (item_id));
+
 CREATE TABLE Transporte (
   trans_id           int(10) NOT NULL AUTO_INCREMENT, 
-  envio_numero_track varchar(30) NOT NULL, 
+  trans_nombre       varchar(30) NOT NULL, 
   updated_at         timestamp NULL, 
   created_at         timestamp NOT NULL, 
-  compras_id         int(10) NOT NULL, 
   ses_id             int(10) NOT NULL, 
   PRIMARY KEY (trans_id));
+
 CREATE TABLE Sesiones (
   ses_id         int(10) NOT NULL AUTO_INCREMENT, 
   ses_token      char(32) NOT NULL, 
@@ -161,6 +173,7 @@ CREATE TABLE Sesiones (
   created_at    timestamp NOT NULL, 
   updated_at    timestamp NULL, 
   PRIMARY KEY (ses_id));
+
 CREATE TABLE Roles (
   rol_id     int(10) NOT NULL AUTO_INCREMENT, 
   rol_nombre varchar(50) NOT NULL, 
@@ -168,6 +181,7 @@ CREATE TABLE Roles (
   created_at    timestamp NOT NULL, 
   updated_at    timestamp NULL, 
   PRIMARY KEY (rol_id));
+
 CREATE TABLE Permisos (
   perm_id       int(10) NOT NULL AUTO_INCREMENT, 
   perm_permisos varchar(20), 
@@ -176,6 +190,7 @@ CREATE TABLE Permisos (
   created_at    timestamp NOT NULL, 
   updated_at    timestamp NULL, 
   PRIMARY KEY (perm_id));
+
 CREATE TABLE TipoEjemplares (
   tipo_id          int(10) NOT NULL AUTO_INCREMENT, 
   tipo_descripcion varchar(50) NOT NULL, 
@@ -241,6 +256,8 @@ INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALU
 INSERT INTO roles (rol_nombre, ses_id, created_at, updated_at) VALUES('NormalUser', 1, NOW(), NOW());
 INSERT INTO Permisos(perm_permisos, rol_id, ses_id, created_at, updated_at) VALUE ('00000000077700000005', 4, 1, NOW(), NOW());
 
+INSERT INTO Transporte (trans_id, trans_nombre, updated_at, created_at, ses_id) VALUES (1, 'DHL', NOW(), NOW(), 1);
+INSERT INTO Transporte (trans_id, trans_nombre, updated_at, created_at, ses_id) VALUES (2, 'FedEx', NOW(), NOW(), 1);
 
 
 INSERT INTO editoriales (ses_id, ed_nombre, ed_correo, updated_at, created_at) VALUES
@@ -278,6 +295,37 @@ BEGIN
   RETURN insertId;
 END|
 
+CREATE FUNCTION getCarrito_orAdd(usuario_id INT(10), sesion_id INT(10))
+RETURNS INT
+BEGIN 
+  DECLARE carritoId INT;
+
+  SELECT comp_id INTO carritoId 
+  FROM compras 
+  WHERE (usr_id = usuario_id) 
+  AND (comp_verif = 0)
+  AND (com_estado = 'carrito')
+  ORDER BY updated_at DESC
+  LIMIT 1;
+
+  IF (carritoId IS NOT NULL) THEN
+    RETURN carritoId;
+  ELSE
+    INSERT INTO Compras(comp_verif, comp_fpago, comp_mpago, com_estado, usr_id, trans_id, ses_id, updated_at, created_at) 
+    VALUES (0, 'Tarjeta', 'Tarjeta Debito', 'carrito', usuario_id, 1, sesion_id, NOW(), NOW());
+
+    SELECT comp_id INTO carritoId 
+    FROM compras 
+    WHERE (usr_id = usuario_id) 
+    AND (comp_verif = 0)
+    AND (com_estado = 'carrito')
+    ORDER BY updated_at DESC
+    LIMIT 1;
+
+  END IF;
+  RETURN carritoId;
+END |
+
 
 /* PROCEDURES */
 CREATE PROCEDURE registerSesion(token CHAR(32), ip VARCHAR(15), fin DATETIME, os VARCHAR (20), u_id INT) 
@@ -306,6 +354,43 @@ BEGIN
   	SIGNAL SQLSTATE '45000';
   END IF;
 END|
+
+CREATE PROCEDURE proc_finalizar_compra(usuario_id INT, sesion_id INT) 
+BEGIN
+  DECLARE carritoId INT;
+
+  SELECT comp_id INTO carritoId 
+  FROM compras 
+  WHERE (usr_id = usuario_id) 
+  AND (comp_verif = 0)
+  AND (com_estado = 'carrito')
+  ORDER BY updated_at DESC
+  LIMIT 1;
+
+  IF (carritoId IS NOT NULL) THEN
+    UPDATE compras SET comp_verif = 1, com_estado = 'finalizado', ses_id = sesion_id,
+    updated_at = NOW()
+    WHERE (comp_id = carritoId) 
+    AND (usr_id = usuario_id);
+  END IF;
+END |
+
+DELIMITER |
+CREATE TRIGGER trg_fin_compra
+AFTER UPDATE ON Compras FOR EACH ROW
+BEGIN
+  /* COMPRA FINALIZADA */
+  IF (NEW.comp_verif = 1 AND NEW.com_estado = 'finalizado') THEN
+    /* PARA CADA ITEM EN LA COMPRA RESTARLE LA CANTIDAD AL EJEMPLAR RESPECTIVO */
+    UPDATE Ejemplares AS ejem
+    INNER JOIN item_compra AS item ON(item.ejemplares_id = ejem.ejem_id)
+    INNER JOIN compras AS comp ON (item.compras_id = comp.comp_id)
+    SET ejem.ejem_cantidad = (ejem.ejem_cantidad - item.item_cantidad),
+    ejem.updated_at = NOW()
+    WHERE (comp.comp_id = NEW.comp_id);
+  END IF;
+END |
+
 
 -- CREATE TRIGGER trg_compra
 -- AFTER UPDATE ON compras

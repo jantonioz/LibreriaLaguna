@@ -10,14 +10,13 @@ const Tipos = require('../models/tipo_ejemplar');
 exports.viewAll = async (req, res) => {
 
     var lotes = await Lote.listAll();
-    
-    res.render('lote/allView', {lotes: lotes, isAdmin: Utils.isAdmin(req), nombreUsuario: Utils.getNombreUsuario(req)});
+    res.render('lote/allView', {lotes: lotes, nombreUsuario: Utils.getNombreUsuario(req)});
 }
 
 exports.detalleView = async (req, res) => {
     let lote = await Lote.get(req.params.id);
 
-    res.render('lote/detalleView', {isAdmin: Utils.isAdmin(req), nombreUsuario: Utils.getNombreUsuario(req)});
+    res.render('lote/detalleView', {lote: lote[0], nombreUsuario: Utils.getNombreUsuario(req)});
 }
 
 exports.addView = async (req, res) => {

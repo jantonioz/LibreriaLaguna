@@ -6,7 +6,7 @@ const imagenLibro = require('./imagen_libro');
 
 
 
-const selectors = 'lib.lib_id, lib.titulo, lib.orig_titulo, lib.isbn,lib.paginas, lib.fecha_pub, ' +
+const selectors = 'lib.lib_id, lib.titulo, lib.orig_titulo, lib.isbn,lib.paginas, lib.fecha_pub AS fecha_pub, ' +
     'lib.descripcion, gen.gen_nombre AS genero, aut.aut_nombre AS autor, ' +
     'aut.aut_id AS autor_id, gen.gen_id AS gen_id, lib.editorial_id, ed.ed_nombre AS editorial ';
 const imgSelectors = ', img.img_path AS path,' +

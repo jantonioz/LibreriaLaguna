@@ -8,11 +8,13 @@ const INSERT =
 
 const SELECTBYLIBRO = 
     'SELECT lib.titulo AS titulo, lib.descripcion AS descripcion, lib.fecha_pub AS publicacion, ' +
-    'ejem.ejem_cantidad AS cantidad, ejem.ejem_precio AS precio, ' +
+    'ejem.ejem_cantidad AS cantidad, ejem.ejem_precio AS precio, ejem.ejem_id AS ejem_id, ' +
     '(SELECT prov.prov_nombre FROM proveedores AS prov where prov.prov_id = (SELECT lot.proveedor_id FROM lotes AS lot where lot.lot_id = ejem.lote_id)) AS proveedor '+
     'FROM ejemplares AS ejem ' +
     'INNER JOIN libros AS lib ON (lib.lib_id = ejem.libro_id) ' +
     'WHERE ejem.libro_id = ?';
+
+const SELECT_BY_ID = 'SELECT * FROM ejemplares WHERE ejem_id = ?';
 
 
 class Ejemplar {
@@ -40,6 +42,19 @@ class Ejemplar {
                 });
         });
     }
+}
+
+Ejemplar.getById = (ejem_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(SELECT_BY_ID, ejem_id, (err, res) => {
+            if (!err) {
+                console.log("EJEM GETBYID: ", res);
+                resolve(res[0]);
+            } else {
+                reject(err);
+            }
+        });
+    });
 }
 
 Ejemplar.getAllByLibro = (libroId) => {

@@ -69,6 +69,8 @@ const VerifyAdmin = 'SELECT * FROM usuarios WHERE '
     + fields.password + assign + ' AND '
     + '';
 
+const GET_CARRITO = "SELECT getCarrito_orAdd(?, ?) AS 'carrito_id'";
+
 class Usuario {
     constructor(nombre, apellidos, email, username, password, fnac, direccion_id, rol_id, ses_id, id = 0, permisos = '', rol = '') {
         this.id = id;
@@ -160,6 +162,18 @@ class Usuario {
             });
         });
     }
+}
+
+Usuario.getCarrito = (usr_id, ses_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(GET_CARRITO, [usr_id, ses_id], (err, res) => {
+            if (!err) {
+                resolve(res[0].carrito_id);
+            } else {
+                reject(err);
+            }
+        });
+    });
 }
 
 Usuario.getCryptoPassword = (usr_username) => {
