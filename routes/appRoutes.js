@@ -131,16 +131,19 @@ router.get('/login', redirectHome, usuario.formLogin);
 router.post('/login', redirectHome, usuario.login);
 router.get('/logout', redirectLogin, usuario.logout);
 router.get('/registro', redirectHome, usuario.getRegister);
+router.post('/registro', redirectHome, usuario.create_usr)
 router.get('/usuarios/admin/register', checkAdmin, usuario.getRegisterWAdmin);
 router.post('/usuarios/admin/register', checkAdmin, usuario.create_usrWAdmin);
 router.get('/cuenta', redirectLogin, usuario.userInfo);
-router.get('/admin/add', checkAdmin, usuario.getRegister);
 router.post('/addCarrito', redirectLogin, usuario.addCarrito);
-
+router.get('/usuarios/admin/list', checkAdmin, usuario.list_all);
+router.post('/usuarios/admin/delete', checkAdmin, usuario.delete);
 
 // ===== COMPRAS =====
 router.get('/compras', redirectLogin, compras.listAll);
 router.post('/compra/finalizar', redirectLogin, compras.finalizar);
+router.get('/compras/e/:compId', redirectLogin, compras.formEditar);
+router.post('/compras/edit', redirectLogin, compras.changeCompra);
 
 // ===== CUENTA =====
 router.get('/cuenta/password', redirectLogin, usuario.formPassword);

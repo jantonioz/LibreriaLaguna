@@ -7,6 +7,32 @@ const utils = require("./Utils");
 const Rol = require('../models/rol');
 const Ejemplar = require('../models/ejemplar');
 const Item = require('../models/item_compra');
+const paginate = require('express-paginate');
+
+exports.delete = async (req, res) => {
+    let usr_id = req.body.to_delete_usr_id;
+
+    let result = await Usuario.deleteUser(usr_id);
+
+    if (result) {
+        res.redirect('/usuarios/admin/list');
+    }
+}
+
+exports.list_all = async (req, res) => {
+    let usuarios = await Usuario.getAllUsuarios();
+
+    let itemCount = usuarios.length;
+    let pageCount = Math.ceil(itemCount / req.query.limit);
+
+    usuarios = usuarios.slice(req.skip, req.skip + req.query.limit);
+
+    res.render('usuario/usuariosList', {
+        title: 'Usuarios', usuarios: usuarios,  pageCount, itemCount,
+        pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
+        actualPage: req.query.page, nombreUsuario: utils.getNombreUsuario(req)
+    });
+}
 
 exports.formFnac = async (req, res) => {
     let usuario = await Usuario.getUserById(req.session.user.usr_id);
@@ -163,11 +189,7 @@ exports.changePassword = async (req, res) => {
 }
 
 exports.list_all_users = function (req, res) {
-    Usuario.getAllUsuarios(function (err, usr) {
-        if (err)
-            res.send(err)
-        res.render('usuario/lista', { nombreUsuario: utils.getNombreUsuario(req) });
-    })
+
 }
 
 exports.formLogin = (req, res) => {

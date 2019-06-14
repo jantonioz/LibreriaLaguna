@@ -60,7 +60,7 @@ const update = 'UPDATE libros SET ' +
     fields.descripcion + assignTo + ', ' +
     fields.publicacion + assignTo + ', ' +
     fields.genero_id + assignTo + ', ' +
-    fields.editorial_id + assignTo +
+    fields.editorial_id + assignTo + ', ' +
     'updated_at = NOW() ' +
     'WHERE lib_id' + assignTo;
 

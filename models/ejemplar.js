@@ -6,15 +6,31 @@ const INSERT =
     'INSERT INTO ejemplares(ejem_cantidad, ejem_precio, sku, libro_id, lote_id, tipo_id, ses_id, created_at, updated_at)' +
     ' VALUES(?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
 
-const SELECTBYLIBRO = 
+const SELECTBYLIBRO =
     'SELECT lib.titulo AS titulo, lib.descripcion AS descripcion, lib.fecha_pub AS publicacion, ' +
     'ejem.ejem_cantidad AS cantidad, ejem.ejem_precio AS precio, ejem.ejem_id AS ejem_id, ' +
-    '(SELECT prov.prov_nombre FROM proveedores AS prov where prov.prov_id = (SELECT lot.proveedor_id FROM lotes AS lot where lot.lot_id = ejem.lote_id)) AS proveedor '+
+    '(SELECT prov.prov_nombre FROM proveedores AS prov where prov.prov_id = (SELECT lot.proveedor_id FROM lotes AS lot where lot.lot_id = ejem.lote_id)) AS proveedor ' +
     'FROM ejemplares AS ejem ' +
     'INNER JOIN libros AS lib ON (lib.lib_id = ejem.libro_id) ' +
     'WHERE ejem.libro_id = ?';
 
+const SELECTALL_WLIBRO =
+    'SELECT lib.titulo AS titulo, lib.descripcion AS descripcion, lib.fecha_pub AS publicacion, ' +
+    'ejem.ejem_cantidad AS cantidad, ejem.ejem_precio AS precio, ejem.ejem_id AS ejem_id, tipoe.tipo_descripcion AS tipo_desc,' +
+    '(SELECT prov.prov_nombre FROM proveedores AS prov where prov.prov_id = (SELECT lot.proveedor_id FROM lotes AS lot where lot.lot_id = ejem.lote_id)) AS proveedor ' +
+    'FROM ejemplares AS ejem ' +
+    'INNER JOIN tipoejemplares AS tipoe ON (ejem.tipo_id = tipoe.tipo_id) ' +
+    'INNER JOIN libros AS lib ON (lib.lib_id = ejem.libro_id) ';
+
 const SELECT_BY_ID = 'SELECT * FROM ejemplares WHERE ejem_id = ?';
+
+const SELECT_BY_LOTE = 'SELECT ejem.ejem_id AS ejem_id, ejem.ejem_cantidad AS ejem_cantidad, ejem.ejem_precio AS ejem_precio, ' +
+    'ejem.sku AS sku, ejem.libro_id AS libro_id, ejem.lote_id AS lote_id, tipo.tipo_descripcion AS tipo, ' +
+    'lib.titulo AS libro ' +
+    'FROM ejemplares as ejem ' +
+    'INNER JOIN libros as lib ON (lib.lib_id = ejem.libro_id) ' +
+    'INNER JOIN tipoejemplares AS tipo ON (ejem.tipo_id = tipo.tipo_id) ' +
+    'WHERE ejem.lote_id = ?';
 
 
 class Ejemplar {
@@ -44,6 +60,18 @@ class Ejemplar {
     }
 }
 
+Ejemplar.getByLote = (lote_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(SELECT_BY_LOTE, lote_id, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        });
+    });
+}
+
 Ejemplar.getById = (ejem_id) => {
     return new Promise((resolve, reject) => {
         sql.query(SELECT_BY_ID, ejem_id, (err, res) => {
@@ -67,6 +95,18 @@ Ejemplar.getAllByLibro = (libroId) => {
                 resolve(null);
             }
         });
+    });
+}
+
+Ejemplar.getAllWithLibro = () => {
+    return new Promise((resolve, reject) => {
+        sql.query(SELECTALL_WLIBRO, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        }); 
     });
 }
 

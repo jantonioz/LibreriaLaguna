@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+    table.table.table-hover
+        thead
+            tr 
+                th(scope="col") ID
+                th(scope="col") Nombres
+                th(scope="col") Email
+                th(scope="col") Username 
+                th(scope="col") Accion
+        tbody
+            each usuario in usuarios
+                tr  
+                    th(scope="row") !{usuario.usr_id}
+                    td !{usuario.usr_nombre}
+                    td !{usuario.usr_email}
+                    td !{usuario.usr_username}
+                    td 
+                        form(action="/usuarios/admin/delete", method="POST")
+                            input(type="hidden", value=usuario.usr_id, name="to_delete_usr_id")
+                            button(type="submit", class="btn btn-danger") Eliminar
+    include ../utils/paginate
+
+block scripts
+    script.
+        function fnc_delete(id) {
+            alert('Borrando ' + id);
+
+            $.ajax({
+                url: '/', 
+                type: 'POST', 
+                contentType: 'application/json', 
+                data: JSON.stringify({number:1})
+            });
+        }

@@ -1,0 +1,63 @@
+extends ../layout
+
+
+block content
+    h1 Editar compra
+    div.controls
+        form(role="form", action="/compras/edit", method="POST", autocomplete="off")
+            input(type="hidden", name="comp_id", value=compra.comp_id)
+            .form-label-group
+                input.form-control(type="text", id="fpago", name="fpago", placeholder="Forma de pago", autofocus, required, value=compra.comp_fpago)
+                label(for="fpago") Forma de pago
+
+            .form-label-group
+                input.form-control(type="text", id="mpago", name="mpago", placeholder="Método de pago", required, value=compra.comp_mpago)
+                label(for="mpago") Método de pago
+
+            .form-group.row
+                label.col.col-sm-2(for="transporte_id", class="col-auto") Transporte:
+                select.col.custom-select(name="transporte_id", required)
+                    option(selected) Selecciona un transporte
+                    if transportes != null
+                        each trans in transportes 
+                            option(value=trans.trans_id) !{trans.trans_nombre}
+
+            br
+            .row
+                .col-auto
+                    h4 Items
+                .col
+                    hr
+                    br
+
+            each item in items
+                input(type="hidden", name="item_id", value=item.item_id)
+                .form-group.row
+                    label.col.col-sm-2(for="eliminar", class="col-auto") Eliminar item? 
+                    select.col.custom-select(name="eliminar", required)
+                        option(value="false", selected) No
+                        option(value="true") Sí
+                        
+
+                .form-group.input-group
+                    .input-group-prepend
+                        span.input-group-text N
+                    input.form-control(type="text", id="ejem", name="cantidades", placeholder="Cantidad", value=item.cantidad)
+                    .input-group-append
+                        span.input-group-text 123
+
+                .form-group.input-group
+                    .input-group-prepend
+                        span.input-group-text $
+                    input.form-control(type="text", id="ejem", name="precios", placeholder="Precio", value=item.precio, readonly)                
+                
+                .form-group.row
+                    label.col.col-sm-2(for="ejemplar_id", class="col col-lg") Ejemplar:
+                    select.col.custom-select(name="ejemplar_id", required)
+                        if item.ejemplares != null
+                            each ejem in item.ejemplares 
+                                if (item.ejem_id == ejem.ejem_id)
+                                    option(value=ejem.ejem_id, selected) !{ejem.titulo} - !{ejem.tipo_desc} 
+                                option(value=ejem.ejem_id) !{ejem.titulo} - !{ejem.tipo_desc}
+
+            button(type="submit", class="btn btn-lg btn-primary btn-block") Guardar

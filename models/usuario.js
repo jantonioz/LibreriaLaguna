@@ -27,23 +27,23 @@ const update =
     + fields.fnac + assign
     + ' WHERE usr_id = ?';
 
-const UpdatePwd = 'UPDATE usuarios SET ' + 
+const UpdatePwd = 'UPDATE usuarios SET ' +
     fields.password + assign + ', updated_at = NOW() WHERE usr_id = ?';
 
-const UpdateUsrname = 'UPDATE usuarios SET ' + 
+const UpdateUsrname = 'UPDATE usuarios SET ' +
     fields.username + assign + ', updated_at = NOW() WHERE usr_id = ?';
 
-const UpdateNombre = 'UPDATE usuarios SET ' + 
+const UpdateNombre = 'UPDATE usuarios SET ' +
     fields.nombre + assign + comma +
     fields.apellidos + assign + ', updated_at = NOW() WHERE usr_id = ?';
 
-const UpdateEmail = 'UPDATE usuarios SET ' + 
+const UpdateEmail = 'UPDATE usuarios SET ' +
     fields.email + assign + ', updated_at = NOW() WHERE usr_id = ?';
 
-const UpdateFnac = 'UPDATE usuarios SET ' + 
+const UpdateFnac = 'UPDATE usuarios SET ' +
     fields.fnac + assign + ', updated_at = NOW() WHERE usr_id = ?';
 
-const UpdateDireccion = 'UPDATE usuarios SET ' + 
+const UpdateDireccion = 'UPDATE usuarios SET ' +
     fields.direccion + assign + comma + 'updated_at = NOW() WHERE usr_id = ?';
 
 const Delete = 'DELETE FROM Usuarios WHERE usr_id = ?';
@@ -200,6 +200,16 @@ Usuario.getUserById = function (usrId) {
     });
 }
 
+Usuario.deleteUser = (usr_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(Delete, usr_id, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else { reject(err); }
+        })
+    });
+}
+
 Usuario.getUserByUsername = function (usrname) {
     return new Promise((resolve, reject) => {
         sql.query("SELECT * FROM usuarios WHERE usr_username = ? LIMIT 1;", [usrname], function (err, res) {
@@ -213,14 +223,16 @@ Usuario.getUserByUsername = function (usrname) {
 }
 
 Usuario.getAllUsuarios = function getAllLibros(result) {
-    sql.query("SELECT * FROM usuarios", function (err, res) {
-        if (err) {
-            console.log("error: ", err);
-            result(null, err);
-        } else {
-            result(null, res);
-        }
-    })
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT * FROM usuarios", function (err, res) {
+            if (err) {
+                console.log("error: ", err);
+                reject(err);
+            } else {
+                resolve(res);
+            }
+        })
+    });
 }
 
 Usuario.updateFnac = (fnac, usr_id) => {

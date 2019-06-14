@@ -3,19 +3,9 @@
 const sql = require('./db.js');
 const ItemCompra = require('./item_compra');
 
-// comp_id    
-// comp_verif 
-// comp_fpago 
-// comp_mpago 
-// comp_estado 
-// usuario_id 
-// empleado_id
-// ses_id	  
-// updated_at 
-// created_at 
 
 const INSERT =
-    'INSERT INTO compras (comp_verif, comp_fpago, comp_mpago, comp_estado, usuario_id, ses_id, created_at, updated_at) ' +
+    'INSERT INTO compras (comp_verif, comp_fpago, comp_mpago, comp_estado, usr_id, ses_id, created_at, updated_at) ' +
     ' VALUES(?, ?, ?, ?, ?, ?, NOW(), NOW())';
 
 const UPDATE =
@@ -23,10 +13,13 @@ const UPDATE =
     'updated_at = NOW() WHERE comp_id = ?';
 
 const GETLASTBYUSER =
-    'SELECT * FROM compras WHERE usuario_id = ? ORDER BY updated_at DESC limit 1';
+    'SELECT * FROM compras WHERE usr_id = ? ORDER BY updated_at DESC limit 1';
 
 const GETALLBYUSER =
-    'SELECT * FROM compras WHERE usuario_id = ? ORDER BY updated_at DESC';
+    'SELECT * FROM compras WHERE usr_id = ? ORDER BY updated_at DESC';
+
+const GETTRANSPORTES = 
+    'SELECT * FROM transporte';
 
 
 // const GET_ALL_BY_USER_COMPLETE = 
@@ -49,8 +42,8 @@ const GET_ALL_BY_USER_COMPLETE =
     'WHERE com.usr_id = ?';
 
 const GET_ALL_ITEMS = 
-    'SELECT item.item_cantidad AS cantidad, item.item_preciou AS precio, ' +
-    'lib.titulo AS titulo, tipoe.tipo_descripcion AS descripcion ' +
+    'SELECT item.item_id AS item_id, item.item_cantidad AS cantidad, item.item_preciou AS precio, ' +
+    'lib.titulo AS titulo, tipoe.tipo_descripcion AS descripcion, ejem.ejem_id AS ejem_id ' +
     'FROM item_compra as item ' +
     'INNER JOIN ejemplares AS ejem ON (item.ejemplares_id = ejem.ejem_id) ' +
     'INNER JOIN libros AS lib ON (ejem.libro_id = lib.lib_id) ' +
@@ -58,6 +51,10 @@ const GET_ALL_ITEMS =
     'WHERE item.compras_id = ?';
 
 const FINALIZAR_COMPRA = 'CALL proc_finalizar_compra(?, ?)';
+
+const UPDATE_COMPRA = 'UPDATE compras SET comp_fpago = ?, comp_mpago = ?, trans_id = ? ' +
+    'WHERE comp_id = ?';
+
 
 class Compra {
     constructor({ id = 0, verif = 0, forma = 'Debito', metodo = 'PayPal', estado = 'Shopping', usr_id = null, ses_id = null }) {
@@ -107,13 +104,37 @@ class Compra {
     }
 }
 
+Compra.update = (fpago, mpago, trans_id, comp_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(UPDATE_COMPRA, [fpago, mpago, trans_id, comp_id], (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        });
+    });
+}
+
+Compra.getTransportes = () => {
+    return new Promise((resolve, reject) => {
+        sql.query(GETTRANSPORTES, (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        });
+    });
+}
+
 Compra.lastByUser = (user_id) => {
     return new Promise((resolve, reject) => {
         sql.query(GETLASTBYUSER, [user_id], (err, res) => {
             if (!err) {
-                resolve(res);
+                resolve(res[0]);
             } else {
-                resolve(-1);
+                reject(err);
             }
         })
     })

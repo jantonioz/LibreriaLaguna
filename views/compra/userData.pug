@@ -48,4 +48,4 @@ block content
                             form(action="/compra/finalizar", , method="POST")
                                 input(type="hidden", name="compra", value=compra.comp_id)
                                 button.btn.btn-success(type="submit") Finalizar
-                            a.btn.btn-primary.text-white(href="#") Editar
+                            a.btn.btn-primary.text-white(href="/compras/e/" + compra.comp_id) Editar

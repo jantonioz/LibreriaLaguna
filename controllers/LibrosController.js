@@ -165,8 +165,7 @@ exports.update_a_libro = async function (req, res) {
     var genero_id = req.body.genero_id;
     var autor_id = req.body.autor_id;
 
-    var libro = new Libro(titulo, tituloO, isbn, paginas,
-        descripcion, fecha, genero_id, editorial_id, lib_id);
+    var libro = new Libro(titulo, tituloO, isbn, paginas, descripcion, fecha, req.session.user.ses_id, genero_id, editorial_id, lib_id);
 
     var oldAutor = await libro.getAutor();
 
@@ -174,13 +173,11 @@ exports.update_a_libro = async function (req, res) {
     var aut_lib = new AutorLibro(oldAutor, lib_id);
     await aut_lib.update(lib_id, autor_id);
 
-    libro.update((err, result) => {
-        if (err)
-            res.send(err);
-        else {
-            res.redirect('/libros/d/' + lib_id);
-        }
+    await libro.update().catch((reason) => {
+        return res.send("ERROR");
     });
+
+    res.redirect('/libros');
 }
 
 exports.delete_form = async (req, res) => {

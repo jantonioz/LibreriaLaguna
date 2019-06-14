@@ -392,6 +392,10 @@ BEGIN
 END |
 
 
+
+
+
+
 -- CREATE TRIGGER trg_compra
 -- AFTER UPDATE ON compras
 -- FOR EACH ROW 

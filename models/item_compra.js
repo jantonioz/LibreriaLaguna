@@ -12,6 +12,9 @@ const REMOVE =
 const BYCOMPRA = 
     'SELECT * FROM item_compra WHERE compras_id = ?';
 
+const UPDATE = 'UPDATE item_compra SET item_cantidad = ?, ejemplares_id = ?, item_preciou = ? ' +
+    'WHERE item_id = ?';
+
 class ItemCompra {
     constructor(cantidad, precio, ejemplar_id, compra_id, ses_id, id = 0) {
         this.cantidad = cantidad;
@@ -37,13 +40,26 @@ class ItemCompra {
     }
 }
 
+
+ItemCompra.update = (item_id, cantidad, precio, ejemplar_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(UPDATE, [cantidad, ejemplar_id, precio, item_id], (err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
+            }
+        })
+    });
+}
+
 ItemCompra.remove = (item_id) => {
     return new Promise((resolve, reject) => {
         sql.query(REMOVE, [item_id], (err, res) => {
             if (!err) {
                 resolve(res);
             } else {
-                resolve(null);
+                reject(err);
             }
         });
     });

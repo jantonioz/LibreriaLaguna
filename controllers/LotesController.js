@@ -6,6 +6,7 @@ const Ejemplar = require('../models/ejemplar');
 const Libro = require('../models/libro');
 const Utils = require("./Utils");
 const Tipos = require('../models/tipo_ejemplar');
+const Item = require('../models/item_compra');
 
 exports.viewAll = async (req, res) => {
 
@@ -16,7 +17,9 @@ exports.viewAll = async (req, res) => {
 exports.detalleView = async (req, res) => {
     let lote = await Lote.get(req.params.id);
 
-    res.render('lote/detalleView', {lote: lote[0], nombreUsuario: Utils.getNombreUsuario(req)});
+    let ejemplares = await Ejemplar.getByLote(req.params.id);
+
+    res.render('lote/detalleView', {lote: lote[0], ejemplares: ejemplares, nombreUsuario: Utils.getNombreUsuario(req)});
 }
 
 exports.addView = async (req, res) => {

@@ -3,3 +3,29 @@ extends ../layout
 
 block content
     h1 !{lote.lot_descripcion}
+
+    hr 
+    br
+
+    h4 Contenido
+    table.table.table-hover
+        thead
+            tr 
+                th(scope="col") ID
+                th(scope="col") Cantidad
+                th(scope="col") Precio
+                th(scope="col") SKU
+                th(scope="col") Libro
+                th(scope="col") Sesion
+                th(scope="col") Tipo
+        tbody
+            each ejem in ejemplares
+                tr  
+                    th(scope="row") !{ejem.ejem_id}
+                    td !{ejem.ejem_cantidad}
+                    td !{ejem.ejem_precio}
+                    td !{ejem.sku}
+                    td 
+                        a(href="/libros/d/" + ejem.libro_id) !{ejem.libro} 
+                    td !{ejem.ses_id}
+                    td !{ejem.tipo}
