@@ -335,10 +335,18 @@ exports.userInfo = async (req, res) => {
     let dir = await Direccion.getByUser(id);
     dir = dir[0];
 
-    console.log(usuario);
+    let itemCount = sesiones.length;
+    let pageCount = Math.ceil(itemCount / req.query.limit);
+    sesiones = sesiones.slice(req.skip, req.skip + req.query.limit);
+
     res.render('usuario/cuenta', {
-        usr: usuario[0], sesiones: sesiones,
-        isAdmin: utils.isAdmin(req), nombreUsuario: utils.getNombreUsuario(req),
+        usr: usuario[0], 
+        sesiones: sesiones,
+        pageCount: itemCount, 
+        pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
+        actualPage: req.query.page,
+        isAdmin: utils.isAdmin(req), 
+        nombreUsuario: utils.getNombreUsuario(req),
         direccion: dir
     });
 }
