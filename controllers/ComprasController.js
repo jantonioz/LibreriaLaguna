@@ -2,6 +2,8 @@ const Compra = require('../models/compra');
 const Usuario = require('../models/usuario');
 const Ejemplar = require('../models/ejemplar');
 const Item = require('../models/item_compra');
+const paginate = require('express-paginate');
+const moment = require('moment');
 
 exports.changeCompra = async (req, res) => {
     let comp_id = req.body.comp_id;
@@ -9,7 +11,7 @@ exports.changeCompra = async (req, res) => {
     let mpago = req.body.mpago;
 
     let transporte_id = req.body.transporte_id;
-    
+
     let cantidades = req.body.cantidades;
     let items_id = req.body.item_id;
     let ejemplares_id = req.body.ejemplar_id;
@@ -20,12 +22,12 @@ exports.changeCompra = async (req, res) => {
     });
 
     // UPDATE ITEMS
-    for(var i = 0; i < cantidades.length; i++) {
+    for (var i = 0; i < cantidades.length; i++) {
         // OBTENER EL PRECIO DEL EJEMPLAR
         let ejemplar = await Ejemplar.getById(ejemplares_id[i]);
         let newPrecio = ejemplar.ejem_precio;
         let result = null;
-        
+
         if (eliminar[i] == 'true') {
             console.log("ELIMINANDO ITEM", items_id[i]);
             result = await Item.remove(items_id[i]);
@@ -53,28 +55,35 @@ exports.formEditar = async (req, res) => {
     });
 
     let items = await Compra.getItems(comp_id);
-    let ejemplares = await Ejemplar.getAllWithLibro(); 
+    let ejemplares = await Ejemplar.getAllWithLibro();
 
     let transportes = await Compra.getTransportes();
 
-    for (var i = 0; i < items.length; i ++) {
+    for (var i = 0; i < items.length; i++) {
         items[i].ejemplares = ejemplares;
     }
-    
-    res.render('compra/editView', 
-    {compra: compra, items: items, nombreUsuario: usuario.usr_nombre, 
-    transportes: transportes});
-    
+
+    res.render('compra/editView',
+        {
+            compra: compra, items: items, nombreUsuario: usuario.usr_nombre,
+            transportes: transportes
+        });
+
 }
 
 exports.listAll = async (req, res) => {
+
     let compras = await Compra.getAllByUserComplete(req.session.user.usr_id).catch((reason) => {
         console.log(reason);
     });
 
     if (compras) {
-        for(var i = 0; i < compras.length; i++) {
+        for (var i = 0; i < compras.length; i++) {
             let comp_id = compras[i].comp_id;
+
+            let fecha = compras[i].fecha;
+            const fromNow = moment(fecha).lang("es").fromNow();
+            compras[i].fecha = fromNow;
 
             let items = await Compra.getItems(comp_id);
             if (items) {
@@ -88,10 +97,21 @@ exports.listAll = async (req, res) => {
         }
     }
 
+    let itemCount = compras.length;
+    let pageCount = Math.ceil(itemCount / req.query.limit);
+
+    compras = compras.slice(req.skip, req.skip + req.query.limit);
+
     let usuario = await Usuario.getUserById(req.session.user.usr_id);
     console.log(compras);
 
-    res.render('compra/userData', {compras: compras, nombre: usuario.usr_nombre});
+    res.render('compra/userData', {
+        compras: compras,
+        title: 'Libros', compras: compras, pageCount, itemCount,
+        pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
+        actualPage: req.query.page,
+        nombre: usuario.usr_nombre
+    });
 
 }
 

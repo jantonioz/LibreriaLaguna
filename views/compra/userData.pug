@@ -10,42 +10,27 @@ block content
                 th(scope="col") Forma pago
                 th(scope="col") Método pago
                 th(scope="col") Estado
+                th(scope="col") Fecha
                 th(scope="col") Transporte
-                th(scope="col") Titulo
-                th(scope="col") Descripcion
-                th(scope="col") Cantidad
-                th(scope="col") Precio
                 th(scope="col") Total
                 th(scope="col") Accion
         tbody
             each compra in compras
-                tr
-                    td(scope="row") !{compra.verif}
+                tr.accordion-toggle(data-toggle="collapse", data-target="#items"+compra.comp_id)
+                    td(scope="row") !{compra.verif} 
                     td(scope="row") !{compra.forma}
                     td(scope="row") !{compra.metodo}
                     td(scope="row") !{compra.estado}
+                    td(scope="row") !{compra.fecha}
                     td(scope="row") !{compra.transporte}
-                    td(scope="row") 
-                        ul.list-group.list-group-flush
-                        each item in compra.items 
-                            li.list-group-item !{item.titulo}
-                    td(scope="row")
-                        ul.list-group.list-group-flush
-                        each item in compra.items 
-                            li.list-group-item !{item.descripcion}
-                    td(scope="row") 
-                        ul.list-group.list-group-flush
-                        each item in compra.items 
-                            li.list-group-item !{item.cantidad}
-                    td(scope="row") 
-                        ul.list-group.list-group-flush
-                        each item in compra.items 
-                            li.list-group-item $!{item.precio}
                     td(scope="row") $!{compra.total}
-
                     td(scope="row") 
-                        if (compra.verif == 0)
-                            form(action="/compra/finalizar", , method="POST")
-                                input(type="hidden", name="compra", value=compra.comp_id)
-                                button.btn.btn-success(type="submit") Finalizar
-                            a.btn.btn-primary.text-white(href="/compras/e/" + compra.comp_id) Editar
+                        a.btn.btn-outline-primary(href="/compras/d/"+compra.comp_id)
+                            span +
+                    td(scope="row") 
+                            if (compra.verif == 0)
+                                form(action="/compra/finalizar", , method="POST")
+                                    input(type="hidden", name="compra", value=compra.comp_id)
+                                    button.btn.btn-success(type="submit") Finalizar
+                                a.btn.btn-primary.text-white(href="/compras/e/" + compra.comp_id) Editar
+

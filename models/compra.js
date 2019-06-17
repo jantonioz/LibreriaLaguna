@@ -35,7 +35,9 @@ const GETTRANSPORTES =
 //     'WHERE com.usr_id = ?';
 
 const GET_ALL_BY_USER_COMPLETE =
-    'SELECT com.comp_id AS comp_id, com.comp_verif AS verif, com.comp_fpago AS forma, com.comp_mpago AS metodo, ' +
+    'SELECT com.comp_id AS comp_id, com.comp_verif AS verif,'+
+    ' com.created_at AS fecha,' +
+    ' com.comp_fpago AS forma, com.comp_mpago AS metodo, ' +
     'com.com_estado AS estado, trans.trans_nombre AS transporte ' +
     'FROM compras AS com ' +
     'LEFT JOIN transporte AS trans ON (com.trans_id = trans.trans_id) ' +
