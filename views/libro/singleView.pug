@@ -30,15 +30,8 @@ block content
               span.sr-only Siguiente
           div.mcontainer
             img(class="img-fluid" src=imgsrc alt="")
-            //- div.middle
-            //-   a.text-white.text(href="/libros/i/" + libro.lib_id) Agregar más
         else
           img(class="card-img-top" src="http://placehold.it/500x325" alt="")
-
-        
-        //- form(action="/libros/addImage/" + libro.lib_id, method="POST")
-        //-   label(for="file-upload" class="custom-file-upload text-light bg-danger") Agregar Imagen
-        //-     input(type="file" id="file-upload")
           
       div(class="col")
         h1= libro.titulo 
@@ -48,7 +41,7 @@ block content
         small Autor 
           a(href="/autores/d/" + libro.autor_id) !{libro.autor}
           | !{" \u2022 "} !{genLink}
-        p= libro.descripcion
+        p.descripcion= libro.descripcion
 
         .row
           .col
@@ -75,3 +68,6 @@ block content
                 p !{ejemplar.cantidad} Disponibles a $ !{ejemplar.precio}
                   br
                   small Por: !{ejemplar.proveedor}
+  
+  .container.mt-5
+    h4 Relacionados

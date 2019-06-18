@@ -63,10 +63,11 @@ ImagenLibro.getImagesOfLibroID = (libro_id) => {
     return new Promise((resolve, reject) => {
         sql.query("SELECT * FROM imagen_libro WHERE libro_id = ?", libro_id, (err, res) => {
             if (err) {
-                resolve('undefined');
+                reject(err)
+            } else {
+                resolve(res);
             }
-            resolve(res);
-        })
+        });
     });
 
 }

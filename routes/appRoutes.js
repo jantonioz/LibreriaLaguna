@@ -93,9 +93,11 @@ var checkStockAdmin = (req, res, next) => {
         res.render('usuario/login', { title: 'Login usuario', gobackTo: req.originalUrl });
         return;
     }
-
-    if (rolIs(req, 'stockadmin') || rolIs('sysadmin')) {
+    
+    if (rolIs(req, 'stockadmin') || rolIs(req, 'sysadmin')) {
         next();
+    } else {
+        console.log(req.session.user.nombreRol);
     }
 }
 

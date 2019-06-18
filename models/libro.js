@@ -159,7 +159,7 @@ Libro.getAllLibros = async () => {
             if (!err) {
                 for (var i = 0; i < res.length; i++) {
                     let imagenes = await imagenLibro.getImagesOfLibroID(res[i].lib_id);
-                    console.log(imagenes);
+                    
                     if (imagenes.length > 0) {
                         res[i].imagenes = imagenes;
                         res[i].imagenes[0].active = 1;
