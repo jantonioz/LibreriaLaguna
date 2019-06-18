@@ -4,6 +4,7 @@ const Ejemplar = require('../models/ejemplar');
 const Item = require('../models/item_compra');
 const paginate = require('express-paginate');
 const moment = require('moment');
+const mx = moment.locale("mx");
 
 exports.changeCompra = async (req, res) => {
     let comp_id = req.body.comp_id;
@@ -71,6 +72,25 @@ exports.formEditar = async (req, res) => {
 
 }
 
+exports.getItems = async (req, res) => {
+    const comp_id = req.params.comp_id;
+    const items = await Compra.getItems(comp_id);
+    const usuario = await Usuario.getUserById(req.session.user.usr_id);        
+
+    let total = 0
+    items.map(item => {
+        total += item.precio * item.cantidad;
+    });
+
+    console.log(total);
+
+    res.render('compra/itemsView', {
+        title: 'Articulos de compra', items: items, 
+        nombre: usuario.usr_nombre, comp_id: comp_id,
+        total: total
+    });
+}
+
 exports.listAll = async (req, res) => {
 
     let compras = await Compra.getAllByUserComplete(req.session.user.usr_id).catch((reason) => {
@@ -80,9 +100,11 @@ exports.listAll = async (req, res) => {
     if (compras) {
         for (var i = 0; i < compras.length; i++) {
             let comp_id = compras[i].comp_id;
-
             let fecha = compras[i].fecha;
-            const fromNow = moment(fecha).lang("es").fromNow();
+
+            moment.locale("mx");
+
+            const fromNow = moment(fecha).fromNow();
             compras[i].fecha = fromNow;
 
             let items = await Compra.getItems(comp_id);
@@ -107,7 +129,7 @@ exports.listAll = async (req, res) => {
 
     res.render('compra/userData', {
         compras: compras,
-        title: 'Libros', compras: compras, pageCount, itemCount,
+        title: 'Compras', compras: compras, pageCount, itemCount,
         pages: paginate.getArrayPages(req)(req.query.limit, pageCount, req.query.page),
         actualPage: req.query.page,
         nombre: usuario.usr_nombre

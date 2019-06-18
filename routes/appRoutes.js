@@ -141,6 +141,7 @@ router.post('/usuarios/admin/delete', checkAdmin, usuario.delete);
 
 // ===== COMPRAS =====
 router.get('/compras', redirectLogin, compras.listAll);
+router.get('/compras/d/:comp_id', redirectLogin, compras.getItems);
 router.post('/compra/finalizar', redirectLogin, compras.finalizar);
 router.get('/compras/e/:compId', redirectLogin, compras.formEditar);
 router.post('/compras/edit', redirectLogin, compras.changeCompra);

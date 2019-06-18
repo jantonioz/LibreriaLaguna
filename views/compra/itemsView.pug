@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+    h1 Items de compra #!{comp_id}
+    
+    table.table.table-hover
+        thead
+            tr
+                th(scope="col") Titulo
+                th(scope="col") Descripcion
+                th(scope="col") Autor
+                th(scope="col") Precio
+                th(scope="col") Cantidad
+        tbody
+            each item in items
+                tr
+                    td(scope="row") !{item.titulo}
+                    td(scope="row") !{item.descripcion}
+                    td(scope="row") !{item.autor}
+                    td(scope="row") !{item.precio}
+                    td(scope="row") !{item.cantidad}
+            tr
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td 
+                   h4 Total : <small> $!{total} </small>
+                td &nbsp;

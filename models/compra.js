@@ -45,10 +45,13 @@ const GET_ALL_BY_USER_COMPLETE =
 
 const GET_ALL_ITEMS = 
     'SELECT item.item_id AS item_id, item.item_cantidad AS cantidad, item.item_preciou AS precio, ' +
-    'lib.titulo AS titulo, tipoe.tipo_descripcion AS descripcion, ejem.ejem_id AS ejem_id ' +
+    'lib.titulo AS titulo, tipoe.tipo_descripcion AS descripcion, ejem.ejem_id AS ejem_id, ' +
+    'aut.aut_nombre AS autor ' +
     'FROM item_compra as item ' +
     'INNER JOIN ejemplares AS ejem ON (item.ejemplares_id = ejem.ejem_id) ' +
     'INNER JOIN libros AS lib ON (ejem.libro_id = lib.lib_id) ' +
+    'INNER JOIN autor_libro AS alib ON (alib.libro_id = lib.lib_id) ' +
+    'INNER JOIN autores AS aut ON (aut.aut_id = alib.autor_id) ' +
     'INNER JOIN tipoejemplares AS tipoe ON (ejem.tipo_id = tipoe.tipo_id) ' +
     'WHERE item.compras_id = ?';
 

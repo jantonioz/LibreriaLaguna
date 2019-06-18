@@ -16,7 +16,7 @@ block content
                 th(scope="col") Accion
         tbody
             each compra in compras
-                tr.accordion-toggle(data-toggle="collapse", data-target="#items"+compra.comp_id)
+                tr
                     td(scope="row") !{compra.verif} 
                     td(scope="row") !{compra.forma}
                     td(scope="row") !{compra.metodo}
