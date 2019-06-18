@@ -114,7 +114,7 @@ class Proveedor {
 
 Proveedor.findById = (id) => {
     return new Promise((resolve, reject) => {
-        sql.query(QUERY_FINDBYID, [id], (err, res) => {
+        sql.query(QUERY_FINDBYID, id, (err, res) => {
             if (!err) {
                 resolve(res[0]);
             } else {

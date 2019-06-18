@@ -44,11 +44,11 @@ exports.formFnac = async (req, res) => {
 exports.changeFnac = async (req, res) => {
     let usr_id = req.body.usr_id;
     let fnac = req.body.fnac;
-    console.log(fnac);
+    
 
     let result = await Usuario.updateFnac(fnac, usr_id);
     if (result) {
-        console.log(result);
+        
         res.redirect('/cuenta');
         return;
     }
@@ -57,7 +57,7 @@ exports.changeFnac = async (req, res) => {
 
 exports.formDireccion = async (req, res) => {
     let usuario = await Usuario.getUserById(req.session.user.usr_id);
-    console.log(usuario);
+    
     if (usuario.direccion_id != null) {
         let response = await Direccion.getById(usuario.direccion_id);
         let obj = new Direccion(response.dir_calle, response.dir_num,
@@ -159,7 +159,7 @@ exports.changeUsername = async (req, res) => {
     let newUsername = req.body.newUsername;
 
     let result = await Usuario.updateUsername(newUsername, usr_id);
-    console.log(result);
+    
     if (result) {
         req.session.user.username = newUsername;
     }
@@ -184,7 +184,7 @@ exports.changePassword = async (req, res) => {
 
     let result = await Usuario.updatePassword(encPassword, usr_id);
 
-    console.log(result);
+    
     res.redirect('/cuenta');
 }
 
@@ -219,7 +219,7 @@ exports.login = async (req, res) => {
         }
     }
 
-    console.log("USUARIOS CONTROLLER: OK");
+    
 
     var now = moment().utcOffset('-0500').format('YYYY-MM-DD HH:mm');
     var expire = moment().utcOffset('-0500').add(2, 'h').format('YYYY-MM-DD HH:mm');
@@ -235,8 +235,6 @@ exports.login = async (req, res) => {
     let newSession = new Sesion(user.id, token, now, expire, ip, os);
     let res_sid = await newSession.save();
     let sid = res_sid[0][0].insertId;
-    console.log(sid);
-    console.log(user.rol);
     req.session.user =
         {
             name: user.nombre,

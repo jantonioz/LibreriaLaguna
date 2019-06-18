@@ -67,8 +67,6 @@ function rolIs(req, rolnameToCheck) {
 var checkAdmin = (req, res, next) => {
     console.log("CHECK ADMIN");
     if (req.session == null || req.session.user == null || req.cookies.sid == null) {
-        console.log("USUARIO: ", req.session.user);
-        console.log(req.originalUrl);
         req.gobackTo = req.originalUrl;
         //res.redirect('/login');
         res.render('usuario/login', { title: 'Login usuario', gobackTo: req.originalUrl });
@@ -78,14 +76,18 @@ var checkAdmin = (req, res, next) => {
     
     if (rolIs(req, 'sysadmin')) {
         next();
+    } else if (rolIs(req, 'stockadmin') || rolIs('bookadmin')) {
+        res.render('mensajes/error', {
+            title: 'Denegado',
+            mensaje: 'Permisos insuficientes',
+            detalles: 'No cuentas con los permisos suficientes para realizar esta acción',
+            backto: req.originalUrl
+        })
     }
 }
 
-var checkProv = (req, res, next) => {
-    console.log("CHECK PROV");
+var checkStockAdmin = (req, res, next) => {
     if (req.session == null || req.session.user == null || req.cookies.sid == null) {
-        console.log("USUARIO: ", req.session.user);
-        console.log(req.originalUrl);
         req.gobackTo = req.originalUrl;
         //res.redirect('/login');
         res.render('usuario/login', { title: 'Login usuario', gobackTo: req.originalUrl });
@@ -100,8 +102,6 @@ var checkProv = (req, res, next) => {
 var checkBookAdmin = (req, res, next) => {
     console.log("CHECK Book");
     if (req.session == null || req.session.user == null || req.cookies.sid == null) {
-        console.log("USUARIO: ", req.session.user);
-        console.log(req.originalUrl);
         req.gobackTo = req.originalUrl;
         //res.redirect('/login');
         res.render('usuario/login', { title: 'Login usuario', gobackTo: req.originalUrl });
@@ -185,17 +185,18 @@ router.post('/editoriales/editar', checkAdmin, editorial.editar);
 router.post('/find?:busqueda', busqueda.find);
 
 // ==== PROVEEDORES ====
-router.get('/proveedores/register', checkAdmin, proveedor.register);
-router.post('/proveedores/register', checkAdmin, proveedor.registerPost);
-router.get('/proveedores/', autoMiddleware, proveedor.listAll);
-router.get('/proveedores/e/:prov_id', checkAdmin, proveedor.formEditar);
-router.post('/proveedores/edit', checkAdmin, proveedor.postEditar);
+router.get('/proveedores/register', checkStockAdmin, proveedor.register);
+router.post('/proveedores/register', checkStockAdmin, proveedor.registerPost);
+router.get('/proveedores/', checkStockAdmin, proveedor.listAll);
+router.get('/proveedores/e/:prov_id', checkStockAdmin, proveedor.formEditar);
+router.post('/proveedores/edit', checkStockAdmin, proveedor.postEditar);
+router.get('/proveedores/d/:proveedor_id', checkStockAdmin, proveedor.detalle);
 
 // ==== LOTES ====
-router.get('/lotes/', checkAdmin, lote.viewAll);
-router.get('/lotes/d/:id', checkAdmin, lote.detalleView);
-router.get('/lotes/add/', checkAdmin, lote.addView);
-router.post('/lotes/add/', checkAdmin, lote.addPost);
+router.get('/lotes/', checkStockAdmin, lote.viewAll);
+router.get('/lotes/d/:id', checkStockAdmin, lote.detalleView);
+router.get('/lotes/add/', checkStockAdmin, lote.addView);
+router.post('/lotes/add/', checkStockAdmin, lote.addPost);
 // router.get('/lotes/e/:id', checkAdmin, lote.editView);
 // router.post('/lotes/e/', checkAdmin, lote.editPost);
 

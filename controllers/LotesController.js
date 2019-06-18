@@ -1,5 +1,3 @@
-'use strict';
-
 const Lote = require('../models/lote');
 const Proveedor = require('../models/proveedor');
 const Ejemplar = require('../models/ejemplar');
@@ -7,11 +5,29 @@ const Libro = require('../models/libro');
 const Utils = require("./Utils");
 const Tipos = require('../models/tipo_ejemplar');
 const Item = require('../models/item_compra');
+const moment = require('moment');
 
 exports.viewAll = async (req, res) => {
 
     var lotes = await Lote.listAll();
-    res.render('lote/allView', {lotes: lotes, nombreUsuario: Utils.getNombreUsuario(req)});
+
+    const newLotes = lotes.map(lote => {
+        fecha = moment(lote.fentrega).format('DD/MM/YYYY');
+        return {
+            lot_id: lote.lot_id,
+            lote_descripcion: lote.lote_descripcion,
+            fentrega: fecha,
+            ses_id: lote.ses_id,
+            proveedor_id: lote.proveedor_id,
+            proveedor: lote.proveedor,
+        };
+    });
+
+    console.log(newLotes);
+    res.render('lote/allView', 
+    {lotes: newLotes, 
+        nombreUsuario: Utils.getNombreUsuario(req)
+    });
 }
 
 exports.detalleView = async (req, res) => {

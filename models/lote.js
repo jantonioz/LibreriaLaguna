@@ -5,7 +5,22 @@ const sql = require('./db');
 const INSERT =
     'INSERT INTO lotes(lote_descripcion, fentrega, proveedor_id, ses_id, created_at, updated_at)' +
     ' VALUES(?, ?, ?, ?, NOW(), NOW())';
-const SELECT = 'SELECT * FROM lotes';
+const SELECT = 
+    'SELECT  *' +
+    'FROM lotes ';
+
+const LISTALL = 
+    'SELECT lot.lot_id AS lot_id, lot.lote_descripcion AS lote_descripcion, ' + 
+    'lot.fentrega AS fentrega, lot.proveedor_id AS proveedor_id, ' +
+    'prov.prov_nombre AS proveedor ' +
+    'FROM lotes AS lot ' + 
+    'INNER JOIN proveedores AS prov ON (lot.proveedor_id = prov.prov_id)';
+
+const GETBYPROV = 
+    'SELECT *' +
+    'FROM lotes AS lot ' +
+    'WHERE proveedor_id = ?';
+    
 
 class Lote {
     constructor(descripcion, fentrega, proveedor_id, ses_id, id = 0) {
@@ -43,18 +58,25 @@ Lote.get = (id) => {
     });
 }
 
-Lote.listAll = (filter = null) => {
-    var query = SELECT;
-    if (filter != null) {
-        query += ' WHERE ' + filter.campo + ' = ' + filter.valor;
-    }
-
+Lote.listAll = () => {
     return new Promise((resolve, reject) => {
-        sql.query(query, (err, res) =>{
+        sql.query(LISTALL, (err, res) =>{
             if (!err) {
                 resolve(res);
             } else {
-                resolve(null);
+                reject(err);
+            }
+        });
+    });
+}
+
+Lote.getByProv = (proveedor_id) => {
+    return new Promise((resolve, reject) => {
+        sql.query(GETBYPROV, proveedor_id,(err, res) => {
+            if (!err) {
+                resolve(res);
+            } else {
+                reject(err);
             }
         });
     });

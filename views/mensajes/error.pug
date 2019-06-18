@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+    h1 !{mensaje}
+
+    .row
+        .col-auto.btn-lg
+            p !{detalles}
+        .col
+            if (backto) 
+                a.btn.btn-outline-primary(href=backto, style="vertical-align: middle;") 
+                    <i class="material-icons md-24">keyboard_arrow_left</i> Regresar
+                    
+                    

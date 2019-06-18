@@ -1,0 +1,23 @@
+extends ../layout
+block content
+    h1=proveedor.prov_nombre 
+    p Correo: !{proveedor.prov_email}
+
+    h4 Lotes:
+
+    table.table.table-hover
+        thead 
+            tr
+                th ID
+                th Descripcion
+                th Entrega
+                th Sesion
+        tbody
+            each lote in lotes
+                tr
+                    td !{lote.lot_id}
+                    td !{lote.lote_descripcion}
+                    td !{lote.fentrega}
+                    td !{lote.ses_id}
+
+    
