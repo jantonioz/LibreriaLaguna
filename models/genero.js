@@ -6,7 +6,7 @@ const imagenLibro = require('./imagen_libro');
 
 
 const INSERT = 'INSERT INTO Generos(gen_nombre, gen_descripcion, ses_id, created_at, updated_at) VALUES(?, ?, ?, NOW(), NOW())';
-const SELECT_ALL = 'SELECT * FROM Generos LIMIT 5';
+const SELECT_ALL = 'SELECT * FROM Generos';
 const filterByName = 'WHERE gen_nombre like ?';
 const filterById = 'WHERE gen_id = ?';
 const UPDATE = 'UPDATE Generos SET gen_nombre = ?, gen_descripcion = ? WHERE gen_id = ?';
@@ -69,14 +69,16 @@ class Genero {
 }
 
 Genero.find = (result) => {
-    sql.query(SELECT_ALL, (err, res) => {
-        if (err) {
-            console.log("ERROR: ", err);
-            result(err, null);
-        } else {
-            result(null, res);
-        }
-    })
+    return new Promise((resolve, reject) => {
+        sql.query(SELECT_ALL, (err, res) => {
+            if (err) {
+                console.log("ERROR: ", err);
+                result(err, null);
+            } else {
+                result(null, res);
+            }
+        })
+    });
 }
 
 Genero.findByNombre = (nombre, result) => {

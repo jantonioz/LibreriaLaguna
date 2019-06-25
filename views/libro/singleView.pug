@@ -48,26 +48,33 @@ block content
             form(action="/addCarrito", method="POST") 
               .form-group.row
                 label.col-sm-3(for="cantidad") Cantidad
-                input.form-control.col-md-5(type="number", name="cantidad", id="cantidad", value="1")
+                if ejemplares != null 
+                  input.form-control.col-md-5(type="number", name="cantidad", id="cantidad", value="1")
+                else 
+                  input.form-control.col-md-5(type="number", name="cantidad", id="cantidad", value="1", disabled)
               .form-group.row
                 label.col-sm-3(for="libro_id", ) Ejemplar:
-                select.col-md-5(class="custom-select" name="ejemplar", required)
-                    option(selected) Selecciona uno
-                    if ejemplares != null
+                if (ejemplares != null)
+                  select.col-md-5(class="custom-select" name="ejemplar", required)
+                      option(selected) Selecciona uno
                         each ejemplar in ejemplares 
                             option(value=ejemplar.ejem_id) $!{ejemplar.precio} - !{ejemplar.proveedor}
+                else 
+                  select.col-md-5(class="custom-select" name="ejemplar", required, disabled)
+                      option(selected) No hay disponible
               button.row.col-md-10(type="submit", class="btn btn-lg btn-success btn-block") Comprar
 
-
       .col-md-3 
-        h5 Ejemplares disponibles:
         if(ejemplares != null && ejemplares.length > 0)
-          each ejemplar in ejemplares 
-            .row
-              .col
-                p !{ejemplar.cantidad} Disponibles a $ !{ejemplar.precio}
-                  br
-                  small Por: !{ejemplar.proveedor}
+          h5 Ejemplares disponibles:
+            each ejemplar in ejemplares 
+              .row
+                .col
+                  p !{ejemplar.cantidad} Disponibles a $ !{ejemplar.precio}
+                    br
+                    small Por: !{ejemplar.proveedor}
+        else
+          h5 No hay ejemplares
   
   .container.mt-5
     h4 Relacionados

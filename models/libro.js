@@ -141,13 +141,11 @@ Libro.getLibroById = function createUser(libroId) {
     return new Promise((resolve, reject) => {
         sql.query("SELECT " + selectors + completeInfo + " WHERE lib.lib_id = ? ", libroId, function (err, res) {
             if (!err) {
-                console.log("ok :", res)
                 resolve(res);
             } else {
-                console.log(err);
-                resolve(null);
+                reject(err);
             }
-        })
+        });
     });
 
 }

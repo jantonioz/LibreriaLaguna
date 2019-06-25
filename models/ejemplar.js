@@ -86,13 +86,12 @@ Ejemplar.getById = (ejem_id) => {
 }
 
 Ejemplar.getAllByLibro = (libroId) => {
-    console.log(SELECTBYLIBRO);
     return new Promise((resolve, reject) => {
         sql.query(SELECTBYLIBRO, libroId, (err, res) => {
             if (!err) {
                 resolve(res);
             } else {
-                resolve(null);
+                reject(err);
             }
         });
     });

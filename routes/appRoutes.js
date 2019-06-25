@@ -97,7 +97,7 @@ var checkStockAdmin = (req, res, next) => {
     if (rolIs(req, 'stockadmin') || rolIs(req, 'sysadmin')) {
         next();
     } else {
-        console.log(req.session.user.nombreRol);
+        console.log("Permisos insuficientes", req.session.user.nombreRol);
     }
 }
 
@@ -116,7 +116,7 @@ var checkBookAdmin = (req, res, next) => {
     }
 }
 
-// ==== LIBROS ====
+// ===== LIBROS =====
 router.get('/libros/', libro.list_all_libros);
 router.get('/libros/d/:libroId', libro.get_a_libro);
 router.post('/libros/find', libro.find_a_libro);
@@ -127,7 +127,7 @@ router.post('/libros/update', checkBookAdmin, libro.update_a_libro);
 router.get('/libros/delete/:libroId', checkBookAdmin, libro.delete_form);
 router.post('/libros/delete', checkBookAdmin, libro.delete_a_libro);
 
-// ==== USUARIOS ====
+// ===== USUARIOS =====
 router.get('/usuarios/', usuario.list_all_users);
 router.get('/login', redirectHome, usuario.formLogin);
 router.post('/login', redirectHome, usuario.login);

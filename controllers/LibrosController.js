@@ -39,7 +39,7 @@ exports.formEditar = async (req, res) => {
     if (libro == null) {
         return res.send("BAD");
     }
-    
+
     libro.fecha_pub = dateFormat(libro.fecha_pub, "yyyy-mm-dd");
 
     let imgs = await Imagen.getImagesOfLibroID(req.params.libroId);
@@ -132,7 +132,6 @@ exports.find_a_libro = async (req, res) => {
 }
 
 exports.get_a_libro = async function (req, res) {
-    console.log(req.params.libroId)
     let libro = await Libro.getLibroById(req.params.libroId);
 
     if (libro == null)
@@ -144,8 +143,16 @@ exports.get_a_libro = async function (req, res) {
         imgs[0].active = true;
     }
 
-    let ejemplares = await Ejemplar.getAllByLibro(req.params.libroId);
+    let ejemplares = await Ejemplar.getAllByLibro(req.params.libroId)
+        .catch(reason => {
+            console.log("Error ejemplares: ", reason);
+        });
 
+    if (ejemplares.length == 0) {
+        console.log("Error ejemplares [LibrosController]: ", ejemplares.length); 
+        ejemplares = null;
+    }
+    
     res.render('libro/singleView', {
         title: libro.titulo, libro: libro[0],
         nombreUsuario: utils.getNombreUsuario(req), imagenes: imgs,

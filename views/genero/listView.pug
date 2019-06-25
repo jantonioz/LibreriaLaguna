@@ -4,6 +4,5 @@ extends ../layout
 block content
     each gen in generos
         h1
-            a(href="/generos/d/" + gen.gen_id ) #{gen.gen_nombre}
-        //- small= 'Autor: ' + libro.autor + 	" \u2022 " + libro.genero
-        //p=  'Nacimiento: ' + aut.aut_fecnac
+            a(href="/generos/d/" + gen.gen_id ) #{gen.gen_nombre} 
+        p !{gen.gen_descripcion}
